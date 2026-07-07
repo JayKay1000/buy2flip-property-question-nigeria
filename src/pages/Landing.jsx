@@ -27,10 +27,10 @@ const features = [
 ];
 
 const stats = [
-  { value: "₦2B+", label: "In Active Commitments" },
-  { value: "500+", label: "Participants" },
+  { value: "₦2B+", label: "Land Banked" },
+  { value: "500+", label: "Land Banking Participants" },
   { value: "50%", label: "Maximum Expected Return" },
-  { value: "100%", label: "Transparency" },
+  { value: "100%", label: "Land-Backed Security" },
 ];
 
 export default function Landing() {
@@ -54,15 +54,16 @@ export default function Landing() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8 animate-fade-in">
               <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-              <span className="text-xs font-medium text-white/90 tracking-wide">A secure wealth-building platform</span>
+              <span className="text-xs font-semibold text-white/90 tracking-[0.2em] uppercase">Land Banking</span>
             </div>
-            <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight animate-fade-up">
-              Build Your Financial Future Through{" "}
-              <span className="text-gradient-gold">Strategic Land Banking</span>
+            <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
+              <span className="text-gradient-gold">Land Banking</span>
+              <br />
+              Made Simple.
             </h1>
             <p className="mt-6 text-lg text-white/70 max-w-xl leading-relaxed animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              Make structured financial commitments that Property Question Nigeria Limited deploys into
-              carefully selected real estate developments — with returns according to your selected plan.
+              Property Question Nigeria Limited helps you build wealth through strategic land banking —
+              acquire premium land, earn returns according to your selected plan, and watch your portfolio grow.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/register">
@@ -197,10 +198,10 @@ export default function Landing() {
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">
-            Ready to Build Your Financial Future?
+            Ready to Start Land Banking?
           </h2>
           <p className="text-white/70 mt-4 max-w-xl mx-auto">
-            Join Land Banking today and start your journey toward strategic wealth building through real estate.
+            Join Property Question Nigeria Limited today and start building wealth through strategic land banking.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
