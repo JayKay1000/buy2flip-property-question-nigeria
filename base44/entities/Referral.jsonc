@@ -1,0 +1,43 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "referrer_code": {
+      "type": "string"
+    },
+    "referred_name": {
+      "type": "string"
+    },
+    "referred_email": {
+      "type": "string"
+    },
+    "level": {
+      "type": "number",
+      "enum": [
+        1,
+        2
+      ]
+    },
+    "reward_percentage": {
+      "type": "number"
+    },
+    "reward_amount": {
+      "type": "number"
+    },
+    "commitment_amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "referrer_code",
+    "level"
+  ]
+}

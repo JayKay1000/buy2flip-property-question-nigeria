@@ -1,0 +1,43 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "evidence_url": {
+      "type": "string"
+    },
+    "commitment_id": {
+      "type": "string"
+    },
+    "company_bank_name": {
+      "type": "string"
+    },
+    "company_account_name": {
+      "type": "string"
+    },
+    "company_account_number": {
+      "type": "string"
+    },
+    "confirmed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rejection_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "amount"
+  ]
+}

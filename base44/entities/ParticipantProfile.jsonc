@@ -1,0 +1,50 @@
+{
+  "name": "ParticipantProfile",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "phone_number": {
+      "type": "string"
+    },
+    "referral_code": {
+      "type": "string"
+    },
+    "referred_by_code": {
+      "type": "string"
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "account_number": {
+      "type": "string"
+    },
+    "account_name": {
+      "type": "string"
+    },
+    "preferred_receiving_bank": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "suspended"
+      ],
+      "default": "active"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "relationship_officer": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "full_name",
+    "phone_number",
+    "referral_code"
+  ]
+}

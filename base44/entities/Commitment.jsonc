@@ -1,0 +1,54 @@
+{
+  "name": "Commitment",
+  "type": "object",
+  "properties": {
+    "plan_name": {
+      "type": "string",
+      "enum": [
+        "Silver",
+        "Gold",
+        "Platinum"
+      ]
+    },
+    "plan_duration_months": {
+      "type": "number"
+    },
+    "plan_return_rate": {
+      "type": "number"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "expected_return": {
+      "type": "number"
+    },
+    "total_expected_value": {
+      "type": "number"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "maturity_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_payment",
+        "active",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending_payment"
+    },
+    "certificate_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_name",
+    "amount"
+  ]
+}

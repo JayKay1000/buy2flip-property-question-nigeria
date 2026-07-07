@@ -1,0 +1,40 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "resolved",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "payment",
+        "commitment",
+        "referral",
+        "account",
+        "general"
+      ],
+      "default": "general"
+    },
+    "response": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "subject",
+    "message"
+  ]
+}
