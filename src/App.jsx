@@ -22,6 +22,13 @@ import Payment from './pages/Payment';
 import Portfolio from './pages/Portfolio';
 import Referrals from './pages/Referrals';
 import Support from './pages/Support';
+import AdminRoute from '@/components/AdminRoute';
+import AdminLayout from '@/components/AdminLayout';
+import AdminOverview from './pages/admin/AdminOverview';
+import AdminParticipants from './pages/admin/AdminParticipants';
+import AdminPayments from './pages/admin/AdminPayments';
+import AdminCommitments from './pages/admin/AdminCommitments';
+import AdminAnnouncements from './pages/admin/AdminAnnouncements';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
@@ -55,6 +62,13 @@ const AuthenticatedApp = () => {
           <Route path="/referrals" element={<Referrals />} />
           <Route path="/support" element={<Support />} />
         </Route>
+      </Route>
+      <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+        <Route index element={<AdminOverview />} />
+        <Route path="participants" element={<AdminParticipants />} />
+        <Route path="payments" element={<AdminPayments />} />
+        <Route path="commitments" element={<AdminCommitments />} />
+        <Route path="announcements" element={<AdminAnnouncements />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
