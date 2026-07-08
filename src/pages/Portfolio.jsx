@@ -25,8 +25,9 @@ export default function Portfolio() {
   const [commitments, setCommitments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingBank, setEditingBank] = useState(false);
-  const [bankForm, setBankForm] = useState({ bank_name: "", account_number: "", account_name: "", preferred_receiving_bank: "" });
+  const [bankForm, setBankForm] = useState({ bank_name: "", account_number: "", account_name: "" });
   const [savingBank, setSavingBank] = useState(false);
+  const [bankError, setBankError] = useState("");
 
   useEffect(() => {
     loadData();
@@ -43,7 +44,6 @@ export default function Portfolio() {
           bank_name: p.bank_name || "",
           account_number: p.account_number || "",
           account_name: p.account_name || "",
-          preferred_receiving_bank: p.preferred_receiving_bank || "",
         });
       }
       const comms = await base44.entities.Commitment.filter({ created_by_id: me.id }, "-created_date");
@@ -55,12 +55,18 @@ export default function Portfolio() {
   };
 
   const saveBankDetails = async () => {
+    setBankError("");
+    if (bankForm.account_number.length !== 10) {
+      setBankError("Account number must be exactly 10 digits.");
+      return;
+    }
     setSavingBank(true);
     try {
       await base44.entities.ParticipantProfile.update(profile.id, bankForm);
       setProfile({ ...profile, ...bankForm });
       setEditingBank(false);
     } catch {
+      setBankError("Failed to save bank details. Please try again.");
     } finally {
       setSavingBank(false);
     }
@@ -268,7 +274,8 @@ export default function Portfolio() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="account_number">Account Number</Label>
-                  <Input id="account_number" value={bankForm.account_number} onChange={(e) => setBankForm({ ...bankForm, account_number: e.target.value })} placeholder="0123456789" className="h-11" />
+                  <Input id="account_number" value={bankForm.account_number} onChange={(e) => setBankForm({ ...bankForm, account_number: e.target.value.replace(/\D/g, "").slice(0, 10) })} placeholder="0123456789" maxLength={10} inputMode="numeric" className="h-11" />
+                  {bankError && <p className="text-xs text-destructive">{bankError}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="account_name">Account Name</Label>
