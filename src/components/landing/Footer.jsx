@@ -28,9 +28,9 @@ export default function Footer() {
             <h3 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Company</h3>
             <ul className="space-y-2.5 text-sm">
               <li className="flex items-center gap-2"><Building2 className="w-4 h-4 text-gold/70 flex-shrink-0" /> Property Question Nigeria Ltd</li>
-              <li className="flex items-center gap-2"><Mail className="w-4 h-4 text-gold/70 flex-shrink-0" /> info@landbanking.ng</li>
-              <li className="flex items-center gap-2"><Phone className="w-4 h-4 text-gold/70 flex-shrink-0" /> +234 800 000 0000</li>
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4 text-gold/70 flex-shrink-0" /> Lagos, Nigeria</li>
+              <li className="flex items-center gap-2"><Mail className="w-4 h-4 text-gold/70 flex-shrink-0" /> info@propertyquestion.net</li>
+              <li className="flex items-center gap-2"><Phone className="w-4 h-4 text-gold/70 flex-shrink-0" /> +234 903 339 3000</li>
+              <li className="flex items-start gap-2"><MapPin className="w-4 h-4 text-gold/70 flex-shrink-0 mt-0.5" /> Suite 43, Ogba Shopping Arcade, Ijaiye Road, Ogba, Lagos, Nigeria</li>
             </ul>
           </div>
         </div>

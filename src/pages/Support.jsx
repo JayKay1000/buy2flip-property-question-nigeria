@@ -103,7 +103,7 @@ export default function Support() {
 
       {/* Quick support options */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer">
+        <a href="https://wa.me/2349033393000" target="_blank" rel="noopener noreferrer">
           <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center mb-3">
               <MessageSquare className="w-5 h-5 text-brand" />
@@ -112,22 +112,22 @@ export default function Support() {
             <p className="text-xs text-muted-foreground mt-1">Chat with us on WhatsApp</p>
           </Card>
         </a>
-        <a href="tel:+2348000000000">
+        <a href="tel:+2349033393000">
           <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center mb-3">
               <Phone className="w-5 h-5 text-gold-dark" />
             </div>
             <h3 className="font-heading font-semibold text-foreground text-sm">Call Support</h3>
-            <p className="text-xs text-muted-foreground mt-1">+234 800 000 0000</p>
+            <p className="text-xs text-muted-foreground mt-1">+234 903 339 3000</p>
           </Card>
         </a>
-        <a href="mailto:info@landbanking.ng">
+        <a href="mailto:info@propertyquestion.net">
           <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center mb-3">
               <Mail className="w-5 h-5 text-brand" />
             </div>
             <h3 className="font-heading font-semibold text-foreground text-sm">Email Us</h3>
-            <p className="text-xs text-muted-foreground mt-1">info@landbanking.ng</p>
+            <p className="text-xs text-muted-foreground mt-1">info@propertyquestion.net</p>
           </Card>
         </a>
       </div>
@@ -186,11 +186,11 @@ export default function Support() {
                 </div>
               </div>
               <div className="space-y-2">
-                <a href="tel:+2348000000000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                  <Phone className="w-4 h-4 text-muted-foreground" /> +234 800 000 0000
+                <a href="tel:+2349033393000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                  <Phone className="w-4 h-4 text-muted-foreground" /> +234 903 339 3000
                 </a>
-                <a href="mailto:info@landbanking.ng" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                  <Mail className="w-4 h-4 text-muted-foreground" /> info@landbanking.ng
+                <a href="mailto:info@propertyquestion.net" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                  <Mail className="w-4 h-4 text-muted-foreground" /> info@propertyquestion.net
                 </a>
               </div>
             </Card>

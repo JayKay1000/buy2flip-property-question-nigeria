@@ -229,11 +229,11 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="space-y-2">
-              <a href="tel:+2348000000000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                <Phone className="w-4 h-4 text-muted-foreground" /> +234 800 000 0000
+              <a href="tel:+2349033393000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                <Phone className="w-4 h-4 text-muted-foreground" /> +234 903 339 3000
               </a>
-              <a href="mailto:info@landbanking.ng" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                <Mail className="w-4 h-4 text-muted-foreground" /> info@landbanking.ng
+              <a href="mailto:info@propertyquestion.net" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                <Mail className="w-4 h-4 text-muted-foreground" /> info@propertyquestion.net
               </a>
             </div>
           </Card>

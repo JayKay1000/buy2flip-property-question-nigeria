@@ -8,6 +8,14 @@ import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate, daysBetween } from "@/lib/format";
 import { generateCommitmentCertificate } from "@/lib/certificate";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
+import {
   Wallet, TrendingUp, Calendar, Download, Award, CheckCircle2,
   Clock, FileText, Plus, Building2, Save
 } from "lucide-react";
@@ -251,8 +259,15 @@ export default function Portfolio() {
             ) : (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="bank_name">Bank Name</Label>
-                  <Input id="bank_name" value={bankForm.bank_name} onChange={(e) => setBankForm({ ...bankForm, bank_name: e.target.value })} placeholder="e.g. GTBank" className="h-11" />
+                  <Label>Bank Name</Label>
+                  <Select value={bankForm.bank_name} onValueChange={(val) => setBankForm({ ...bankForm, bank_name: val })}>
+                    <SelectTrigger className="h-11"><SelectValue placeholder="Select your bank" /></SelectTrigger>
+                    <SelectContent>
+                      {NIGERIAN_BANKS.map((bank) => (
+                        <SelectItem key={bank} value={bank}>{bank}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="account_number">Account Number</Label>
@@ -263,8 +278,15 @@ export default function Portfolio() {
                   <Input id="account_name" value={bankForm.account_name} onChange={(e) => setBankForm({ ...bankForm, account_name: e.target.value })} placeholder="John Doe" className="h-11" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="preferred_bank">Preferred Receiving Bank</Label>
-                  <Input id="preferred_bank" value={bankForm.preferred_receiving_bank} onChange={(e) => setBankForm({ ...bankForm, preferred_receiving_bank: e.target.value })} placeholder="e.g. GTBank" className="h-11" />
+                  <Label>Preferred Receiving Bank</Label>
+                  <Select value={bankForm.preferred_receiving_bank} onValueChange={(val) => setBankForm({ ...bankForm, preferred_receiving_bank: val })}>
+                    <SelectTrigger className="h-11"><SelectValue placeholder="Select preferred bank" /></SelectTrigger>
+                    <SelectContent>
+                      {NIGERIAN_BANKS.map((bank) => (
+                        <SelectItem key={bank} value={bank}>{bank}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1" onClick={() => setEditingBank(false)}>Cancel</Button>

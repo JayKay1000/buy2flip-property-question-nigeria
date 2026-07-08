@@ -4,7 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getPlan, AMOUNT_PRESETS } from "@/lib/plans";
+import { getPlan } from "@/lib/plans";
+import CommitmentAmountSlider from "@/components/CommitmentAmountSlider";
 import { formatNaira, addMonths, formatDate } from "@/lib/format";
 import {
   CheckCircle2, ArrowLeft, ArrowRight, Calculator, HelpCircle, FileText,
@@ -16,7 +17,6 @@ export default function PlanDetail() {
   const navigate = useNavigate();
   const plan = getPlan(planName);
   const [amount, setAmount] = useState(plan ? plan.minimum : 1000000);
-  const [customAmount, setCustomAmount] = useState("");
 
   if (!plan) {
     return (
@@ -27,19 +27,11 @@ export default function PlanDetail() {
     );
   }
 
-  const validAmount = customAmount ? Math.round(parseFloat(customAmount) / 1000000) * 1000000 : amount;
+  const validAmount = amount;
   const expectedReturn = validAmount * plan.returnRate;
   const totalValue = validAmount + expectedReturn;
   const maturityDate = addMonths(new Date(), plan.durationMonths);
   const today = new Date().toISOString().split("T")[0];
-
-  const handleCustomChange = (val) => {
-    setCustomAmount(val);
-    const num = parseFloat(val);
-    if (!isNaN(num) && num >= plan.minimum && num % 1000000 === 0) {
-      setAmount(num);
-    }
-  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
@@ -111,37 +103,7 @@ export default function PlanDetail() {
             </h2>
             <div className="mb-4">
               <Label className="mb-3 block">Select Commitment Amount</Label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
-                {AMOUNT_PRESETS.map((preset) => (
-                  <button
-                    key={preset}
-                    onClick={() => { setAmount(preset); setCustomAmount(""); }}
-                    className={`py-2.5 px-3 rounded-lg text-sm font-medium transition-all ${
-                      amount === preset && !customAmount
-                        ? "bg-brand text-white shadow-sm"
-                        : "bg-muted hover:bg-accent text-foreground"
-                    }`}
-                  >
-                    ₦{preset / 1000000}M
-                  </button>
-                ))}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="custom">Or enter custom amount (multiples of ₦1,000,000)</Label>
-                <Input
-                  id="custom"
-                  type="number"
-                  placeholder="1000000"
-                  value={customAmount}
-                  onChange={(e) => handleCustomChange(e.target.value)}
-                  className="h-12"
-                  min={plan.minimum}
-                  step={1000000}
-                />
-                {customAmount && parseFloat(customAmount) % 1000000 !== 0 && (
-                  <p className="text-xs text-destructive">Amount must be a multiple of ₦1,000,000</p>
-                )}
-              </div>
+              <CommitmentAmountSlider value={validAmount} onChange={setAmount} minimum={plan.minimum} />
             </div>
 
             <div className="bg-muted/50 rounded-xl p-5 space-y-3">

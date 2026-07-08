@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getPlan, PLANS, COMPANY_BANK, AMOUNT_PRESETS, PAYMENT_EXPIRY_HOURS } from "@/lib/plans";
+import { getPlan, PLANS, COMPANY_BANK, PAYMENT_EXPIRY_HOURS } from "@/lib/plans";
+import CommitmentAmountSlider from "@/components/CommitmentAmountSlider";
 import { formatNaira, addMonths, formatDate } from "@/lib/format";
 import {
   Copy, Check, Upload, FileCheck, ArrowRight, ArrowLeft, Clock,
@@ -21,7 +22,6 @@ export default function Payment() {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState(initialPlan);
   const [amount, setAmount] = useState(initialPlan.minimum);
-  const [customAmount, setCustomAmount] = useState("");
   const [copied, setCopied] = useState(false);
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -39,17 +39,9 @@ export default function Payment() {
     }
   }, [step]);
 
-  const validAmount = customAmount ? Math.round(parseFloat(customAmount) / 1000000) * 1000000 : amount;
+  const validAmount = amount;
   const expectedReturn = validAmount * selectedPlan.returnRate;
   const totalValue = validAmount + expectedReturn;
-
-  const handleCustomChange = (val) => {
-    setCustomAmount(val);
-    const num = parseFloat(val);
-    if (!isNaN(num) && num >= selectedPlan.minimum && num % 1000000 === 0) {
-      setAmount(num);
-    }
-  };
 
   const copyAccountNumber = () => {
     navigator.clipboard.writeText(COMPANY_BANK.accountNumber);
@@ -192,7 +184,7 @@ export default function Payment() {
               {PLANS.map((p) => (
                 <button
                   key={p.slug}
-                  onClick={() => { setSelectedPlan(p); setAmount(p.minimum); setCustomAmount(""); }}
+                  onClick={() => { setSelectedPlan(p); setAmount(p.minimum); }}
                   className={`p-4 rounded-xl text-center transition-all border-2 ${
                     selectedPlan.slug === p.slug ? "border-brand bg-brand/5" : "border-border hover:border-gold/40"
                   }`}
@@ -206,33 +198,7 @@ export default function Payment() {
 
           <div>
             <Label className="mb-3 block">Select Commitment Amount</Label>
-            <div className="grid grid-cols-3 gap-2 mb-3">
-              {AMOUNT_PRESETS.map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() => { setAmount(preset); setCustomAmount(""); }}
-                  className={`py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    amount === preset && !customAmount ? "bg-brand text-white" : "bg-muted hover:bg-accent text-foreground"
-                  }`}
-                >
-                  ₦{preset / 1000000}M
-                </button>
-              ))}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="custom-amount">Or enter custom amount</Label>
-              <Input
-                id="custom-amount"
-                type="number"
-                placeholder="1000000"
-                value={customAmount}
-                onChange={(e) => handleCustomChange(e.target.value)}
-                className="h-12"
-                min={selectedPlan.minimum}
-                step={1000000}
-              />
-              <p className="text-xs text-muted-foreground">Multiples of ₦1,000,000 only</p>
-            </div>
+            <CommitmentAmountSlider value={validAmount} onChange={setAmount} minimum={selectedPlan.minimum} />
           </div>
 
           <div className="bg-muted/50 rounded-xl p-5 space-y-2">

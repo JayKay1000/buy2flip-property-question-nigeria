@@ -52,10 +52,6 @@ export default function Landing() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-32 w-full">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8 animate-fade-in">
-              <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-              <span className="text-xs font-semibold text-white/90 tracking-[0.2em] uppercase">Land Banking</span>
-            </div>
             <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
               <span className="text-gradient-gold">Land Banking</span>
               <br />
