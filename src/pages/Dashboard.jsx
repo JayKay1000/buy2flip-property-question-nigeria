@@ -116,8 +116,7 @@ export default function Dashboard() {
       {/* Welcome */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
-          <p className="text-sm text-muted-foreground">Welcome back,</p>
-          <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">{firstName} 👋</h1>
+          <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Welcome Back, {firstName} 👋</h1>
         </div>
         <Link to="/plans">
           <Button className="bg-brand hover:bg-brand-dark">

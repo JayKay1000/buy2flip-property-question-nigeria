@@ -244,10 +244,7 @@ export default function Portfolio() {
                     <p className="text-xs text-muted-foreground">Account Name</p>
                     <p className="font-medium text-foreground">{profile.account_name}</p>
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Preferred Receiving Bank</p>
-                    <p className="font-medium text-foreground">{profile.preferred_receiving_bank || "—"}</p>
-                  </div>
+
                 </div>
               ) : (
                 <div className="text-center py-6">
@@ -277,17 +274,7 @@ export default function Portfolio() {
                   <Label htmlFor="account_name">Account Name</Label>
                   <Input id="account_name" value={bankForm.account_name} onChange={(e) => setBankForm({ ...bankForm, account_name: e.target.value })} placeholder="John Doe" className="h-11" />
                 </div>
-                <div className="space-y-2">
-                  <Label>Preferred Receiving Bank</Label>
-                  <Select value={bankForm.preferred_receiving_bank} onValueChange={(val) => setBankForm({ ...bankForm, preferred_receiving_bank: val })}>
-                    <SelectTrigger className="h-11"><SelectValue placeholder="Select preferred bank" /></SelectTrigger>
-                    <SelectContent>
-                      {NIGERIAN_BANKS.map((bank) => (
-                        <SelectItem key={bank} value={bank}>{bank}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1" onClick={() => setEditingBank(false)}>Cancel</Button>
                   <Button className="flex-1 bg-brand hover:bg-brand-dark" onClick={saveBankDetails} disabled={savingBank}>
