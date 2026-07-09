@@ -62,8 +62,22 @@ export default function Portfolio() {
     }
     setSavingBank(true);
     try {
-      await base44.entities.ParticipantProfile.update(profile.id, bankForm);
-      setProfile({ ...profile, ...bankForm });
+      let savedProfile;
+      if (profile) {
+        savedProfile = await base44.entities.ParticipantProfile.update(profile.id, bankForm);
+      } else {
+        const me = await base44.auth.me();
+        const clean = (me.full_name || me.email || "PQLB").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 4).padEnd(4, "X");
+        const refCode = `${clean}${Math.floor(1000 + Math.random() * 9000)}`;
+        savedProfile = await base44.entities.ParticipantProfile.create({
+          ...bankForm,
+          full_name: me.full_name || me.email,
+          phone_number: me.phone_number || "0000000000",
+          referral_code: refCode,
+          status: "active",
+        });
+      }
+      setProfile(savedProfile);
       setEditingBank(false);
     } catch (err) {
       setBankError(err?.message || "Failed to save bank details. Please try again.");

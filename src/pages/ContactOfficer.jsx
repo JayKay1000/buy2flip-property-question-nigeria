@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { Button } from "@/components/ui/button";
 import { Phone, MessageCircle, Mail, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export default function ContactOfficer() {
+  const navigate = useNavigate();
   const phoneNumber = "+234 903 339 3000";
   const phoneDigits = "2349033393000";
   const whatsappDigits = "2349033393000";
@@ -14,11 +16,11 @@ export default function ContactOfficer() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center px-4 py-20">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 pt-32 pb-20">
         <div className="max-w-3xl w-full">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand transition-colors mb-8">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand mb-8">
             <ArrowLeft className="w-4 h-4" /> Back to Home
-          </Link>
+          </Button>
 
           <div className="text-center mb-12">
             <h1 className="font-display font-bold text-3xl sm:text-4xl text-foreground mb-3">
