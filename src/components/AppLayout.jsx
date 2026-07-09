@@ -21,7 +21,7 @@ export default function AppLayout() {
   }, [location.pathname]);
 
   const handleLogout = async () => {
-    await base44.auth.logout("/login");
+    await base44.auth.logout("/");
   };
 
   const SidebarContent = () => (
