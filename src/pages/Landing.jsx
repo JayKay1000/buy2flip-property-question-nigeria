@@ -64,14 +64,14 @@ export default function Landing() {
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/register">
                 <Button size="lg" className="bg-gold hover:bg-gold-dark text-white border-0 h-14 px-8 text-base font-semibold">
-                  Get Started <ArrowRight className="w-5 h-5 ml-2" />
+                  Participate Now <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <a href="#contact">
+              <Link to="/contact-officer">
                 <Button size="lg" variant="outline" className="glass text-white border-white/20 hover:bg-white/10 h-14 px-8 text-base font-semibold">
                   <PhoneCall className="w-5 h-5 mr-2" /> Speak With A Relationship Officer
                 </Button>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function Landing() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
               <Button size="lg" className="bg-gold hover:bg-gold-dark text-white border-0 h-14 px-8 text-base font-semibold">
-                Get Started <ArrowRight className="w-5 h-5 ml-2" />
+                Participate Now <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
             <Link to="/login">

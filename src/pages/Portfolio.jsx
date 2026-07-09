@@ -65,8 +65,8 @@ export default function Portfolio() {
       await base44.entities.ParticipantProfile.update(profile.id, bankForm);
       setProfile({ ...profile, ...bankForm });
       setEditingBank(false);
-    } catch {
-      setBankError("Failed to save bank details. Please try again.");
+    } catch (err) {
+      setBankError(err?.message || "Failed to save bank details. Please try again.");
     } finally {
       setSavingBank(false);
     }
