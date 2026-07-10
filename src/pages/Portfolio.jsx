@@ -30,6 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import PullToRefresh from "@/components/PullToRefresh";
 
 export default function Portfolio() {
   const [profile, setProfile] = useState(null);
@@ -41,6 +42,8 @@ export default function Portfolio() {
   const [bankError, setBankError] = useState("");
   const [deleteError, setDeleteError] = useState("");
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [secondDialogOpen, setSecondDialogOpen] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
 
   useEffect(() => {
     loadData();
@@ -148,6 +151,7 @@ export default function Portfolio() {
   };
 
   return (
+    <PullToRefresh onRefresh={loadData}>
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -377,11 +381,63 @@ export default function Portfolio() {
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                      onClick={handleRequestDeletion}
+                      onClick={() => setSecondDialogOpen(true)}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      Yes, delete my account
+                      Yes, continue
                     </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              {/* Secondary confirmation dialog */}
+              <AlertDialog
+                open={secondDialogOpen}
+                onOpenChange={(open) => {
+                  if (!deletingAccount) {
+                    setSecondDialogOpen(open);
+                    if (!open) setConfirmText("");
+                  }
+                }}
+              >
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Final Confirmation</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This is your last chance to cancel. Type <strong>DELETE</strong> below to
+                      permanently remove your account, active commitments, and referral history.
+                      This action is irreversible and cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="py-2">
+                    <Input
+                      value={confirmText}
+                      onChange={(e) => setConfirmText(e.target.value)}
+                      placeholder="Type DELETE to confirm"
+                      className="h-11"
+                    />
+                    {deleteError && (
+                      <p className="text-xs text-destructive mt-2">{deleteError}</p>
+                    )}
+                  </div>
+                  <AlertDialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSecondDialogOpen(false);
+                        setConfirmText("");
+                      }}
+                      disabled={deletingAccount}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={handleRequestDeletion}
+                      disabled={confirmText !== "DELETE" || deletingAccount}
+                    >
+                      {deletingAccount ? "Submitting..." : "Permanently Delete Account"}
+                    </Button>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -390,5 +446,6 @@ export default function Portfolio() {
         </div>
       </div>
     </div>
+    </PullToRefresh>
   );
 }

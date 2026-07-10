@@ -88,7 +88,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Mobile header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-brand text-white z-40 flex items-center justify-between px-4 shadow-md">
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-brand text-white z-40 flex items-center justify-between px-4 shadow-md pt-safe">
         <div className="flex items-center gap-2">
           <Logo light size="sm" />
           <span className="text-xs text-gold font-medium">Admin</span>

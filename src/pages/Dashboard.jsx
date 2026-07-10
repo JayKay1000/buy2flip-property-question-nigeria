@@ -10,6 +10,7 @@ import {
   ArrowRight, CheckCircle2, Clock, AlertCircle, Building2, Phone, Mail,
   Plus, Award
 } from "lucide-react";
+import PullToRefresh from "@/components/PullToRefresh";
 
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
@@ -112,6 +113,7 @@ export default function Dashboard() {
   ];
 
   return (
+    <PullToRefresh onRefresh={loadData}>
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Welcome */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -265,5 +267,6 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
+    </PullToRefresh>
   );
 }
