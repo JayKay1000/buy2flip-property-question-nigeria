@@ -13,7 +13,8 @@ import { formatNaira, formatDate, daysBetween } from "@/lib/format";
 import { PLANS } from "@/lib/plans";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TrendingUp, Search, CheckCircle2, Clock, Award, Ban, Save } from "lucide-react";
+import { TrendingUp, Search, CheckCircle2, Clock, Award, Ban, Save, Receipt } from "lucide-react";
+import PaymentEvidenceCard from "@/components/admin/PaymentEvidenceCard";
 
 const statuses = [
   { value: "pending_payment", label: "Pending Payment" },
@@ -25,12 +26,14 @@ const statuses = [
 export default function AdminCommitments() {
   const [commitments, setCommitments] = useState([]);
   const [profiles, setProfiles] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [editing, setEditing] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [saving, setSaving] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -38,12 +41,14 @@ export default function AdminCommitments() {
 
   const loadData = async () => {
     try {
-      const [comms, parts] = await Promise.all([
+      const [comms, parts, pays] = await Promise.all([
         base44.entities.Commitment.list("-created_date"),
         base44.entities.ParticipantProfile.list(),
+        base44.entities.Payment.list(),
       ]);
       setCommitments(comms);
       setProfiles(parts);
+      setPayments(pays);
     } catch {
     } finally {
       setLoading(false);
@@ -51,6 +56,41 @@ export default function AdminCommitments() {
   };
 
   const findProfile = (userId) => profiles.find((p) => p.created_by_id === userId);
+
+  const getCommitmentPayments = (commitmentId) =>
+    payments.filter((p) => p.commitment_id === commitmentId);
+
+  const approvePayment = async (payment) => {
+    setProcessing(true);
+    try {
+      await base44.entities.Payment.update(payment.id, {
+        status: "confirmed",
+        confirmed_at: new Date().toISOString(),
+      });
+      if (payment.commitment_id) {
+        await base44.entities.Commitment.update(payment.commitment_id, { status: "active" });
+        setEditing(null);
+      }
+      await loadData();
+    } catch {
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const rejectPayment = async (payment, reason) => {
+    setProcessing(true);
+    try {
+      await base44.entities.Payment.update(payment.id, {
+        status: "rejected",
+        rejection_reason: reason,
+      });
+      await loadData();
+    } catch {
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   const saveStatus = async () => {
     setSaving(true);
@@ -126,6 +166,7 @@ export default function AdminCommitments() {
                   <th className="px-4 py-3 font-medium">Amount</th>
                   <th className="px-4 py-3 font-medium hidden md:table-cell">Maturity</th>
                   <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium hidden md:table-cell">Evidence</th>
                   <th className="px-4 py-3 font-medium text-right">Action</th>
                 </tr>
               </thead>
@@ -154,6 +195,20 @@ export default function AdminCommitments() {
                           c.status === "completed" ? "bg-emerald-100 text-emerald-700" :
                           c.status === "pending_payment" ? "bg-gold/10 text-gold-dark" : "bg-destructive/10 text-destructive"
                         }`}>{c.status.replace(/_/g, " ")}</span>
+                      </td>
+                      <td className="px-4 py-3 hidden md:table-cell">
+                        {(() => {
+                          const commPays = getCommitmentPayments(c.id);
+                          if (commPays.length === 0) return <span className="text-xs text-muted-foreground">—</span>;
+                          const hasPending = commPays.some((p) => p.status === "pending");
+                          return (
+                            <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${
+                              hasPending ? "bg-gold/10 text-gold-dark" : "bg-brand/10 text-brand"
+                            }`}>
+                              <Receipt className="w-3 h-3" /> {commPays.length} {hasPending ? "pending" : "reviewed"}
+                            </span>
+                          );
+                        })()}
                       </td>
                       <td className="px-4 py-3 text-right">
                         <Button variant="ghost" size="sm" onClick={() => { setEditing(c); setNewStatus(c.status); }}>Update</Button>
@@ -185,6 +240,27 @@ export default function AdminCommitments() {
                 </SelectContent>
               </Select>
             </div>
+            {/* Payment Evidence */}
+            {(() => {
+              const commPayments = getCommitmentPayments(editing.id);
+              return commPayments.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                    <Receipt className="w-4 h-4" /> Payment Evidence ({commPayments.length})
+                  </p>
+                  {commPayments.map((pmt) => (
+                    <PaymentEvidenceCard
+                      key={pmt.id}
+                      payment={pmt}
+                      onApprove={approvePayment}
+                      onReject={rejectPayment}
+                      processing={processing}
+                    />
+                  ))}
+                </div>
+              );
+            })()}
+
             <div className="flex gap-2 mt-6">
               <Button variant="outline" className="flex-1" onClick={() => setEditing(null)}>Cancel</Button>
               <Button className="flex-1 bg-brand hover:bg-brand-dark" onClick={saveStatus} disabled={saving || newStatus === editing.status}>

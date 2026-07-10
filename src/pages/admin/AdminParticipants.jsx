@@ -6,15 +6,18 @@ import { Input } from "@/components/ui/input";
 import { formatNaira, formatDate } from "@/lib/format";
 import {
   Users, Search, Phone, Mail, Building2, CreditCard, Ban,
-  CheckCircle2, X
+  CheckCircle2, X, Receipt
 } from "lucide-react";
+import PaymentEvidenceCard from "@/components/admin/PaymentEvidenceCard";
 
 export default function AdminParticipants() {
   const [participants, setParticipants] = useState([]);
   const [commitments, setCommitments] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -22,12 +25,14 @@ export default function AdminParticipants() {
 
   const loadData = async () => {
     try {
-      const [parts, comms] = await Promise.all([
+      const [parts, comms, pays] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
         base44.entities.Commitment.list(),
+        base44.entities.Payment.list(),
       ]);
       setParticipants(parts);
       setCommitments(comms);
+      setPayments(pays);
     } catch {
     } finally {
       setLoading(false);
@@ -58,6 +63,40 @@ export default function AdminParticipants() {
 
   const getParticipantCommitments = (participantId) =>
     commitments.filter((c) => c.created_by_id === participantId);
+
+  const getCommitmentPayments = (commitmentId) =>
+    payments.filter((p) => p.commitment_id === commitmentId);
+
+  const approvePayment = async (payment) => {
+    setProcessing(true);
+    try {
+      await base44.entities.Payment.update(payment.id, {
+        status: "confirmed",
+        confirmed_at: new Date().toISOString(),
+      });
+      if (payment.commitment_id) {
+        await base44.entities.Commitment.update(payment.commitment_id, { status: "active" });
+      }
+      await loadData();
+    } catch {
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const rejectPayment = async (payment, reason) => {
+    setProcessing(true);
+    try {
+      await base44.entities.Payment.update(payment.id, {
+        status: "rejected",
+        rejection_reason: reason,
+      });
+      await loadData();
+    } catch {
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
@@ -173,22 +212,48 @@ export default function AdminParticipants() {
                 <p className="text-xs text-muted-foreground">Joined: {formatDate(selected.created_date)}</p>
               </div>
 
-              {/* Commitments */}
+              {/* Commitments & Payment Evidence */}
               <div>
-                <h4 className="font-heading font-semibold text-sm text-foreground mb-3">Commitments</h4>
+                <h4 className="font-heading font-semibold text-sm text-foreground mb-3">Commitments & Payment Evidence</h4>
                 {getParticipantCommitments(selected.created_by_id).length === 0 ? (
                   <p className="text-sm text-muted-foreground">No commitments.</p>
                 ) : (
-                  <div className="space-y-2">
-                    {getParticipantCommitments(selected.created_by_id).map((c) => (
-                      <div key={c.id} className="border border-border rounded-lg p-3">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-medium text-foreground">{c.plan_name} Plan</span>
-                          <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-muted text-muted-foreground">{c.status.replace(/_/g, " ")}</span>
+                  <div className="space-y-4">
+                    {getParticipantCommitments(selected.created_by_id).map((c) => {
+                      const commPayments = getCommitmentPayments(c.id);
+                      return (
+                        <div key={c.id} className="border border-border rounded-lg p-3 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-foreground">{c.plan_name} Plan</span>
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                              c.status === "active" ? "bg-brand/10 text-brand" :
+                              c.status === "completed" ? "bg-emerald-100 text-emerald-700" :
+                              c.status === "pending_payment" ? "bg-gold/10 text-gold-dark" :
+                              "bg-destructive/10 text-destructive"
+                            }`}>{c.status.replace(/_/g, " ")}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground font-numeric">{formatNaira(c.amount)} → {formatNaira(c.total_expected_value)}</p>
+                          {commPayments.length > 0 ? (
+                            <div className="space-y-2">
+                              <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                                <Receipt className="w-3.5 h-3.5" /> Payment Evidence ({commPayments.length})
+                              </p>
+                              {commPayments.map((pmt) => (
+                                <PaymentEvidenceCard
+                                  key={pmt.id}
+                                  payment={pmt}
+                                  onApprove={approvePayment}
+                                  onReject={rejectPayment}
+                                  processing={processing}
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-xs text-muted-foreground italic">No payment evidence uploaded.</p>
+                          )}
                         </div>
-                        <p className="text-xs text-muted-foreground font-numeric">{formatNaira(c.amount)} → {formatNaira(c.total_expected_value)}</p>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
