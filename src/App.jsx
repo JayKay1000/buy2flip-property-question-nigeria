@@ -34,6 +34,7 @@ import AdminWithdrawals from './pages/admin/AdminWithdrawals';
 import AdminAnnouncements from './pages/admin/AdminAnnouncements';
 import AdminLeaderboard from './pages/admin/AdminLeaderboard';
 import AdminUsers from './pages/admin/AdminUsers';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
 import Terms from './pages/Terms';
 import Transactions from './pages/Transactions';
 import WithdrawalStatus from './pages/WithdrawalStatus';
@@ -85,6 +86,7 @@ const AuthenticatedApp = () => {
         <Route path="announcements" element={<AdminAnnouncements />} />
         <Route path="leaderboard" element={<AdminLeaderboard />} />
         <Route path="users" element={<AdminUsers />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
