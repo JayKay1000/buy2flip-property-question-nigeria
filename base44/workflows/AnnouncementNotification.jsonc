@@ -1,0 +1,41 @@
+{
+  "description": "Emails all participants when a new announcement is posted.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "Announcement"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "announcement_notification",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "notify_all": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "notifyAnnouncementToAll",
+            "args": {
+              "title": "${ .trigger.data.title }",
+              "message": "${ .trigger.data.body }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Notify all participants",
+            "description": "Email new announcement"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Announcement Notification"
+}
