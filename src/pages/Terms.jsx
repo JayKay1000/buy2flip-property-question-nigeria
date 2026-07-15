@@ -30,35 +30,39 @@ const sections = [
     body: "Returns and redemption values are disbursed to the participant's preferred receiving bank account at the maturity of the commitment. Participants may request an early withdrawal before maturity, subject to the Company's approval, applicable early-exit adjustments, and compliance checks. Early withdrawal requests are processed on a case-by-case basis and may affect the expected return. Withdrawal requests are processed subject to verification and applicable compliance checks.",
   },
   {
-    title: "7. Referral Program",
+    title: "7. Welcome Package Fee & Early Withdrawal Penalty",
+    body: "A 1% welcome package fee is granted to every participant upon a successful, verified commitment. If a participant elects to withdraw their commitment early — before the agreed maturity date — the 1% welcome package fee will be deducted from the withdrawn amount, and no expected return (ROI) will be paid on that commitment. Early withdrawals remain subject to the Company's approval and applicable compliance checks as set out in these Terms.",
+  },
+  {
+    title: "8. Referral Program",
     body: "Participants may earn referral rewards of 2% on direct (first-line) referrals and 0.5% on indirect (second-line) referrals when referred participants make a verified commitment. Referral rewards are credited once the referred commitment is confirmed and may be subject to additional terms communicated by the Company.",
   },
   {
-    title: "8. Regulatory Compliance",
+    title: "9. Regulatory Compliance",
     body: "The Company operates in accordance with applicable Nigerian laws and regulations governing real estate and financial services. The Platform facilitates structured commitments backed by real estate assets. Participants are encouraged to seek independent legal and financial advice regarding the regulatory implications of participating. These Terms shall be interpreted in compliance with the laws of the Federal Republic of Nigeria, and any dispute shall be resolved in accordance with Nigerian law.",
   },
   {
-    title: "9. Risk Disclosure",
+    title: "10. Risk Disclosure",
     body: "Land banking and real estate-backed commitments involve inherent risks, including but not limited to market fluctuations, development delays, and liquidity constraints. Expected returns are projections and not guarantees. Participants should only commit funds they can afford to hold for the full plan duration and should carefully consider their financial position before participating.",
   },
   {
-    title: "10. Account Status & Suspension",
+    title: "11. Account Status & Suspension",
     body: "The Company reserves the right to suspend or terminate accounts that violate these Terms, engage in fraudulent activity, or provide false information. Suspended participants may not make new commitments or request withdrawals until the account is reinstated. Participants may request account deletion through the Platform, subject to review of active commitments.",
   },
   {
-    title: "11. Privacy & Data Protection",
+    title: "12. Privacy & Data Protection",
     body: "The Company handles participant data in accordance with applicable data protection laws. Personal information is used to administer commitments, process disbursements, and provide support. Payment evidence and banking details are stored securely and accessed only for verification and disbursement purposes.",
   },
   {
-    title: "12. Limitation of Liability",
+    title: "13. Limitation of Liability",
     body: "To the maximum extent permitted by law, the Company shall not be liable for indirect, incidental, or consequential damages arising from participation in the Platform. The Company's total liability shall not exceed the commitment amount associated with the claim in question.",
   },
   {
-    title: "13. Governing Law & Dispute Resolution",
+    title: "14. Governing Law & Dispute Resolution",
     body: "These Terms are governed by the laws of the Federal Republic of Nigeria. Any dispute arising from or relating to the Platform shall first be addressed through good-faith negotiation. Unresolved disputes shall be submitted to the jurisdiction of the competent courts of Lagos State, Nigeria.",
   },
   {
-    title: "14. Amendments",
+    title: "15. Amendments",
     body: "The Company may update these Terms from time to time. Material changes will be communicated to participants. Continued use of the Platform following changes constitutes acceptance of the revised Terms.",
   },
 ];
