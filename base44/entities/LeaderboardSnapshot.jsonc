@@ -1,0 +1,39 @@
+{
+  "name": "LeaderboardSnapshot",
+  "type": "object",
+  "properties": {
+    "period_label": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "referral_code": {
+            "type": "string"
+          },
+          "total_referrals": {
+            "type": "number"
+          },
+          "total_earnings": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "published_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "period_label",
+    "entries"
+  ]
+}
