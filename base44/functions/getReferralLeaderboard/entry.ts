@@ -11,12 +11,12 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.ParticipantProfile.list(),
     ]);
 
-    const codeToName = {};
+    const codeToName = Object.create(null);
     profiles.forEach((p) => {
       if (p.referral_code) codeToName[p.referral_code] = p.full_name;
     });
 
-    const agg = {};
+    const agg = Object.create(null);
     referrals.forEach((r) => {
       const code = r.referrer_code;
       if (!code) return;
