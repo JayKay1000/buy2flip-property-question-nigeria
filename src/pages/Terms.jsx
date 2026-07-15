@@ -27,7 +27,7 @@ const sections = [
   },
   {
     title: "6. Withdrawals & Redemptions",
-    body: "Returns and redemption values are disbursed to the participant's preferred receiving bank account at the maturity of the commitment. Early withdrawal is not permitted; commitments are held for the full plan duration to ensure optimal deployment of capital. Withdrawal requests are processed subject to verification and applicable compliance checks.",
+    body: "Returns and redemption values are disbursed to the participant's preferred receiving bank account at the maturity of the commitment. Participants may request an early withdrawal before maturity, subject to the Company's approval, applicable early-exit adjustments, and compliance checks. Early withdrawal requests are processed on a case-by-case basis and may affect the expected return. Withdrawal requests are processed subject to verification and applicable compliance checks.",
   },
   {
     title: "7. Referral Program",
