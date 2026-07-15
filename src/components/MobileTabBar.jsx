@@ -1,11 +1,12 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt } from "lucide-react";
 
 const tabs = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Plans", path: "/plans", icon: TrendingUp },
   { label: "Portfolio", path: "/portfolio", icon: Wallet },
+  { label: "Transactions", path: "/transactions", icon: Receipt },
   { label: "Support", path: "/support", icon: LifeBuoy },
 ];
 

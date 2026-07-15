@@ -14,6 +14,7 @@ export default function Referrals() {
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
+  const [featured, setFeatured] = useState(null);
   const [myCode, setMyCode] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedField, setCopiedField] = useState("");
@@ -37,6 +38,10 @@ export default function Referrals() {
         setLeaderboard(lb.data?.leaderboard || []);
         setMyCode(lb.data?.myCode || null);
       } catch { /* leaderboard unavailable */ }
+      try {
+        const f = await base44.functions.invoke("getPublishedLeaderboard", {});
+        setFeatured(f.data?.latest || null);
+      } catch { /* featured unavailable */ }
     } catch {
     } finally {
       setLoading(false);
@@ -173,7 +178,41 @@ export default function Referrals() {
         ))}
       </div>
 
-      {/* Leaderboard */}
+      {/* Featured monthly leaders (admin-published) */}
+      {featured && (featured.entries || []).length > 0 && (
+        <Card className="p-6 mb-8 bg-gradient-to-br from-gold/5 to-brand/5 border-gold/30">
+          <div className="flex items-center gap-2 mb-4">
+            <Trophy className="w-5 h-5 text-gold" />
+            <h2 className="font-heading font-semibold text-foreground">Featured Monthly Leaders — {featured.period_label}</h2>
+            <span className="ml-auto text-xs text-muted-foreground">Official Top 10</span>
+          </div>
+          <div className="space-y-2">
+            {(featured.entries || []).map((entry) => {
+              const isMe = entry.referral_code === myCode;
+              const medal = entry.rank === 1 ? "bg-gold text-white" : entry.rank === 2 ? "bg-muted-foreground text-white" : entry.rank === 3 ? "bg-amber-700 text-white" : "bg-muted text-muted-foreground";
+              return (
+                <div
+                  key={entry.referral_code}
+                  className={`flex items-center gap-3 p-3 rounded-lg bg-white/60 ${isMe ? "border border-brand/30" : "border border-border"}`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-numeric font-bold text-sm flex-shrink-0 ${medal}`}>
+                    {entry.rank}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {isMe ? "You" : entry.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{entry.total_referrals} referrals</p>
+                  </div>
+                  <p className="font-numeric font-semibold text-sm text-gold-dark flex-shrink-0">{formatNaira(entry.total_earnings)}</p>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* Live Leaderboard */}
       <Card className="p-6 mb-8">
         <div className="flex items-center gap-2 mb-4">
           <Trophy className="w-5 h-5 text-gold" />
