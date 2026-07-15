@@ -174,13 +174,22 @@ export default function Referrals() {
       </div>
 
       {/* Leaderboard */}
-      {leaderboard.length > 0 && (
-        <Card className="p-6 mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Trophy className="w-5 h-5 text-gold" />
-            <h2 className="font-heading font-semibold text-foreground">Referral Leaderboard</h2>
-            <span className="ml-auto text-xs text-muted-foreground">Top {leaderboard.length} earners</span>
+      <Card className="p-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Trophy className="w-5 h-5 text-gold" />
+          <h2 className="font-heading font-semibold text-foreground">Referral Leaderboard</h2>
+          <span className="ml-auto text-xs text-muted-foreground">
+            {leaderboard.length > 0 ? `Top ${Math.min(leaderboard.length, 10)} earners` : "No entries yet"}
+          </span>
+        </div>
+        {leaderboard.length === 0 ? (
+          <div className="py-8 text-center">
+            <Trophy className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">
+              The leaderboard will populate as participants build their referral networks. Share your code to climb the ranks!
+            </p>
           </div>
+        ) : (
           <div className="space-y-2">
             {leaderboard.slice(0, 10).map((entry, idx) => {
               const isMe = entry.referral_code === myCode;
@@ -209,8 +218,8 @@ export default function Referrals() {
               );
             })}
           </div>
-        </Card>
-      )}
+        )}
+      </Card>
 
       {/* Referral tree */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
