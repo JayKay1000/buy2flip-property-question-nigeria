@@ -11,13 +11,6 @@ import {
   CheckCircle2, Award, PhoneCall, Star
 } from "lucide-react";
 
-const planImages = {
-  Bronze: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
-  Silver: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
-  Gold: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
-  Platinum: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
-};
-
 const features = [
   { icon: ShieldCheck, title: "Bank-Grade Security", desc: "Email OTP, password hashing, session management, and audit logs protect every transaction." },
   { icon: TrendingUp, title: "Strategic Returns", desc: "Up to 50% expected returns on carefully selected real estate developments." },
@@ -129,7 +122,7 @@ export default function Landing() {
             {PLANS.map((plan) => (
               <Card key={plan.slug} className={`overflow-hidden transition-all duration-300 hover:shadow-xl ${plan.name === "Gold" ? "ring-2 ring-gold" : ""}`}>
                 <div className="relative h-40 overflow-hidden">
-                  <img src={planImages[plan.name]} alt={plan.name} className="w-full h-full object-cover" />
+                  <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-5">
                     <h3 className="font-display font-bold text-2xl text-white">{plan.name} Plan</h3>

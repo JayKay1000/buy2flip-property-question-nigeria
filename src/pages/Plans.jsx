@@ -6,12 +6,6 @@ import { PLANS } from "@/lib/plans";
 import { formatNaira } from "@/lib/format";
 import { CheckCircle2, Star, ArrowRight, ShieldCheck } from "lucide-react";
 
-const planImages = {
-  Silver: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
-  Gold: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
-  Platinum: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
-};
-
 export default function Plans() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
@@ -41,7 +35,7 @@ export default function Plans() {
               </div>
             )}
             <div className="relative h-44 overflow-hidden">
-              <img src={planImages[plan.name]} alt={plan.name} className="w-full h-full object-cover" />
+              <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent" />
               <div className="absolute bottom-0 left-0 p-5">
                 <div
