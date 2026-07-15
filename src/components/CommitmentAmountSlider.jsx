@@ -2,7 +2,7 @@ import React from "react";
 import { Slider } from "@/components/ui/slider";
 import { formatNaira } from "@/lib/format";
 
-export default function CommitmentAmountSlider({ value, onChange, minimum = 1000000, max = 10000000000 }) {
+export default function CommitmentAmountSlider({ value, onChange, minimum = 1000000, max = 1000000000 }) {
   const sliderValue = Math.round(value / 1000000);
   const minSlider = Math.round(minimum / 1000000);
   const maxSlider = Math.round(max / 1000000);
