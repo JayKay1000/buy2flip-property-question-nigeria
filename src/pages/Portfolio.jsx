@@ -7,13 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate, daysBetween } from "@/lib/format";
 import { generateCommitmentCertificate } from "@/lib/certificate";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
 import {
   Wallet, TrendingUp, Calendar, Download, Award, CheckCircle2,
@@ -345,14 +339,12 @@ export default function Portfolio() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Bank Name</Label>
-                  <Select value={bankForm.bank_name} onValueChange={(val) => setBankForm({ ...bankForm, bank_name: val })}>
-                    <SelectTrigger className="h-11"><SelectValue placeholder="Select your bank" /></SelectTrigger>
-                    <SelectContent>
-                      {NIGERIAN_BANKS.map((bank) => (
-                        <SelectItem key={bank} value={bank}>{bank}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <AdaptiveSelect
+                    value={bankForm.bank_name}
+                    onValueChange={(val) => setBankForm({ ...bankForm, bank_name: val })}
+                    placeholder="Select your bank"
+                    options={NIGERIAN_BANKS}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="account_number">Account Number</Label>

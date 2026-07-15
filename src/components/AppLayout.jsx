@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 import MobileTabBar from "@/components/MobileTabBar";
+import MobileHeader from "@/components/MobileHeader";
 import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot, Banknote, ScrollText } from "lucide-react";
 
 const navItems = [
@@ -17,8 +18,23 @@ const navItems = [
   { label: "Terms of Service", path: "/terms", icon: ScrollText },
 ];
 
+const TAB_ROOTS = ["/dashboard", "/plans", "/portfolio", "/transactions", "/support"];
+
+const getTabForPath = (p) =>
+  TAB_ROOTS.find((r) => p === r || p.startsWith(r + "/"));
+
 export default function AppLayout() {
   const location = useLocation();
+  const [tabLocations, setTabLocations] = useState({});
+
+  useEffect(() => {
+    const tab = getTabForPath(location.pathname);
+    if (tab) {
+      setTabLocations((prev) =>
+        prev[tab] === location.pathname ? prev : { ...prev, [tab]: location.pathname }
+      );
+    }
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await base44.auth.logout("/");
@@ -68,15 +84,10 @@ export default function AppLayout() {
       </aside>
 
       {/* Mobile header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-brand text-white z-40 flex items-center justify-between px-4 shadow-md pt-safe">
-        <Link to="/dashboard"><Logo light size="sm" /></Link>
-        <button onClick={handleLogout} className="p-2 -mr-2">
-          <LogOut className="w-5 h-5" />
-        </button>
-      </header>
+      <MobileHeader />
 
       {/* Mobile bottom tab bar */}
-      <MobileTabBar />
+      <MobileTabBar tabLocations={tabLocations} />
 
       {/* Main content */}
       <main className="lg:ml-72 pt-14 lg:pt-0 min-h-screen pb-20 lg:pb-0">
