@@ -1,8 +1,7 @@
 import { jsPDF } from "jspdf";
 import { formatNaira, formatDate } from "./format";
-import { addLogo } from "./docLogo";
 
-export const generateCommitmentCertificate = async (commitment, participantName) => {
+export const generateCommitmentCertificate = (commitment, participantName) => {
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
@@ -19,21 +18,20 @@ export const generateCommitmentCertificate = async (commitment, participantName)
   doc.setDrawColor(201, 162, 39);
   doc.rect(12, 12, pageW - 24, pageH - 24);
 
-  // Logo + Header
-  await addLogo(doc, { align: "center", y: 13, w: 30, h: 11 });
+  // Header
   doc.setTextColor(11, 61, 46);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
-  doc.text("PROPERTY QUESTION NIGERIA LIMITED", pageW / 2, 28, { align: "center" });
+  doc.text("PROPERTY QUESTION NIGERIA LIMITED", pageW / 2, 25, { align: "center" });
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(120, 120, 120);
-  doc.text("Land Banking Platform", pageW / 2, 34, { align: "center" });
+  doc.text("Land Banking Platform", pageW / 2, 31, { align: "center" });
 
   // Gold divider
   doc.setDrawColor(201, 162, 39);
   doc.setLineWidth(1);
-  doc.line(pageW / 2 - 40, 38, pageW / 2 + 40, 38);
+  doc.line(pageW / 2 - 40, 35, pageW / 2 + 40, 35);
 
   // Title
   doc.setTextColor(11, 61, 46);

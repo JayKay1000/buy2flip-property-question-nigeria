@@ -1,12 +1,11 @@
 import { jsPDF } from "jspdf";
 import { formatNaira, formatDate } from "./format";
-import { addLogo } from "./docLogo";
 
 const BRAND = [11, 61, 46];
 const GOLD = [201, 162, 39];
 const GREY = [120, 120, 120];
 
-async function header(doc, title) {
+function header(doc, title) {
   const pageW = doc.internal.pageSize.getWidth();
   doc.setFillColor(...BRAND);
   doc.rect(0, 0, pageW, 28, "F");
@@ -18,7 +17,6 @@ async function header(doc, title) {
   doc.setFontSize(8);
   doc.setTextColor(201, 162, 39);
   doc.text("Land Banking Platform", 14, 19);
-  await addLogo(doc, { x: pageW - 42, y: 33, w: 28, h: 10 });
   doc.setTextColor(...BRAND);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
@@ -41,9 +39,9 @@ function footer(doc) {
   doc.text(`Generated on ${formatDate(new Date().toISOString())}  ·  Ref: PQLB-${Date.now().toString(36).toUpperCase()}`, pageW / 2, pageH - 7, { align: "center" });
 }
 
-async function newDoc(title) {
+function newDoc(title) {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  await header(doc, title);
+  header(doc, title);
   return doc;
 }
 
@@ -51,8 +49,8 @@ function save(doc, name) {
   doc.save(name);
 }
 
-export const generateAcknowledgementLetter = async (profile, commitments) => {
-  const doc = await newDoc("Acknowledgement Letter");
+export const generateAcknowledgementLetter = (profile, commitments) => {
+  const doc = newDoc("Acknowledgement Letter");
   const name = profile?.full_name || "Participant";
   const active = commitments.filter((c) => c.status === "active" || c.status === "pending_payment");
   let y = 60;
@@ -81,8 +79,8 @@ export const generateAcknowledgementLetter = async (profile, commitments) => {
   save(doc, `Acknowledgement_Letter.pdf`);
 };
 
-export const generatePaymentConfirmation = async (profile, payments, commitments) => {
-  const doc = await newDoc("Payment Confirmation");
+export const generatePaymentConfirmation = (profile, payments, commitments) => {
+  const doc = newDoc("Payment Confirmation");
   let y = 60;
   doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(40, 40, 40);
   const name = profile?.full_name || "Participant";
@@ -115,8 +113,8 @@ export const generatePaymentConfirmation = async (profile, payments, commitments
   save(doc, `Payment_Confirmation.pdf`);
 };
 
-export const generateAccountStatement = async (profile, commitments, payments) => {
-  const doc = await newDoc("Account Statement");
+export const generateAccountStatement = (profile, commitments, payments) => {
+  const doc = newDoc("Account Statement");
   let y = 60;
   doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(40, 40, 40);
   const name = profile?.full_name || "Participant";
@@ -149,19 +147,18 @@ export const generateAccountStatement = async (profile, commitments, payments) =
   save(doc, `Account_Statement.pdf`);
 };
 
-export const generateCompletionCertificate = async (profile, commitment) => {
+export const generateCompletionCertificate = (profile, commitment) => {
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
   doc.setFillColor(255, 255, 255); doc.rect(0, 0, pageW, pageH, "F");
   doc.setDrawColor(...BRAND); doc.setLineWidth(2); doc.rect(8, 8, pageW - 16, pageH - 16);
   doc.setLineWidth(0.5); doc.setDrawColor(...GOLD); doc.rect(12, 12, pageW - 24, pageH - 24);
-  await addLogo(doc, { align: "center", y: 13, w: 30, h: 11 });
   doc.setTextColor(...BRAND); doc.setFont("helvetica", "bold"); doc.setFontSize(14);
-  doc.text("PROPERTY QUESTION NIGERIA LIMITED", pageW / 2, 28, { align: "center" });
+  doc.text("PROPERTY QUESTION NIGERIA LIMITED", pageW / 2, 25, { align: "center" });
   doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(...GREY);
-  doc.text("Land Banking Platform", pageW / 2, 34, { align: "center" });
-  doc.setDrawColor(...GOLD); doc.setLineWidth(1); doc.line(pageW / 2 - 40, 38, pageW / 2 + 40, 38);
+  doc.text("Land Banking Platform", pageW / 2, 31, { align: "center" });
+  doc.setDrawColor(...GOLD); doc.setLineWidth(1); doc.line(pageW / 2 - 40, 35, pageW / 2 + 40, 35);
   doc.setTextColor(...BRAND); doc.setFont("helvetica", "bold"); doc.setFontSize(26);
   doc.text("Completion Certificate", pageW / 2, 50, { align: "center" });
   doc.setFontSize(11); doc.setFont("helvetica", "normal"); doc.setTextColor(...GREY);
@@ -182,8 +179,8 @@ export const generateCompletionCertificate = async (profile, commitment) => {
   save(doc, `Completion_Certificate_${commitment.plan_name}.pdf`);
 };
 
-export const generateReferralReport = async (profile, referrals) => {
-  const doc = await newDoc("Referral Report");
+export const generateReferralReport = (profile, referrals) => {
+  const doc = newDoc("Referral Report");
   let y = 60;
   doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(40, 40, 40);
   doc.text(`Participant: ${profile?.full_name || "Participant"}`, 14, y); y += 6;

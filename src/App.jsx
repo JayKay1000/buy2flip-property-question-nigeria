@@ -31,7 +31,6 @@ import AdminPayments from './pages/admin/AdminPayments';
 import AdminCommitments from './pages/admin/AdminCommitments';
 import AdminWithdrawals from './pages/admin/AdminWithdrawals';
 import AdminAnnouncements from './pages/admin/AdminAnnouncements';
-import AdminLeaderboard from './pages/admin/AdminLeaderboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
@@ -74,7 +73,6 @@ const AuthenticatedApp = () => {
         <Route path="commitments" element={<AdminCommitments />} />
         <Route path="withdrawals" element={<AdminWithdrawals />} />
         <Route path="announcements" element={<AdminAnnouncements />} />
-        <Route path="leaderboard" element={<AdminLeaderboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
