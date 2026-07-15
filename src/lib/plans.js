@@ -163,9 +163,9 @@ export const PLANS = [
 export const getPlan = (slug) => PLANS.find((p) => p.slug === slug?.toLowerCase());
 
 export const COMPANY_BANK = {
-  bankName: "Guaranty Trust Bank",
-  accountName: "Property Question Nigeria LTD",
-  accountNumber: "0123783838"
+  bankName: "Zenith Bank",
+  accountName: "Property Question Nigeria",
+  accountNumber: "1213875230"
 };
 
 export const AMOUNT_PRESETS = [1000000, 2000000, 3000000, 5000000, 10000000, 20000000];
