@@ -36,6 +36,7 @@ import AdminLeaderboard from './pages/admin/AdminLeaderboard';
 import AdminUsers from './pages/admin/AdminUsers';
 import Terms from './pages/Terms';
 import Transactions from './pages/Transactions';
+import WithdrawalStatus from './pages/WithdrawalStatus';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/referrals" element={<Referrals />} />
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/withdrawal-status" element={<WithdrawalStatus />} />
           <Route path="/support" element={<Support />} />
           <Route path="/support-assistant" element={<SupportAssistant />} />
         </Route>
