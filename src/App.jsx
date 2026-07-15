@@ -23,6 +23,7 @@ import Payment from './pages/Payment';
 import Portfolio from './pages/Portfolio';
 import Referrals from './pages/Referrals';
 import Support from './pages/Support';
+import SupportAssistant from './pages/SupportAssistant';
 import AdminRoute from '@/components/AdminRoute';
 import AdminLayout from '@/components/AdminLayout';
 import AdminOverview from './pages/admin/AdminOverview';
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
           <Route path="/referrals" element={<Referrals />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/support-assistant" element={<SupportAssistant />} />
         </Route>
       </Route>
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>

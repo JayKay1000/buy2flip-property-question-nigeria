@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ import {
 import { formatDateTime } from "@/lib/format";
 import {
   LifeBuoy, MessageSquare, Phone, Mail, Building2, HelpCircle,
-  Send, CheckCircle2, Clock, ChevronDown
+  Send, CheckCircle2, Clock, ChevronDown, Bot
 } from "lucide-react";
 
 const faqs = [
@@ -96,9 +97,16 @@ export default function Support() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Support Centre</h1>
-        <p className="text-muted-foreground mt-1">We're here to help with any questions or concerns.</p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Support Centre</h1>
+          <p className="text-muted-foreground mt-1">We're here to help with any questions or concerns.</p>
+        </div>
+        <Link to="/support-assistant">
+          <Button className="bg-brand hover:bg-brand-dark">
+            <Bot className="w-4 h-4 mr-2" /> Check Ticket Status
+          </Button>
+        </Link>
       </div>
 
       {/* Quick support options */}

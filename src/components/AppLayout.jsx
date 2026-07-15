@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 import MobileTabBar from "@/components/MobileTabBar";
-import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -12,6 +12,7 @@ const navItems = [
   { label: "Transactions", path: "/transactions", icon: Receipt },
   { label: "Referrals", path: "/referrals", icon: Users },
   { label: "Support", path: "/support", icon: LifeBuoy },
+  { label: "Support Assistant", path: "/support-assistant", icon: Bot },
 ];
 
 export default function AppLayout() {
