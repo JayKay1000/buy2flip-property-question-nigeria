@@ -32,11 +32,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import PullToRefresh from "@/components/PullToRefresh";
+import PortfolioDocuments from "@/components/PortfolioDocuments";
 
 export default function Portfolio() {
   const [profile, setProfile] = useState(null);
   const [commitments, setCommitments] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingBank, setEditingBank] = useState(false);
   const [withdrawCommitment, setWithdrawCommitment] = useState(null);
@@ -69,6 +72,10 @@ export default function Portfolio() {
       setCommitments(comms);
       const wd = await base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date");
       setWithdrawals(wd);
+      const pays = await base44.entities.Payment.filter({ created_by_id: me.id }, "-created_date");
+      setPayments(pays);
+      const refs = await base44.entities.Referral.filter({ referrer_code: p?.referral_code || "___" });
+      setReferrals(refs);
     } catch {
     } finally {
       setLoading(false);
@@ -289,31 +296,12 @@ export default function Portfolio() {
           </Card>
 
           {/* Documents */}
-          <Card className="p-6">
-            <h2 className="font-heading font-semibold text-foreground mb-4">Documents</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { label: "Acknowledgement Letter", icon: FileText },
-                { label: "Commitment Certificate", icon: Award },
-                { label: "Payment Confirmation", icon: CheckCircle2 },
-                { label: "Account Statement", icon: Wallet },
-                { label: "Completion Certificate", icon: Award },
-                { label: "Referral Report", icon: TrendingUp },
-              ].map((doc) => (
-                <button
-                  key={doc.label}
-                  disabled={commitments.length === 0}
-                  className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-gold/40 hover:bg-muted/30 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-brand/10 flex items-center justify-center flex-shrink-0">
-                    <doc.icon className="w-4 h-4 text-brand" />
-                  </div>
-                  <span className="text-sm font-medium text-foreground flex-1">{doc.label}</span>
-                  <Download className="w-4 h-4 text-muted-foreground" />
-                </button>
-              ))}
-            </div>
-          </Card>
+          <PortfolioDocuments
+            profile={profile}
+            commitments={commitments}
+            payments={payments}
+            referrals={referrals}
+          />
         </div>
 
         {/* Right column - bank details */}

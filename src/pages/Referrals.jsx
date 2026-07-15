@@ -7,12 +7,14 @@ import { formatNaira, formatDate } from "@/lib/format";
 import { REFERRAL_REWARDS } from "@/lib/plans";
 import {
   Users, Copy, Check, Share2, Gift, TrendingUp, Clock,
-  CheckCircle2, Link2, ChevronRight
+  CheckCircle2, Link2, ChevronRight, Trophy
 } from "lucide-react";
 
 export default function Referrals() {
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [myCode, setMyCode] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedField, setCopiedField] = useState("");
 
@@ -30,6 +32,11 @@ export default function Referrals() {
         const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code });
         setReferrals(refs);
       }
+      try {
+        const lb = await base44.functions.invoke("getReferralLeaderboard", {});
+        setLeaderboard(lb.data?.leaderboard || []);
+        setMyCode(lb.data?.myCode || null);
+      } catch { /* leaderboard unavailable */ }
     } catch {
     } finally {
       setLoading(false);
@@ -165,6 +172,45 @@ export default function Referrals() {
           </Card>
         ))}
       </div>
+
+      {/* Leaderboard */}
+      {leaderboard.length > 0 && (
+        <Card className="p-6 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Trophy className="w-5 h-5 text-gold" />
+            <h2 className="font-heading font-semibold text-foreground">Referral Leaderboard</h2>
+            <span className="ml-auto text-xs text-muted-foreground">Top {leaderboard.length} earners</span>
+          </div>
+          <div className="space-y-2">
+            {leaderboard.slice(0, 10).map((entry, idx) => {
+              const isMe = entry.referral_code === myCode;
+              const rank = idx + 1;
+              const medal = rank === 1 ? "bg-gold text-white" : rank === 2 ? "bg-muted-foreground text-white" : rank === 3 ? "bg-amber-700 text-white" : "bg-muted text-muted-foreground";
+              return (
+                <div
+                  key={entry.referral_code}
+                  className={`flex items-center gap-3 p-3 rounded-lg ${isMe ? "bg-brand/5 border border-brand/30" : "border border-border"}`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-numeric font-bold text-sm flex-shrink-0 ${medal}`}>
+                    {rank}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {isMe ? "You" : entry.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {entry.total_referrals} referral{entry.total_referrals !== 1 ? "s" : ""} · {entry.paid_referrals} paid
+                    </p>
+                  </div>
+                  <p className="font-numeric font-semibold text-sm text-gold-dark flex-shrink-0">
+                    {formatNaira(entry.total_earnings)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
 
       {/* Referral tree */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
