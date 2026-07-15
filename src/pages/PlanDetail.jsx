@@ -42,7 +42,7 @@ export default function PlanDetail() {
 
       {/* Plan header */}
       <div className="relative rounded-3xl overflow-hidden mb-8 h-56">
-        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80" alt={plan.name} className="w-full h-full object-cover" />
+        <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/90 to-brand/60" />
         <div className="absolute inset-0 flex items-center p-8 sm:p-12">
           <div>

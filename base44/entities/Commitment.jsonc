@@ -5,6 +5,7 @@
     "plan_name": {
       "type": "string",
       "enum": [
+        "Bronze",
         "Silver",
         "Gold",
         "Platinum"

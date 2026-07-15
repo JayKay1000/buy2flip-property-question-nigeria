@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 const planImages = {
+  Bronze: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
   Silver: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
   Gold: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
   Platinum: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
