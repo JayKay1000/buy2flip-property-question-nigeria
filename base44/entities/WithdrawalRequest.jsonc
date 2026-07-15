@@ -1,0 +1,42 @@
+{
+  "name": "WithdrawalRequest",
+  "type": "object",
+  "properties": {
+    "commitment_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "requested",
+        "processing",
+        "paid",
+        "rejected"
+      ],
+      "default": "requested"
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "account_number": {
+      "type": "string"
+    },
+    "account_name": {
+      "type": "string"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "commitment_id",
+    "amount"
+  ]
+}

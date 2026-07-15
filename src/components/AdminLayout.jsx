@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 import {
-  LayoutDashboard, Users, CreditCard, TrendingUp, Megaphone,
+  LayoutDashboard, Users, CreditCard, TrendingUp, Megaphone, Banknote,
   LogOut, Menu, X, ShieldCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ const navItems = [
   { label: "Overview", path: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Participants", path: "/admin/participants", icon: Users },
   { label: "Payments", path: "/admin/payments", icon: CreditCard },
+  { label: "Withdrawals", path: "/admin/withdrawals", icon: Banknote },
   { label: "Commitments", path: "/admin/commitments", icon: TrendingUp },
   { label: "Announcements", path: "/admin/announcements", icon: Megaphone },
 ];

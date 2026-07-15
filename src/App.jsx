@@ -29,6 +29,7 @@ import AdminOverview from './pages/admin/AdminOverview';
 import AdminParticipants from './pages/admin/AdminParticipants';
 import AdminPayments from './pages/admin/AdminPayments';
 import AdminCommitments from './pages/admin/AdminCommitments';
+import AdminWithdrawals from './pages/admin/AdminWithdrawals';
 import AdminAnnouncements from './pages/admin/AdminAnnouncements';
 
 const AuthenticatedApp = () => {
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
         <Route path="participants" element={<AdminParticipants />} />
         <Route path="payments" element={<AdminPayments />} />
         <Route path="commitments" element={<AdminCommitments />} />
+        <Route path="withdrawals" element={<AdminWithdrawals />} />
         <Route path="announcements" element={<AdminAnnouncements />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

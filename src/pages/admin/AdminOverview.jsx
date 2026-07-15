@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate } from "@/lib/format";
 import {
   Users, CreditCard, TrendingUp, CheckCircle2, Clock, AlertCircle,
-  ArrowRight, Award
+  ArrowRight, Award, Banknote
 } from "lucide-react";
 
 export default function AdminOverview() {
@@ -14,6 +14,7 @@ export default function AdminOverview() {
   const [participants, setParticipants] = useState([]);
   const [commitments, setCommitments] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -21,14 +22,16 @@ export default function AdminOverview() {
 
   const loadData = async () => {
     try {
-      const [parts, comms, pays] = await Promise.all([
+      const [parts, comms, pays, wd] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
         base44.entities.Commitment.list(),
         base44.entities.Payment.list(),
+        base44.entities.WithdrawalRequest.list(),
       ]);
       setParticipants(parts);
       setCommitments(comms);
       setPayments(pays);
+      setWithdrawals(wd);
     } catch {
     } finally {
       setLoading(false);
@@ -46,6 +49,7 @@ export default function AdminOverview() {
   const activeCommitments = commitments.filter((c) => c.status === "active");
   const completedCommitments = commitments.filter((c) => c.status === "completed");
   const pendingPayments = payments.filter((p) => p.status === "pending");
+  const pendingWithdrawals = withdrawals.filter((w) => w.status === "requested");
   const totalCommitted = activeCommitments.reduce((s, c) => s + (c.amount || 0), 0);
   const projectedReturns = activeCommitments.reduce((s, c) => s + (c.expected_return || 0), 0);
 
@@ -54,6 +58,7 @@ export default function AdminOverview() {
     { label: "Active Plans", value: activeCommitments.length, icon: TrendingUp, color: "text-gold-dark", bg: "bg-gold/10" },
     { label: "Completed Plans", value: completedCommitments.length, icon: Award, color: "text-brand", bg: "bg-brand/10" },
     { label: "Pending Confirmations", value: pendingPayments.length, icon: Clock, color: "text-gold-dark", bg: "bg-gold/10" },
+    { label: "Withdrawal Requests", value: pendingWithdrawals.length, icon: Banknote, color: "text-brand", bg: "bg-brand/10" },
     { label: "Total Committed", value: formatNaira(totalCommitted), icon: CreditCard, color: "text-brand", bg: "bg-brand/10" },
     { label: "Projected Returns", value: formatNaira(projectedReturns), icon: TrendingUp, color: "text-gold-dark", bg: "bg-gold/10" },
   ];
@@ -82,7 +87,7 @@ export default function AdminOverview() {
 
       {/* Quick actions */}
       {pendingPayments.length > 0 && (
-        <Card className="p-5 mb-8 border-gold/40 bg-gold/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+        <Card className="p-5 mb-4 border-gold/40 bg-gold/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-gold-dark flex-shrink-0" />
             <div>
@@ -92,6 +97,21 @@ export default function AdminOverview() {
           </div>
           <Link to="/admin/payments">
             <Button variant="outline" size="sm">Review Now <ArrowRight className="w-4 h-4 ml-1" /></Button>
+          </Link>
+        </Card>
+      )}
+
+      {pendingWithdrawals.length > 0 && (
+        <Card className="p-5 mb-8 border-brand/40 bg-brand/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+          <div className="flex items-center gap-3">
+            <Banknote className="w-5 h-5 text-brand flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">{pendingWithdrawals.length} withdrawal request(s) awaiting processing</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Review participant bank details and process payments.</p>
+            </div>
+          </div>
+          <Link to="/admin/withdrawals">
+            <Button variant="outline" size="sm">Process Now <ArrowRight className="w-4 h-4 ml-1" /></Button>
           </Link>
         </Card>
       )}

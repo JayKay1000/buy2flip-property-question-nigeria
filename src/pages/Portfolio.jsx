@@ -17,8 +17,9 @@ import {
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
 import {
   Wallet, TrendingUp, Calendar, Download, Award, CheckCircle2,
-  Clock, FileText, Plus, Building2, Save, AlertTriangle, Trash2, ShieldAlert
+  Clock, FileText, Plus, Building2, Save, AlertTriangle, Trash2, ShieldAlert, Banknote
 } from "lucide-react";
+import WithdrawalDialog from "@/components/WithdrawalDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,8 +36,10 @@ import PullToRefresh from "@/components/PullToRefresh";
 export default function Portfolio() {
   const [profile, setProfile] = useState(null);
   const [commitments, setCommitments] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingBank, setEditingBank] = useState(false);
+  const [withdrawCommitment, setWithdrawCommitment] = useState(null);
   const [bankForm, setBankForm] = useState({ bank_name: "", account_number: "", account_name: "" });
   const [savingBank, setSavingBank] = useState(false);
   const [bankError, setBankError] = useState("");
@@ -64,6 +67,8 @@ export default function Portfolio() {
       }
       const comms = await base44.entities.Commitment.filter({ created_by_id: me.id }, "-created_date");
       setCommitments(comms);
+      const wd = await base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date");
+      setWithdrawals(wd);
     } catch {
     } finally {
       setLoading(false);
@@ -131,6 +136,15 @@ export default function Portfolio() {
   const activeCommitments = commitments.filter((c) => c.status === "active");
   const completedCommitments = commitments.filter((c) => c.status === "completed");
   const pendingCommitments = commitments.filter((c) => c.status === "pending_payment");
+
+  const getWithdrawal = (commitmentId) =>
+    withdrawals.find((w) => w.commitment_id === commitmentId);
+  const withdrawalStatusConfig = {
+    requested: { label: "Withdrawal Requested", color: "bg-gold/10 text-gold-dark" },
+    processing: { label: "Withdrawal Processing", color: "bg-blue-100 text-blue-700" },
+    paid: { label: "Withdrawn", color: "bg-brand/10 text-brand" },
+    rejected: { label: "Withdrawal Rejected", color: "bg-destructive/10 text-destructive" },
+  };
 
   const portfolioValue = activeCommitments.reduce((sum, c) => sum + (c.total_expected_value || 0), 0);
   const totalCommitted = activeCommitments.reduce((sum, c) => sum + (c.amount || 0), 0);
@@ -235,11 +249,42 @@ export default function Portfolio() {
                             <p className="font-numeric font-medium text-gold-dark">{daysBetween(new Date(), c.maturity_date)}</p>
                           </div>
                         )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                        </div>
+
+                        {(c.status === "active" || c.status === "completed") && (() => {
+                        const wd = getWithdrawal(c.id);
+                        if (wd && (wd.status === "requested" || wd.status === "processing")) {
+                          const cfg = withdrawalStatusConfig[wd.status];
+                          return (
+                            <div className="mt-4 pt-4 border-t border-border">
+                              <span className={`text-xs px-3 py-1.5 rounded-full font-medium ${cfg.color}`}>
+                                <Clock className="w-3 h-3 inline mr-1" /> {cfg.label}
+                              </span>
+                            </div>
+                          );
+                        }
+                        if (wd?.status === "paid") {
+                          return (
+                            <div className="mt-4 pt-4 border-t border-border">
+                              <span className={`text-xs px-3 py-1.5 rounded-full font-medium ${withdrawalStatusConfig.paid.color}`}>
+                                <CheckCircle2 className="w-3 h-3 inline mr-1" /> {withdrawalStatusConfig.paid.label}
+                              </span>
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground">Ready to withdraw your returns?</span>
+                            <Button size="sm" className="bg-brand hover:bg-brand-dark" onClick={() => setWithdrawCommitment(c)}>
+                              <Banknote className="w-4 h-4 mr-1" /> Withdraw
+                            </Button>
+                          </div>
+                        );
+                        })()}
+                        </div>
+                        );
+                        })}
+                        </div>
             )}
           </Card>
 
@@ -446,6 +491,14 @@ export default function Portfolio() {
         </div>
       </div>
     </div>
+
+    <WithdrawalDialog
+      open={!!withdrawCommitment}
+      onOpenChange={(open) => !open && setWithdrawCommitment(null)}
+      commitment={withdrawCommitment}
+      profile={profile}
+      onSubmitted={loadData}
+    />
     </PullToRefresh>
   );
 }
