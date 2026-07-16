@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { Building2, Mail, Phone, MapPin } from "lucide-react";
+import SocialLinks from "@/components/SocialLinks";
 
 export default function Footer() {
   return (
@@ -35,7 +36,13 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-white/10 text-xs text-white/40 space-y-2">
+        <div className="mt-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h4 className="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Follow Us</h4>
+            <SocialLinks variant="light" />
+          </div>
+        </div>
+        <div className="mt-8 pt-8 border-t border-white/10 text-xs text-white/40 space-y-2">
           <p>© {new Date().getFullYear()} Property Question Nigeria Limited. All rights reserved.</p>
           <p className="max-w-3xl leading-relaxed">
             This platform facilitates structured financial commitments into real estate. Expected returns are based on
