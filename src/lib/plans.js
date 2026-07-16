@@ -166,7 +166,7 @@ export const PLANS = [
     minimum: 1000000,
     tagline: "The crown jewel of long-term land banking",
     accent: "#1B2A4A",
-    image: "https://images.unsplash.com/photo-1519501025264-65415ab20c54?w=1200&q=80",
+    image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/a8aa7a8f8_waterskyscrapper.jpg",
     benefits: [
       "24-month commitment period",
       "65% expected return on commitment",
