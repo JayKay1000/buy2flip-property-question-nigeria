@@ -67,20 +67,34 @@ export default function Support() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    // Optimistic: show the new pending ticket immediately
+    const tempId = `temp-${Date.now()}`;
+    const optimisticTicket = {
+      id: tempId,
+      subject,
+      message,
+      category,
+      status: "open",
+      created_date: new Date().toISOString(),
+    };
+    setTickets((prev) => [optimisticTicket, ...prev]);
     try {
-      await base44.entities.SupportTicket.create({
+      const created = await base44.entities.SupportTicket.create({
         subject,
         message,
         category,
         status: "open",
       });
+      // Replace the temp entry with the real, server-confirmed ticket
+      setTickets((prev) => prev.map((t) => (t.id === tempId ? created : t)));
       setSubmitted(true);
       setSubject("");
       setMessage("");
       setCategory("general");
-      loadData();
       setTimeout(() => setSubmitted(false), 5000);
     } catch {
+      // Rollback the optimistic entry on failure
+      setTickets((prev) => prev.filter((t) => t.id !== tempId));
     } finally {
       setSubmitting(false);
     }

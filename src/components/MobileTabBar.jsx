@@ -1,5 +1,5 @@
-import React from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { useLocation, Link } from "react-router-dom";
 import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt } from "lucide-react";
 
 const tabs = [
@@ -14,10 +14,21 @@ const TAB_ROOTS = tabs.map((t) => t.path);
 const getTabForPath = (p) =>
   TAB_ROOTS.find((r) => p === r || p.startsWith(r + "/"));
 
-export default function MobileTabBar({ tabLocations = {} }) {
+export default function MobileTabBar({ tabLocations: propTabLocations = {} }) {
   const location = useLocation();
-  const navigate = useNavigate();
   const activeTabRoot = getTabForPath(location.pathname);
+  const memoryRef = useRef({});
+
+  // Memorize the last-visited sub-route for each tab so switching tabs preserves context
+  useEffect(() => {
+    const tab = getTabForPath(location.pathname);
+    if (tab) {
+      memoryRef.current = { ...memoryRef.current, [tab]: location.pathname };
+    }
+  }, [location.pathname]);
+
+  const resolveDest = (tabPath) =>
+    memoryRef.current[tabPath] || propTabLocations[tabPath] || tabPath;
 
   return (
     <nav
@@ -26,20 +37,11 @@ export default function MobileTabBar({ tabLocations = {} }) {
     >
       {tabs.map((tab) => {
         const active = location.pathname.startsWith(tab.path);
-        const isActiveTab = activeTabRoot === tab.path;
-        const dest = tabLocations[tab.path] || tab.path;
+        const dest = resolveDest(tab.path);
         return (
           <Link
             key={tab.path}
             to={dest}
-            onClick={(e) => {
-              if (isActiveTab) {
-                e.preventDefault();
-                if (location.pathname !== tab.path) {
-                  navigate(tab.path);
-                }
-              }
-            }}
             className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 flex-1 transition-colors ${
               active ? "text-brand" : "text-muted-foreground"
             }`}

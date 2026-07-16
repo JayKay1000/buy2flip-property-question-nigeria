@@ -82,11 +82,19 @@ export default function Portfolio() {
       setBankError("Account number must be exactly 10 digits.");
       return;
     }
+    // Optimistic: snapshot for rollback, reflect locally, close edit immediately
+    const previousProfile = profile;
+    const previousBankForm = { ...bankForm };
+    const optimisticProfile = profile
+      ? { ...profile, ...bankForm }
+      : { ...bankForm, status: "active" };
+    setProfile(optimisticProfile);
+    setEditingBank(false);
     setSavingBank(true);
     try {
       let savedProfile;
-      if (profile) {
-        savedProfile = await base44.entities.ParticipantProfile.update(profile.id, bankForm);
+      if (previousProfile) {
+        savedProfile = await base44.entities.ParticipantProfile.update(previousProfile.id, bankForm);
       } else {
         const me = await base44.auth.me();
         const clean = (me.full_name || me.email || "PQLB").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 4).padEnd(4, "X");
@@ -100,8 +108,13 @@ export default function Portfolio() {
         });
       }
       setProfile(savedProfile);
-      setEditingBank(false);
     } catch (err) {
+      // Rollback to previous state on failure
+      setProfile(previousProfile);
+      setBankForm(previousProfile
+        ? { bank_name: previousProfile.bank_name || "", account_number: previousProfile.account_number || "", account_name: previousProfile.account_name || "" }
+        : previousBankForm);
+      setEditingBank(true);
       setBankError(err?.message || "Failed to save bank details. Please try again.");
     } finally {
       setSavingBank(false);
