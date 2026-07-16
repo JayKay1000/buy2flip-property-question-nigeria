@@ -11,6 +11,7 @@ import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
+import VerificationSuccess from "@/components/VerificationSuccess";
 
 const generateReferralCode = (name) => {
   const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
@@ -110,8 +111,6 @@ export default function Register() {
         } catch {}
       }
       setVerified(true);
-      fireConfetti();
-      setTimeout(() => { window.location.href = "/dashboard"; }, 2400);
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -136,37 +135,7 @@ export default function Register() {
   };
 
   if (verified) {
-    return (
-      <AuthLayout icon={CheckCircle2} title="Email Verified!" subtitle="Welcome to Land Banking">
-        <motion.div
-          initial={{ scale: 0, rotate: -30, opacity: 0 }}
-          animate={{ scale: 1, rotate: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 12 }}
-          className="flex justify-center mb-6"
-        >
-          <div className="w-24 h-24 rounded-full bg-brand/10 flex items-center justify-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 14 }}
-            >
-              <CheckCircle2 className="w-16 h-16 text-brand" />
-            </motion.div>
-          </div>
-        </motion.div>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-center text-muted-foreground"
-        >
-          Your account is ready. Taking you to your dashboard...
-        </motion.p>
-        <div className="flex justify-center mt-6">
-          <Loader2 className="w-5 h-5 animate-spin text-brand" />
-        </div>
-      </AuthLayout>
-    );
+    return <VerificationSuccess onContinue={() => { window.location.href = "/dashboard"; }} autoRedirectMs={3000} />;
   }
 
   if (showOtp) {
