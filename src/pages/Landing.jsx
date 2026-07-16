@@ -33,7 +33,7 @@ export default function Landing() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80"
@@ -44,8 +44,9 @@ export default function Landing() {
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-32 w-full">
-          <div className="max-w-3xl">
+        <div className="relative z-10 flex-1 flex items-center w-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 sm:py-32 w-full">
+            <div className="max-w-3xl">
             <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
               <span className="text-gradient-gold">Land Banking</span>
               <br />
@@ -67,11 +68,12 @@ export default function Landing() {
                 </Button>
               </Link>
             </div>
+            </div>
           </div>
         </div>
 
         {/* Stats bar */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/10 glass-dark">
+        <div className="relative z-10 border-t border-white/10 glass-dark">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
