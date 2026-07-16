@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Building2, Banknote, AlertCircle } from "lucide-react";
 
-export default function WithdrawalDialog({ open, onOpenChange, commitment, profile, onSubmitted }) {
+export default function WithdrawalDialog({ open, onOpenChange, commitment, profile, onSubmitted, onRevert }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,6 +26,18 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
       setError("Please add your bank details before requesting a withdrawal.");
       return;
     }
+    // Optimistic: reflect the request instantly; close only on success, revert on error
+    const optimisticRecord = {
+      id: `temp-${Date.now()}`,
+      commitment_id: commitment.id,
+      amount,
+      status: "requested",
+      bank_name: profile.bank_name,
+      account_number: profile.account_number,
+      account_name: profile.account_name,
+      created_date: new Date().toISOString(),
+    };
+    onSubmitted(optimisticRecord);
     setSubmitting(true);
     try {
       await base44.entities.WithdrawalRequest.create({
@@ -36,9 +48,9 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
         account_number: profile.account_number,
         account_name: profile.account_name,
       });
-      onSubmitted();
       onOpenChange(false);
     } catch (err) {
+      onRevert(optimisticRecord);
       setError(err?.message || "Failed to submit withdrawal request.");
     } finally {
       setSubmitting(false);

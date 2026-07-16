@@ -121,6 +121,14 @@ export default function Portfolio() {
     }
   };
 
+  const handleWithdrawalSubmitted = (optimisticRecord) => {
+    setWithdrawals((prev) => [optimisticRecord, ...prev]);
+  };
+
+  const handleWithdrawalRevert = (record) => {
+    setWithdrawals((prev) => prev.filter((w) => w.id !== record.id));
+  };
+
   const handleRequestDeletion = async () => {
     setDeleteError("");
     setDeletingAccount(true);
@@ -490,7 +498,8 @@ export default function Portfolio() {
       onOpenChange={(open) => !open && setWithdrawCommitment(null)}
       commitment={withdrawCommitment}
       profile={profile}
-      onSubmitted={loadData}
+      onSubmitted={handleWithdrawalSubmitted}
+      onRevert={handleWithdrawalRevert}
     />
     </PullToRefresh>
   );

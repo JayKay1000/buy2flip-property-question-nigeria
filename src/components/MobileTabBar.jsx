@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt } from "lucide-react";
 
@@ -10,25 +10,8 @@ const tabs = [
   { label: "Support", path: "/support", icon: LifeBuoy },
 ];
 
-const TAB_ROOTS = tabs.map((t) => t.path);
-const getTabForPath = (p) =>
-  TAB_ROOTS.find((r) => p === r || p.startsWith(r + "/"));
-
-export default function MobileTabBar({ tabLocations: propTabLocations = {} }) {
+export default function MobileTabBar({ tabLocations = {} }) {
   const location = useLocation();
-  const activeTabRoot = getTabForPath(location.pathname);
-  const memoryRef = useRef({});
-
-  // Memorize the last-visited sub-route for each tab so switching tabs preserves context
-  useEffect(() => {
-    const tab = getTabForPath(location.pathname);
-    if (tab) {
-      memoryRef.current = { ...memoryRef.current, [tab]: location.pathname };
-    }
-  }, [location.pathname]);
-
-  const resolveDest = (tabPath) =>
-    memoryRef.current[tabPath] || propTabLocations[tabPath] || tabPath;
 
   return (
     <nav
@@ -37,7 +20,8 @@ export default function MobileTabBar({ tabLocations: propTabLocations = {} }) {
     >
       {tabs.map((tab) => {
         const active = location.pathname.startsWith(tab.path);
-        const dest = resolveDest(tab.path);
+        // Switching tabs returns to that tab's last-visited sub-route (preserved by AppLayout) instead of the root
+        const dest = tabLocations[tab.path] || tab.path;
         return (
           <Link
             key={tab.path}

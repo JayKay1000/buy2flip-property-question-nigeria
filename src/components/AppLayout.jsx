@@ -24,16 +24,29 @@ const TAB_ROOTS = ["/dashboard", "/plans", "/portfolio", "/transactions", "/supp
 const getTabForPath = (p) =>
   TAB_ROOTS.find((r) => p === r || p.startsWith(r + "/"));
 
+const TAB_MEMORY_KEY = "pqlb_tab_memory";
+const loadTabMemory = () => {
+  try {
+    const raw = sessionStorage.getItem(TAB_MEMORY_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
 export default function AppLayout() {
   const location = useLocation();
-  const [tabLocations, setTabLocations] = useState({});
+  const [tabLocations, setTabLocations] = useState(loadTabMemory);
 
   useEffect(() => {
     const tab = getTabForPath(location.pathname);
     if (tab) {
-      setTabLocations((prev) =>
-        prev[tab] === location.pathname ? prev : { ...prev, [tab]: location.pathname }
-      );
+      setTabLocations((prev) => {
+        if (prev[tab] === location.pathname) return prev;
+        const next = { ...prev, [tab]: location.pathname };
+        try { sessionStorage.setItem(TAB_MEMORY_KEY, JSON.stringify(next)); } catch {}
+        return next;
+      });
     }
   }, [location.pathname]);
 
