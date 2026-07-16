@@ -23,7 +23,7 @@ const features = [
 const stats = [
   { value: "₦2B+", label: "Land Banked" },
   { value: "500+", label: "Land Banking Participants" },
-  { value: "50%", label: "Maximum Expected Return" },
+  { value: "65%", label: "Maximum Expected Return" },
   { value: "100%", label: "Land-Backed Security" },
 ];
 
