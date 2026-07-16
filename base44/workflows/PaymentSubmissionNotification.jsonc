@@ -1,0 +1,46 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "Payment"
+    }
+  },
+  "name": "Payment Submission Notification",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "payment_submission_notification",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "notify_admin": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "notifyPaymentSubmitted",
+            "args": {
+              "payment_id": "${ .trigger.entity_id }",
+              "amount": "${ .trigger.data.amount }",
+              "commitment_id": "${ .trigger.data.commitment_id }",
+              "company_bank_name": "${ .trigger.data.company_bank_name }",
+              "company_account_name": "${ .trigger.data.company_account_name }",
+              "company_account_number": "${ .trigger.data.company_account_number }",
+              "user_id": "${ .trigger.data.created_by_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Notify admin of payment",
+            "description": "Email admins about the new payment requiring confirmation"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Emails all admins the moment a participant submits a payment requiring confirmation."
+}
