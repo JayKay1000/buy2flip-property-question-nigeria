@@ -114,9 +114,11 @@ export default function AdminCommitments() {
 
   const filtered = commitments.filter((c) => {
     const profile = findProfile(c.created_by_id);
-    const matchesSearch = !search ||
-      profile?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-      c.plan_name?.toLowerCase().includes(search.toLowerCase());
+    const q = search.trim().toLowerCase();
+    const matchesSearch = !q ||
+      profile?.full_name?.toLowerCase().includes(q) ||
+      c.plan_name?.toLowerCase().includes(q) ||
+      c.id?.toLowerCase().includes(q);
     const matchesStatus = statusFilter === "all" || c.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
