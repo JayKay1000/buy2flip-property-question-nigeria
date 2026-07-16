@@ -4,11 +4,13 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus, Mail, Lock, Loader2, Phone, User, Gift } from "lucide-react";
+import { UserPlus, Mail, Lock, Loader2, Phone, User, Gift, CheckCircle2 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
+import { motion } from "framer-motion";
+import confetti from "canvas-confetti";
 
 const generateReferralCode = (name) => {
   const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
@@ -29,6 +31,16 @@ export default function Register() {
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [verified, setVerified] = useState(false);
+
+  const fireConfetti = () => {
+    try {
+      const colors = ["#0F5C3F", "#C9A227", "#0B3D2E"];
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 }, colors });
+      setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { y: 0.6 }, colors }), 200);
+      setTimeout(() => confetti({ particleCount: 50, spread: 120, origin: { y: 0.7 }, colors }), 400);
+    } catch {}
+  };
 
   useEffect(() => {
     if (resendCooldown > 0) {
@@ -97,7 +109,9 @@ export default function Register() {
           }
         } catch {}
       }
-      window.location.href = "/dashboard";
+      setVerified(true);
+      fireConfetti();
+      setTimeout(() => { window.location.href = "/dashboard"; }, 2400);
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -120,6 +134,40 @@ export default function Register() {
   const handleGoogle = () => {
     base44.auth.loginWithProvider("google", "/dashboard");
   };
+
+  if (verified) {
+    return (
+      <AuthLayout icon={CheckCircle2} title="Email Verified!" subtitle="Welcome to Land Banking">
+        <motion.div
+          initial={{ scale: 0, rotate: -30, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 12 }}
+          className="flex justify-center mb-6"
+        >
+          <div className="w-24 h-24 rounded-full bg-brand/10 flex items-center justify-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 14 }}
+            >
+              <CheckCircle2 className="w-16 h-16 text-brand" />
+            </motion.div>
+          </div>
+        </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-center text-muted-foreground"
+        >
+          Your account is ready. Taking you to your dashboard...
+        </motion.p>
+        <div className="flex justify-center mt-6">
+          <Loader2 className="w-5 h-5 animate-spin text-brand" />
+        </div>
+      </AuthLayout>
+    );
+  }
 
   if (showOtp) {
     return (
