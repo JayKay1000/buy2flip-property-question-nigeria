@@ -157,6 +157,48 @@ export const PLANS = [
       "The participant must provide valid bank details before maturity.",
       "Property Question Nigeria Limited reserves the right to verify all payment evidence."
     ]
+  },
+  {
+    name: "Diamond",
+    slug: "diamond",
+    durationMonths: 24,
+    returnRate: 0.65,
+    minimum: 1000000,
+    tagline: "The crown jewel of long-term land banking",
+    accent: "#1B2A4A",
+    image: "https://images.unsplash.com/photo-1519501025264-65415ab20c54?w=1200&q=80",
+    benefits: [
+      "24-month commitment period",
+      "65% expected return on commitment",
+      "Minimum commitment of ₦1,000,000",
+      "Monthly portfolio progress updates",
+      "Premium commitment certificate",
+      "Maximised referral reward programme",
+      "Dedicated senior relationship officer",
+      "Exclusive access to pre-launch developments",
+      "Annual partner appreciation event",
+      "Priority access to high-value land acquisitions"
+    ],
+    timeline: [
+      { phase: "Enrolment", detail: "Choose your plan and commitment amount" },
+      { phase: "Payment", detail: "Transfer to the official company account" },
+      { phase: "Activation", detail: "Portfolio goes live upon confirmation" },
+      { phase: "Maturity", detail: "Receive principal plus expected return" }
+    ],
+    faqs: [
+      { q: "What is the minimum commitment amount?", a: "The minimum commitment for the Diamond Plan is ₦1,000,000. You may commit in multiples of ₦1,000,000." },
+      { q: "When do I receive my returns?", a: "Expected returns are disbursed at the end of the 24-month commitment period to your preferred receiving bank account." },
+      { q: "What makes Diamond different?", a: "The Diamond Plan offers the highest expected return of 65%, along with priority access to high-value land acquisitions and exclusive premium support." },
+      { q: "How is my return calculated?", a: "Your expected return is calculated as 65% of your commitment amount, payable at maturity." }
+    ],
+    terms: [
+      "The commitment period is fixed at 24 months from the activation date.",
+      "The minimum commitment amount is ₦1,000,000.",
+      "The expected return of 65% is calculated on the total commitment amount.",
+      "Returns are disbursed only to the participant's verified receiving bank account.",
+      "The participant must provide valid bank details before maturity.",
+      "Property Question Nigeria Limited reserves the right to verify all payment evidence."
+    ]
   }
 ];
 
