@@ -29,7 +29,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Company</h3>
             <ul className="space-y-2.5 text-sm">
-              <li className="flex items-center gap-2"><Building2 className="w-4 h-4 text-gold/70 flex-shrink-0" /> PROPERTY QUESTION NIGERIA LTD</li>
+              <li className="flex items-center gap-2"><Building2 className="w-4 h-4 text-gold/70 flex-shrink-0" /> PROPERTY QUESTION NIGERIA LIMITED</li>
               <li className="flex items-center gap-2"><Mail className="w-4 h-4 text-gold/70 flex-shrink-0" /> info@propertyquestion.net</li>
               <li className="flex items-center gap-2"><Phone className="w-4 h-4 text-gold/70 flex-shrink-0" /> +234 903 339 3000</li>
               <li className="flex items-start gap-2"><MapPin className="w-4 h-4 text-gold/70 flex-shrink-0 mt-0.5" /> Suite 43, Ogba Shopping Arcade, Ijaiye Road, Ogba, Lagos, Nigeria</li>
