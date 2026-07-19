@@ -16,11 +16,23 @@ import { Building2, Banknote, AlertCircle } from "lucide-react";
 export default function WithdrawalDialog({ open, onOpenChange, commitment, profile, onSubmitted, onRevert }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [showWarning, setShowWarning] = useState(false);
+  const [acknowledged, setAcknowledged] = useState(false);
 
   const hasBankDetails = profile?.bank_name && profile?.account_number && profile?.account_name;
   const amount = commitment ? (commitment.total_expected_value || commitment.amount) : 0;
 
-  const handleWithdraw = async () => {
+  const isEarlyWithdrawal = (() => {
+    if (!commitment?.maturity_date) return false;
+    return new Date(commitment.maturity_date) > new Date();
+  })();
+
+  const principal = commitment?.amount || 0;
+  const expectedReturn = commitment?.expected_return != null ? commitment.expected_return : Math.max(0, (commitment?.total_expected_value || 0) - principal);
+  const welcomePackage = principal * 0.01;
+  const earlyPayout = principal - welcomePackage;
+
+  const submitWithdrawal = async () => {
     setError("");
     if (!hasBankDetails) {
       setError("Please add your bank details before requesting a withdrawal.");
@@ -58,7 +70,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={(v) => { if (!v) { setShowWarning(false); setAcknowledged(false); setError(""); } onOpenChange(v); }}>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
@@ -93,14 +105,56 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
             )}
           </div>
 
+          {showWarning && (
+            <div className="p-4 rounded-lg bg-destructive/5 border border-destructive/30 space-y-3">
+              <p className="text-sm font-semibold text-destructive flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4" /> Early Withdrawal Penalty
+              </p>
+              <p className="text-sm text-foreground/90">
+                Withdrawing before your maturity date ({commitment?.maturity_date ? new Date(commitment.maturity_date).toLocaleDateString() : "—"}) means you will:
+              </p>
+              <ul className="text-sm text-foreground/90 space-y-1 pl-1">
+                <li>• Forfeit your entire Expected Return of <span className="font-numeric font-medium">{formatNaira(expectedReturn)}</span>.</li>
+                <li>• Have the 1% welcome package (<span className="font-numeric font-medium">{formatNaira(welcomePackage)}</span>) deducted from your initial commitment.</li>
+              </ul>
+              <div className="flex justify-between items-center pt-2 border-t border-destructive/20">
+                <span className="text-xs text-muted-foreground">Estimated payout</span>
+                <span className="font-numeric font-bold text-destructive">{formatNaira(earlyPayout)}</span>
+              </div>
+              <label className="flex items-start gap-2 text-sm text-foreground/90 cursor-pointer pt-1">
+                <input
+                  type="checkbox"
+                  checked={acknowledged}
+                  onChange={(e) => setAcknowledged(e.target.checked)}
+                  className="mt-0.5"
+                />
+                I understand and accept that I will forfeit my ROI and the 1% welcome package by withdrawing early.
+              </label>
+            </div>
+          )}
           {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={submitting}>Cancel</AlertDialogCancel>
-          <Button onClick={handleWithdraw} disabled={submitting || !hasBankDetails} className="bg-brand hover:bg-brand-dark">
-            {submitting ? "Submitting..." : "Confirm Withdrawal"}
-          </Button>
+          {showWarning ? (
+            <>
+              <AlertDialogCancel onClick={() => { setShowWarning(false); setAcknowledged(false); }}>Back</AlertDialogCancel>
+              <Button onClick={submitWithdrawal} disabled={submitting || !acknowledged} className="bg-destructive hover:bg-destructive/90">
+                {submitting ? "Submitting..." : "I Understand, Withdraw Now"}
+              </Button>
+            </>
+          ) : (
+            <>
+              <AlertDialogCancel disabled={submitting}>Cancel</AlertDialogCancel>
+              <Button
+                onClick={() => isEarlyWithdrawal ? setShowWarning(true) : submitWithdrawal()}
+                disabled={submitting || !hasBankDetails}
+                className="bg-brand hover:bg-brand-dark"
+              >
+                {submitting ? "Submitting..." : "Confirm Withdrawal"}
+              </Button>
+            </>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
