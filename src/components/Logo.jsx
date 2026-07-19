@@ -5,7 +5,7 @@ const LOGO_URL = "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8
 const sizeMap = {
   sm: "h-10 sm:h-11",
   md: "h-12 sm:h-14",
-  lg: "h-16 sm:h-20",
+  lg: "h-16 sm:h-20"
 };
 
 export default function Logo({ light = false, size = "md", className = "" }) {
@@ -14,9 +14,9 @@ export default function Logo({ light = false, size = "md", className = "" }) {
       <img
         src={LOGO_URL}
         alt="Property Question Nigeria"
-        className={`${sizeMap[size]} w-auto object-contain`}
-        style={{ height: '72px', width: 'auto' }}
-      />
-    </div>
-  );
+        className={`${sizeMap[size]} w-auto object-contain h-18 sm:h-20`}
+        style={{ height: '72px', width: 'auto' }} />
+      
+    </div>);
+
 }
