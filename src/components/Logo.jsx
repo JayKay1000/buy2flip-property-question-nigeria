@@ -15,7 +15,7 @@ export default function Logo({ light = false, size = "md", className = "" }) {
         src={LOGO_URL}
         alt="Property Question Nigeria"
         className={`${sizeMap[size]} w-auto object-contain h-18 sm:h-20`}
-        style={{ height: '72px', width: 'auto' }} />
+        style={{ height: '92px', width: 'auto' }} />
       
     </div>);
 
