@@ -231,12 +231,12 @@ export default function Referrals() {
         ) : (
           <div className="space-y-2">
             {leaderboard.slice(0, 10).map((entry, idx) => {
-              const isMe = entry.referral_code === myCode;
-              const rank = idx + 1;
+              const isMe = entry.is_current_user;
+              const rank = entry.rank || idx + 1;
               const medal = rank === 1 ? "bg-gold text-white" : rank === 2 ? "bg-muted-foreground text-white" : rank === 3 ? "bg-amber-700 text-white" : "bg-muted text-muted-foreground";
               return (
                 <div
-                  key={entry.referral_code}
+                  key={entry.rank || idx}
                   className={`flex items-center gap-3 p-3 rounded-lg ${isMe ? "bg-brand/5 border border-brand/30" : "border border-border"}`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-numeric font-bold text-sm flex-shrink-0 ${medal}`}>

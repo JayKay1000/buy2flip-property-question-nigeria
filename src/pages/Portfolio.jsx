@@ -94,7 +94,12 @@ export default function Portfolio() {
     try {
       let savedProfile;
       if (previousProfile) {
-        savedProfile = await base44.entities.ParticipantProfile.update(previousProfile.id, bankForm);
+        const bankUpdate = {
+          bank_name: bankForm.bank_name,
+          account_number: bankForm.account_number,
+          account_name: bankForm.account_name,
+        };
+        savedProfile = await base44.entities.ParticipantProfile.update(previousProfile.id, bankUpdate);
       } else {
         const me = await base44.auth.me();
         const clean = (me.full_name || me.email || "PQLB").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 4).padEnd(4, "X");
