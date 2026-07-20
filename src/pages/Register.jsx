@@ -180,7 +180,7 @@ export default function Register() {
     <AuthLayout
       icon={UserPlus}
       title="Create your account"
-      subtitle="Join Land Banking and build your financial future"
+      subtitle="Join Buy2Flip and build your financial future"
       footer={
         <>Already have an account?{" "}
           <Link to="/login" className="text-primary font-medium hover:underline">Log in</Link>

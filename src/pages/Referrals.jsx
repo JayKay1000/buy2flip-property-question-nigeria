@@ -79,7 +79,7 @@ export default function Referrals() {
   ];
 
   const shareLinks = {
-    whatsapp: `https://wa.me/?text=${encodeURIComponent(`Join me on Land Banking! Use my referral code: ${referralCode}. Register here: ${referralLink}`)}`,
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(`Join me on Buy2Flip! Use my referral code: ${referralCode}. Register here: ${referralLink}`)}`,
     copy: referralLink,
   };
 

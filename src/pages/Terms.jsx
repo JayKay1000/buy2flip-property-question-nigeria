@@ -7,7 +7,7 @@ import { ShieldCheck, FileText, Scale, AlertTriangle } from "lucide-react";
 const sections = [
   {
     title: "1. Acceptance of Terms",
-    body: "By registering an account, making a commitment, or otherwise using the Property Question Nigeria Limited land banking platform (the \"Platform\"), you confirm that you have read, understood, and agree to be bound by these Terms of Service (\"Terms\"). If you do not agree with any provision, you must not access or use the Platform.",
+    body: "By registering an account, making a commitment, or otherwise using the Property Question Nigeria Limited Buy2Flip platform (the \"Platform\"), you confirm that you have read, understood, and agree to be bound by these Terms of Service (\"Terms\"). If you do not agree with any provision, you must not access or use the Platform.",
   },
   {
     title: "2. Definitions",
@@ -43,7 +43,7 @@ const sections = [
   },
   {
     title: "10. Risk Disclosure",
-    body: "Land banking and real estate-backed commitments involve inherent risks, including but not limited to market fluctuations, development delays, and liquidity constraints. Expected returns are projections and not guarantees. Participants should only commit funds they can afford to hold for the full plan duration and should carefully consider their financial position before participating.",
+    body: "Buy2Flip and real estate-backed commitments involve inherent risks, including but not limited to market fluctuations, development delays, and liquidity constraints. Expected returns are projections and not guarantees. Participants should only commit funds they can afford to hold for the full plan duration and should carefully consider their financial position before participating.",
   },
   {
     title: "11. Account Status & Suspension",
@@ -90,7 +90,7 @@ export default function Terms() {
           <h1 className="font-display font-bold text-3xl sm:text-4xl mb-3">Terms of Service</h1>
           <p className="text-white/70 max-w-2xl leading-relaxed">
             The terms, regulatory compliance, and legal guidelines governing your participation
-            in the Property Question Nigeria Limited land banking platform.
+            in the Property Question Nigeria Limited Buy2Flip platform.
           </p>
           <p className="text-xs text-white/50 mt-4">Last updated: July 2026</p>
         </div>
@@ -124,7 +124,7 @@ export default function Terms() {
               <AlertTriangle className="w-5 h-5 text-gold-dark flex-shrink-0 mt-0.5" />
               <p className="text-sm text-foreground/80 leading-relaxed">
                 Please read these Terms carefully before making any commitment. By participating,
-                you acknowledge the risks and regulatory considerations associated with land banking.
+                you acknowledge the risks and regulatory considerations associated with Buy2Flip.
               </p>
             </div>
 

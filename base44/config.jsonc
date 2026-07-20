@@ -1,5 +1,5 @@
 {
-  "name": "untitled",
+  "name": "Buy2Flip",
   "site": {
     "installCommand": "npm install",
     "buildCommand": "npm run build",

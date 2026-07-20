@@ -5,7 +5,7 @@ export const PLANS = [
     durationMonths: 3,
     returnRate: 0.05,
     minimum: 1000000,
-    tagline: "Your first step into land banking",
+    tagline: "Your first step into Buy2Flip",
     accent: "#A0673A",
     image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/ca8e7cb43_Bronzebanner.jpg",
     benefits: [
@@ -44,7 +44,7 @@ export const PLANS = [
     durationMonths: 6,
     returnRate: 0.12,
     minimum: 1000000,
-    tagline: "Your entry into strategic land banking",
+    tagline: "Your entry into strategic Buy2Flip",
     accent: "#94A3B8",
     image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/fc5e4056f_silverbanner.png",
     benefits: [
@@ -123,7 +123,7 @@ export const PLANS = [
     durationMonths: 18,
     returnRate: 0.50,
     minimum: 1000000,
-    tagline: "The pinnacle of strategic land banking",
+    tagline: "The pinnacle of strategic Buy2Flip",
     accent: "#1A1A1A",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
     benefits: [
@@ -164,7 +164,7 @@ export const PLANS = [
     durationMonths: 24,
     returnRate: 0.65,
     minimum: 1000000,
-    tagline: "The crown jewel of long-term land banking",
+    tagline: "The crown jewel of long-term Buy2Flip",
     accent: "#1B2A4A",
     image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/a8aa7a8f8_waterskyscrapper.jpg",
     benefits: [

@@ -28,7 +28,7 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
           </Link>
           <div>
             <h2 className="font-display font-bold text-3xl xl:text-4xl leading-tight max-w-md">
-              Build Your Financial Future Through Strategic Land Banking
+              Build Your Financial Future Through Strategic Buy2Flip
             </h2>
             <p className="text-white/70 mt-4 max-w-sm text-sm leading-relaxed">
               A secure wealth-building platform by Property Question Nigeria Limited, deploying your commitments into carefully selected real estate developments.

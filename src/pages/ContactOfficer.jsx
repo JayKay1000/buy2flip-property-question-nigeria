@@ -27,7 +27,7 @@ export default function ContactOfficer() {
               Speak With A Relationship Officer
             </h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Our team is ready to guide you through your land banking journey. Reach out through any of the channels below.
+              Our team is ready to guide you through your Buy2Flip journey. Reach out through any of the channels below.
             </p>
           </div>
 

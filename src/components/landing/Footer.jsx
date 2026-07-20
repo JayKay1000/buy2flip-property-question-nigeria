@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Logo light />
             <p className="mt-5 text-sm max-w-md leading-relaxed">
-              Land Banking is a secure wealth-building platform by Property Question Nigeria Limited,
+              Buy2Flip is a secure wealth-building platform by Property Question Nigeria Limited,
               enabling structured financial commitments backed by carefully selected real estate developments.
             </p>
           </div>

@@ -22,7 +22,7 @@ const features = [
 
 const stats = [
 { value: "₦2B+", label: "Land Banked" },
-{ value: "500+", label: "Land Banking Participants" },
+{ value: "500+", label: "Buy2Flip Participants" },
 { value: "65%", label: "Maximum Expected Return" },
 { value: "100%", label: "Land-Backed Security" }];
 
@@ -48,12 +48,12 @@ export default function Landing() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 sm:py-32 w-full">
             <div className="max-w-3xl">
             <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
-              <span className="text-gradient-gold">Land Banking</span>
+              <span className="text-gradient-gold">Buy2Flip</span>
               <br />
               Made Simple.
             </h1>
             <p className="mt-6 text-lg text-white/70 max-w-xl leading-relaxed animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              Property Question Nigeria Limited helps you build wealth through strategic land banking —
+              Property Question Nigeria Limited helps you build wealth through strategic Buy2Flip —
               acquire premium land, earn returns according to your selected plan, and watch your portfolio grow.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
@@ -190,10 +190,10 @@ export default function Landing() {
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">
-            Ready to Start Land Banking?
+            Ready to Start Buy2Flip?
           </h2>
           <p className="text-white/70 mt-4 max-w-xl mx-auto">
-            Join Property Question Nigeria Limited today and start building wealth through strategic land banking.
+            Join Property Question Nigeria Limited today and start building wealth through strategic Buy2Flip.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">

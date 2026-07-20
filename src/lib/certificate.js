@@ -26,7 +26,7 @@ export const generateCommitmentCertificate = (commitment, participantName) => {
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(120, 120, 120);
-  doc.text("Land Banking Platform", pageW / 2, 31, { align: "center" });
+  doc.text("Buy2Flip Platform", pageW / 2, 31, { align: "center" });
 
   // Gold divider
   doc.setDrawColor(201, 162, 39);

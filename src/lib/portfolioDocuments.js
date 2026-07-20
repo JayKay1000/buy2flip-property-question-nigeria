@@ -16,7 +16,7 @@ function header(doc, title) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(201, 162, 39);
-  doc.text("Land Banking Platform", 14, 19);
+  doc.text("Buy2Flip Platform", 14, 19);
   doc.setTextColor(...BRAND);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
@@ -59,7 +59,7 @@ export const generateAcknowledgementLetter = (profile, commitments) => {
   doc.setTextColor(40, 40, 40);
   doc.text(formatDate(new Date().toISOString()), 14, y); y += 10;
   doc.text("Dear Participant,", 14, y); y += 10;
-  const body = `This letter serves to acknowledge that ${name} has been duly enrolled as a participant on the Property Question Nigeria Limited Land Banking Platform. The participant's commitment(s) have been received and are being deployed in accordance with the terms of the selected commitment plan(s).`;
+  const body = `This letter serves to acknowledge that ${name} has been duly enrolled as a participant on the Property Question Nigeria Limited Buy2Flip Platform. The participant's commitment(s) have been received and are being deployed in accordance with the terms of the selected commitment plan(s).`;
   doc.text(doc.splitTextToSize(body, 180), 14, y); y += 24;
   if (active.length) {
     doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(...BRAND);
@@ -157,7 +157,7 @@ export const generateCompletionCertificate = (profile, commitment) => {
   doc.setTextColor(...BRAND); doc.setFont("helvetica", "bold"); doc.setFontSize(14);
   doc.text("PROPERTY QUESTION NIGERIA LIMITED", pageW / 2, 25, { align: "center" });
   doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(...GREY);
-  doc.text("Land Banking Platform", pageW / 2, 31, { align: "center" });
+  doc.text("Buy2Flip Platform", pageW / 2, 31, { align: "center" });
   doc.setDrawColor(...GOLD); doc.setLineWidth(1); doc.line(pageW / 2 - 40, 35, pageW / 2 + 40, 35);
   doc.setTextColor(...BRAND); doc.setFont("helvetica", "bold"); doc.setFontSize(26);
   doc.text("Completion Certificate", pageW / 2, 50, { align: "center" });
