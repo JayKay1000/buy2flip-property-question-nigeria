@@ -10,7 +10,7 @@ export default function ContactOfficer() {
   const phoneNumber = "+234 903 339 3000";
   const phoneDigits = "2349033393000";
   const whatsappDigits = "2349033393000";
-  const email = "info@propertyquestion.net";
+  const email = "buy2flip@propertyquestion.net";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

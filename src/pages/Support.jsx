@@ -143,13 +143,13 @@ export default function Support() {
             <p className="text-xs text-muted-foreground mt-1">+234 903 339 3000</p>
           </Card>
         </a>
-        <a href="mailto:info@propertyquestion.net">
+        <a href="mailto:buy2flip@propertyquestion.net">
           <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center mb-3">
               <Mail className="w-5 h-5 text-brand" />
             </div>
             <h3 className="font-heading font-semibold text-foreground text-sm">Email Us</h3>
-            <p className="text-xs text-muted-foreground mt-1">info@propertyquestion.net</p>
+            <p className="text-xs text-muted-foreground mt-1">buy2flip@propertyquestion.net</p>
           </Card>
         </a>
       </div>
@@ -211,8 +211,8 @@ export default function Support() {
                 <a href="tel:+2349033393000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
                   <Phone className="w-4 h-4 text-muted-foreground" /> +234 903 339 3000
                 </a>
-                <a href="mailto:info@propertyquestion.net" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                  <Mail className="w-4 h-4 text-muted-foreground" /> info@propertyquestion.net
+                <a href="mailto:buy2flip@propertyquestion.net" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                  <Mail className="w-4 h-4 text-muted-foreground" /> buy2flip@propertyquestion.net
                 </a>
               </div>
             </Card>

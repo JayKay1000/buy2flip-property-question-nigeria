@@ -142,7 +142,7 @@ export default function Terms() {
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 For questions regarding these Terms, contact Property Question Nigeria Limited at
-                <span className="text-foreground font-medium"> info@propertyquestion.net</span>,
+                <span className="text-foreground font-medium"> buy2flip@propertyquestion.net</span>,
                 <span className="text-foreground font-medium"> +234 903 339 3000</span>, or Suite 43,
                 Ogba Shopping Arcade, Ijaiye Road, Ogba, Lagos, Nigeria.
               </p>
