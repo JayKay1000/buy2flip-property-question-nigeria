@@ -7,11 +7,11 @@ import { ShieldCheck, FileText, Scale, AlertTriangle } from "lucide-react";
 const sections = [
   {
     title: "1. Acceptance of Terms",
-    body: "By registering an account, making a commitment, or otherwise using the Property Question Nigeria Limited Buy2Flip platform (the \"Platform\"), you confirm that you have read, understood, and agree to be bound by these Terms of Service (\"Terms\"). If you do not agree with any provision, you must not access or use the Platform.",
+    body: "By registering an account, making a commitment, or otherwise participate in the Property Question Nigeria Limited buy2flip product (the \"Platform\"), you confirm that you have read, understood, and agree to be bound by these Terms of Service (\"Terms\"). If you do not agree with any provision, you must not access or use the Platform.",
   },
   {
     title: "2. Definitions",
-    body: "\"Company\" refers to Property Question Nigeria Limited. \"Participant\" refers to any registered user who makes a commitment through the Platform. \"Commitment\" refers to a structured financial contribution into a selected real estate-backed plan. \"Expected Return\" refers to the projected value payable at the maturity of a commitment, based on the selected plan's return rate.",
+    body: "\"Company\" refers to Property Question Nigeria Limited. \"Participant\" refers to any registered user who subscribes through the Platform. \u201CParticipate\u201D refers to a structured commitment contribution into a selected real estate-backed plan. \"Expected Return\" refers to the projected value payable at the maturity of a commitment, based on the selected plan's return rate.",
   },
   {
     title: "3. Eligibility",
@@ -27,7 +27,7 @@ const sections = [
   },
   {
     title: "6. Withdrawals & Redemptions",
-    body: "Returns and redemption values are disbursed to the participant's preferred receiving bank account at the maturity of the commitment. Participants may request an early withdrawal before maturity, subject to the Company's approval, applicable early-exit adjustments, and compliance checks. Early withdrawal requests are processed on a case-by-case basis and may affect the expected return. Withdrawal requests are processed subject to verification and applicable compliance checks.",
+    body: "Returns and redemption values are disbursed to the participant's preferred receiving account at the maturity of the commitment. Participants may request an early withdrawal before maturity, subject to the Company's approval, applicable early-exit adjustments, and compliance checks. Early withdrawal requests are processed on a case-by-case basis and may affect the expected return. Withdrawal requests are processed subject to verification and applicable compliance checks.",
   },
   {
     title: "7. Welcome Package Fee & Early Withdrawal Penalty",
@@ -43,27 +43,23 @@ const sections = [
   },
   {
     title: "10. Risk Disclosure",
-    body: "Buy2Flip and real estate-backed commitments involve inherent risks, including but not limited to market fluctuations, development delays, and liquidity constraints. Expected returns are projections and not guarantees. Participants should only commit funds they can afford to hold for the full plan duration and should carefully consider their financial position before participating.",
+    body: "Buy2flip is designed as a near-risk-free venture, considering that our speculations are based on gains at the very initial purchase and given that the product is intended for developmental purposes, which further guarantees returns.",
   },
   {
-    title: "11. Account Status & Suspension",
-    body: "The Company reserves the right to suspend or terminate accounts that violate these Terms, engage in fraudulent activity, or provide false information. Suspended participants may not make new commitments or request withdrawals until the account is reinstated. Participants may request account deletion through the Platform, subject to review of active commitments.",
+    title: "11. Privacy & Data Protection",
+    body: "The use of customer data is strictly limited to this platform, and it is subject to applicable data protection laws. However, customer information may be used for administrative purposes, support, verification, and to process disbursement.",
   },
   {
-    title: "12. Privacy & Data Protection",
-    body: "The Company handles participant data in accordance with applicable data protection laws. Personal information is used to administer commitments, process disbursements, and provide support. Payment evidence and banking details are stored securely and accessed only for verification and disbursement purposes.",
-  },
-  {
-    title: "13. Limitation of Liability",
+    title: "12. Limitation of Liability",
     body: "To the maximum extent permitted by law, the Company shall not be liable for indirect, incidental, or consequential damages arising from participation in the Platform. The Company's total liability shall not exceed the commitment amount associated with the claim in question.",
   },
   {
-    title: "14. Governing Law & Dispute Resolution",
-    body: "These Terms are governed by the laws of the Federal Republic of Nigeria. Any dispute arising from or relating to the Platform shall first be addressed through good-faith negotiation. Unresolved disputes shall be submitted to the jurisdiction of the competent courts of Lagos State, Nigeria.",
+    title: "13. Dispute Resolution",
+    body: "These Terms are governed by the laws of the Federal Republic of Nigeria. Any dispute arising from or relating to the Platform shall first be addressed through good-faith negotiation. Unresolved disputes shall be through arbitration only.",
   },
   {
-    title: "15. Amendments",
-    body: "The Company may update these Terms from time to time. Material changes will be communicated to participants. Continued use of the Platform following changes constitutes acceptance of the revised Terms.",
+    title: "14. Amendments",
+    body: "The Company may update or amend these Terms from time to time without formal communication to its users.",
   },
 ];
 
