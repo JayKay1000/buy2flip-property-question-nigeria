@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
@@ -124,7 +124,13 @@ export default function AppLayout() {
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
           >
-            <Outlet />
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+              </div>
+            }>
+              <Outlet />
+            </Suspense>
           </motion.div>
         </AnimatePresence>
       </main>
