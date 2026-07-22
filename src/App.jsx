@@ -1,45 +1,52 @@
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
-// Add page imports here
-import { Navigate } from 'react-router-dom';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/components/AppLayout';
-import Landing from './pages/Landing';
-import ContactOfficer from './pages/ContactOfficer';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import Dashboard from './pages/Dashboard';
-import Plans from './pages/Plans';
-import PlanDetail from './pages/PlanDetail';
-import Payment from './pages/Payment';
-import Portfolio from './pages/Portfolio';
-import Referrals from './pages/Referrals';
-import Support from './pages/Support';
-import SupportAssistant from './pages/SupportAssistant';
 import AdminRoute from '@/components/AdminRoute';
 import AdminLayout from '@/components/AdminLayout';
-import AdminOverview from './pages/admin/AdminOverview';
-import AdminParticipants from './pages/admin/AdminParticipants';
-import AdminPayments from './pages/admin/AdminPayments';
-import AdminCommitments from './pages/admin/AdminCommitments';
-import AdminWithdrawals from './pages/admin/AdminWithdrawals';
-import AdminAnnouncements from './pages/admin/AdminAnnouncements';
-import AdminLeaderboard from './pages/admin/AdminLeaderboard';
-import AdminUsers from './pages/admin/AdminUsers';
-import AdminAnalytics from './pages/admin/AdminAnalytics';
-import Terms from './pages/Terms';
-import Transactions from './pages/Transactions';
-import WithdrawalStatus from './pages/WithdrawalStatus';
-import DocumentCentre from './pages/DocumentCentre';
-import AdminDocuments from './pages/admin/AdminDocuments';
+
+// Code-split pages for faster WebView initial paint
+const Landing = lazy(() => import('./pages/Landing'));
+const ContactOfficer = lazy(() => import('./pages/ContactOfficer'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Plans = lazy(() => import('./pages/Plans'));
+const PlanDetail = lazy(() => import('./pages/PlanDetail'));
+const Payment = lazy(() => import('./pages/Payment'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Referrals = lazy(() => import('./pages/Referrals'));
+const Support = lazy(() => import('./pages/Support'));
+const SupportAssistant = lazy(() => import('./pages/SupportAssistant'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Transactions = lazy(() => import('./pages/Transactions'));
+const WithdrawalStatus = lazy(() => import('./pages/WithdrawalStatus'));
+const DocumentCentre = lazy(() => import('./pages/DocumentCentre'));
+const AdminOverview = lazy(() => import('./pages/admin/AdminOverview'));
+const AdminParticipants = lazy(() => import('./pages/admin/AdminParticipants'));
+const AdminPayments = lazy(() => import('./pages/admin/AdminPayments'));
+const AdminCommitments = lazy(() => import('./pages/admin/AdminCommitments'));
+const AdminWithdrawals = lazy(() => import('./pages/admin/AdminWithdrawals'));
+const AdminAnnouncements = lazy(() => import('./pages/admin/AdminAnnouncements'));
+const AdminLeaderboard = lazy(() => import('./pages/admin/AdminLeaderboard'));
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
+const AdminDocuments = lazy(() => import('./pages/admin/AdminDocuments'));
+
+const PageLoader = () => (
+  <div className="fixed inset-0 flex items-center justify-center">
+    <div className="w-8 h-8 border-4 border-slate-200 border-t-brand rounded-full animate-spin" />
+  </div>
+);
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
@@ -57,6 +64,7 @@ const AuthenticatedApp = () => {
   }
 
   return (
+    <Suspense fallback={<PageLoader />}>
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/contact-officer" element={<ContactOfficer />} />
@@ -94,6 +102,7 @@ const AuthenticatedApp = () => {
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
+    </Suspense>
   );
 };
 

@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { formatDateTime } from "@/lib/format";
 import {
   LifeBuoy, MessageSquare, Phone, Mail, Building2, HelpCircle,
@@ -173,14 +167,12 @@ export default function Support() {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="h-11"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {ticketCategories.map((cat) => (
-                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <AdaptiveSelect
+                value={category}
+                onValueChange={setCategory}
+                placeholder="Select Category"
+                options={ticketCategories}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="message">Message</Label>

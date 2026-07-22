@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt } from "lucide-react";
 
 const tabs = [
@@ -10,8 +10,19 @@ const tabs = [
   { label: "Support", path: "/support", icon: LifeBuoy },
 ];
 
-export default function MobileTabBar({ tabLocations = {} }) {
+export default function MobileTabBar({ tabLocations = {}, onTabReset }) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleClick = (e, tab) => {
+    const active = location.pathname.startsWith(tab.path);
+    // If already on this tab, reset to its base root and clear saved memory
+    if (active) {
+      e.preventDefault();
+      navigate(tab.path);
+      onTabReset?.(tab.path);
+    }
+  };
 
   return (
     <nav
@@ -26,6 +37,7 @@ export default function MobileTabBar({ tabLocations = {} }) {
           <Link
             key={tab.path}
             to={dest}
+            onClick={(e) => handleClick(e, tab)}
             className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 flex-1 transition-colors ${
               active ? "text-brand" : "text-muted-foreground"
             }`}

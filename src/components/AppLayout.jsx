@@ -102,7 +102,17 @@ export default function AppLayout() {
       <MobileHeader />
 
       {/* Mobile bottom tab bar */}
-      <MobileTabBar tabLocations={tabLocations} />
+      <MobileTabBar
+        tabLocations={tabLocations}
+        onTabReset={(path) =>
+          setTabLocations((prev) => {
+            const next = { ...prev };
+            delete next[path];
+            try { sessionStorage.setItem(TAB_MEMORY_KEY, JSON.stringify(next)); } catch {}
+            return next;
+          })
+        }
+      />
 
       {/* Main content */}
       <main className="lg:ml-72 pt-14 lg:pt-0 min-h-screen pb-20 lg:pb-0">
