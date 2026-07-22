@@ -9,6 +9,7 @@ import {
   Building2, ChevronDown, ChevronUp, Clock, Tag
 } from "lucide-react";
 import PullToRefresh from "@/components/PullToRefresh";
+import DocumentCentreBanner from "@/components/DocumentCentreBanner";
 
 const BROCHURE_URL = "https://media.base44.com/files/public/6a4d7c087d41148d5f9d3c8c/f478a8cea_FINALCOLONY_compressed.pdf";
 
@@ -106,15 +107,8 @@ export default function DocumentCentre() {
   return (
     <PullToRefresh onRefresh={loadData}>
       <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">
-            Land Allocation & Document Centre
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Your land-backed commitment details and official project documents.
-          </p>
-        </div>
+        {/* Banner */}
+        <DocumentCentreBanner />
 
         {/* Legal disclaimer */}
         <div className="mb-6 p-4 rounded-xl border border-gold/30 bg-gold/5 flex items-start gap-3">
