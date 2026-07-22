@@ -49,7 +49,7 @@ export default function DocumentCentreBanner() {
 
         <Link
           to="/dashboard"
-          className="inline-flex items-center gap-2 mt-7 px-5 py-2.5 rounded-xl bg-gold text-charcoal font-medium text-sm hover:bg-gold-light transition-colors no-select">View My Commitments
+          className="inline-flex items-center gap-2 mt-7 px-5 py-2.5 rounded-xl bg-gold text-charcoal font-medium text-sm hover:bg-gold-light transition-colors no-select">View My Commitment
 
 
         </Link>
