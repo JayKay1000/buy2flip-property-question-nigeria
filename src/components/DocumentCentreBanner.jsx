@@ -15,8 +15,8 @@ export default function DocumentCentreBanner() {
           alt="Colony Enclave land development, Epe, Lagos"
           fittingType="fill"
           focalPointY={0.4}
-          className="w-full h-full"
-        />
+          className="w-full h-full" />
+        
         <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/70 to-brand/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent" />
       </div>
@@ -49,11 +49,11 @@ export default function DocumentCentreBanner() {
 
         <Link
           to="/dashboard"
-          className="inline-flex items-center gap-2 mt-7 px-5 py-2.5 rounded-xl bg-gold text-charcoal font-medium text-sm hover:bg-gold-light transition-colors no-select"
-        >
-          View My Allocation <ArrowRight className="w-4 h-4" />
+          className="inline-flex items-center gap-2 mt-7 px-5 py-2.5 rounded-xl bg-gold text-charcoal font-medium text-sm hover:bg-gold-light transition-colors no-select">View My Commitments
+
+
         </Link>
       </div>
-    </div>
-  );
+    </div>);
+
 }
