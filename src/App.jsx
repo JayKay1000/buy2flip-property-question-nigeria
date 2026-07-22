@@ -38,6 +38,8 @@ import AdminAnalytics from './pages/admin/AdminAnalytics';
 import Terms from './pages/Terms';
 import Transactions from './pages/Transactions';
 import WithdrawalStatus from './pages/WithdrawalStatus';
+import DocumentCentre from './pages/DocumentCentre';
+import AdminDocuments from './pages/admin/AdminDocuments';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
@@ -73,6 +75,7 @@ const AuthenticatedApp = () => {
           <Route path="/referrals" element={<Referrals />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/withdrawal-status" element={<WithdrawalStatus />} />
+          <Route path="/documents" element={<DocumentCentre />} />
           <Route path="/support" element={<Support />} />
           <Route path="/support-assistant" element={<SupportAssistant />} />
         </Route>
@@ -87,6 +90,7 @@ const AuthenticatedApp = () => {
         <Route path="leaderboard" element={<AdminLeaderboard />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="documents" element={<AdminDocuments />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

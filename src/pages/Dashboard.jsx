@@ -8,7 +8,7 @@ import { REFERRAL_REWARDS } from "@/lib/plans";
 import {
   Wallet, TrendingUp, Calendar, Users, Bell, Download, LifeBuoy,
   ArrowRight, CheckCircle2, Clock, AlertCircle, Building2, Phone, Mail,
-  Plus, Award
+  Plus, Award, MapPin, Landmark
 } from "lucide-react";
 import PullToRefresh from "@/components/PullToRefresh";
 
@@ -60,6 +60,7 @@ export default function Dashboard() {
   const totalCommitted = activeCommitments.reduce((sum, c) => sum + (c.amount || 0), 0);
 
   const firstName = profile?.full_name?.split(" ")[0] || "there";
+  const landAllocationSqm = Math.floor(totalCommitted / 1_000_000);
 
   const stats = [
     {
@@ -139,6 +140,48 @@ export default function Dashboard() {
           </div>
           <Link to="/portfolio"><Button variant="outline" size="sm">Update Now</Button></Link>
         </Card>
+      )}
+
+      {/* My Land Allocation card */}
+      {currentCommitment && (
+        <Link to="/documents" className="block mb-6">
+          <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-brand to-brand-dark text-white shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-white/60 text-xs uppercase tracking-wider font-medium">My Land Allocation</p>
+                  <p className="font-heading font-bold text-lg mt-0.5">Colony Enclave, Epe, Lagos</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <Landmark className="w-5 h-5 text-gold" />
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-white/10 rounded-xl p-3">
+                  <p className="text-white/60 text-xs">Committed</p>
+                  <p className="font-numeric font-bold text-sm mt-0.5">{formatNaira(totalCommitted)}</p>
+                </div>
+                <div className="bg-gold/20 rounded-xl p-3 border border-gold/30">
+                  <p className="text-gold-light text-xs">Land Allocation</p>
+                  <p className="font-numeric font-bold text-sm mt-0.5">{landAllocationSqm} m²</p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-3">
+                  <p className="text-white/60 text-xs">Status</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                    <p className="font-medium text-xs">Land Backed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="px-5 py-3 bg-black/20 flex items-center justify-between">
+              <p className="text-white/60 text-xs flex items-center gap-1">
+                <MapPin className="w-3 h-3" /> View documents & survey plan
+              </p>
+              <ArrowRight className="w-4 h-4 text-white/50" />
+            </div>
+          </div>
+        </Link>
       )}
 
       {/* Stats grid */}

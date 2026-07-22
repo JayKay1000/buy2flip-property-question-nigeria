@@ -1,0 +1,59 @@
+{
+  "name": "ProjectDocument",
+  "type": "object",
+  "properties": {
+    "project_name": {
+      "type": "string"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "brochure",
+        "survey_plan",
+        "title_document",
+        "other"
+      ],
+      "default": "brochure"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "version_notes": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "access_level": {
+      "type": "string",
+      "enum": [
+        "all_participants",
+        "active_only"
+      ],
+      "default": "all_participants"
+    },
+    "download_count": {
+      "type": "number",
+      "default": 0
+    },
+    "superseded_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_name",
+    "document_type",
+    "title",
+    "file_url"
+  ]
+}
