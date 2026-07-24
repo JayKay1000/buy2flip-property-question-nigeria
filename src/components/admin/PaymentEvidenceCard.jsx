@@ -7,6 +7,7 @@ import {
   ChevronDown, ChevronUp
 } from "lucide-react";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isSafeUrl } from "@/lib/urlSafe";
 
 /**
  * Displays a single payment record with evidence preview (inline image
@@ -18,7 +19,8 @@ export default function PaymentEvidenceCard({ payment, onApprove, onReject, proc
   const [showReject, setShowReject] = useState(false);
   const [reason, setReason] = useState("");
 
-  const isImage = payment.evidence_url && /\.(jpg|jpeg|png|gif|webp)$/i.test(payment.evidence_url);
+  const safeUrl = isSafeUrl(payment.evidence_url);
+  const isImage = safeUrl && /\.(jpg|jpeg|png|gif|webp)$/i.test(payment.evidence_url);
 
   const handleReject = () => {
     onReject(payment, reason || "Payment could not be verified");
@@ -54,7 +56,11 @@ export default function PaymentEvidenceCard({ payment, onApprove, onReject, proc
       {/* Evidence */}
       {payment.evidence_url && (
         <div>
-          {isImage ? (
+          {!safeUrl ? (
+            <Button variant="outline" size="sm" className="w-full" disabled>
+              <AlertCircle className="w-3.5 h-3.5 mr-2" /> Evidence link unavailable
+            </Button>
+          ) : isImage ? (
             <div className="space-y-2">
               <button
                 onClick={() => setShowPreview(!showPreview)}
