@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getPlan, PLANS, COMPANY_BANK, PAYMENT_EXPIRY_HOURS } from "@/lib/plans";
 import CommitmentAmountSlider from "@/components/CommitmentAmountSlider";
-import { formatNaira, addMonths, formatDate } from "@/lib/format";
+import { formatNaira } from "@/lib/format";
 import {
   Copy, Check, Upload, FileCheck, ArrowRight, ArrowLeft, Clock,
   Building2, AlertCircle, CheckCircle2, Loader2, X
@@ -99,30 +99,13 @@ export default function Payment() {
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      const maturityDate = addMonths(new Date(), selectedPlan.durationMonths);
-      const startDate = new Date().toISOString().split("T")[0];
-
-      const commitment = await base44.entities.Commitment.create({
-        plan_name: selectedPlan.name,
-        plan_duration_months: selectedPlan.durationMonths,
-        plan_return_rate: selectedPlan.returnRate,
+      // Financial values are computed server-side to prevent client-side tampering.
+      const { data } = await base44.functions.invoke("createCommitment", {
+        planName: selectedPlan.name,
         amount: validAmount,
-        expected_return: expectedReturn,
-        total_expected_value: totalValue,
-        start_date: startDate,
-        maturity_date: maturityDate,
-        status: "pending_payment",
+        evidenceUrl: file_url,
       });
-
-      await base44.entities.Payment.create({
-        amount: validAmount,
-        status: "pending",
-        evidence_url: file_url,
-        commitment_id: commitment.id,
-        company_bank_name: COMPANY_BANK.bankName,
-        company_account_name: COMPANY_BANK.accountName,
-        company_account_number: COMPANY_BANK.accountNumber,
-      });
+      const commitment = data?.commitment;
 
       setCreatedCommitment(commitment);
       setStep(4);
