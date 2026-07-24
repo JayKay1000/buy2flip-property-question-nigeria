@@ -9,6 +9,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { formatDate, formatDateTime } from "@/lib/format";
+import { isSafeUrl } from "@/lib/urlSafe";
 import {
   FolderOpen, Upload, FileText, Download, Trash2, Edit3, Plus,
   BookOpen, MapPin, Shield, Tag, Clock, Eye, EyeOff, RefreshCw, AlertCircle
@@ -269,7 +270,7 @@ export default function AdminDocuments() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <Button variant="ghost" size="icon" onClick={() => window.open(doc.file_url, "_blank")} title="Preview">
+                        <Button variant="ghost" size="icon" onClick={() => { if (isSafeUrl(doc.file_url)) window.open(doc.file_url, "_blank"); }} title="Preview">
                           <Download className="w-4 h-4" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleToggleActive(doc)} title={doc.is_active ? "Hide" : "Show"}>
