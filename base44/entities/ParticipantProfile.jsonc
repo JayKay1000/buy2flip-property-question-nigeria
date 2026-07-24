@@ -33,7 +33,7 @@
         "active",
         "suspended"
       ],
-      "default": "active"
+      "default": "pending"
     },
     "avatar_url": {
       "type": "string"

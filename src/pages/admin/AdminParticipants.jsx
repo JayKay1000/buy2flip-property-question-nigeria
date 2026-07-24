@@ -14,6 +14,7 @@ export default function AdminParticipants() {
   const [participants, setParticipants] = useState([]);
   const [commitments, setCommitments] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -25,14 +26,16 @@ export default function AdminParticipants() {
 
   const loadData = async () => {
     try {
-      const [parts, comms, pays] = await Promise.all([
+      const [parts, comms, pays, usrs] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
         base44.entities.Commitment.list(),
         base44.entities.Payment.list(),
+        base44.entities.User.list(),
       ]);
       setParticipants(parts);
       setCommitments(comms);
       setPayments(pays);
+      setUsers(usrs);
     } catch {
     } finally {
       setLoading(false);
@@ -44,6 +47,12 @@ export default function AdminParticipants() {
     await base44.entities.ParticipantProfile.update(p.id, { status: newStatus });
     loadData();
     setSelected({ ...p, status: newStatus });
+  };
+
+  const approveParticipant = async (p) => {
+    await base44.entities.ParticipantProfile.update(p.id, { status: "active" });
+    loadData();
+    setSelected({ ...p, status: "active" });
   };
 
   if (loading) {
@@ -61,6 +70,7 @@ export default function AdminParticipants() {
     p.referral_code?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const getUser = (uid) => users.find((u) => u.id === uid);
   const getParticipantCommitments = (participantId) =>
     commitments.filter((c) => c.created_by_id === participantId);
 
@@ -140,7 +150,7 @@ export default function AdminParticipants() {
                   <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                     <td className="px-4 py-3">
                       <p className="font-medium text-foreground">{p.full_name}</p>
-                      <p className="text-xs text-muted-foreground">{p.created_by_id?.slice(0, 8)}...</p>
+                      <p className="text-xs text-muted-foreground">{getUser(p.created_by_id)?.email || "—"}</p>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{p.phone_number}</td>
                     <td className="px-4 py-3 font-numeric text-foreground hidden md:table-cell">{p.referral_code}</td>
@@ -190,6 +200,10 @@ export default function AdminParticipants() {
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-foreground">{getUser(selected.created_by_id)?.email || "—"}</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                   <span className="text-foreground">{selected.phone_number}</span>
                 </div>
@@ -197,19 +211,25 @@ export default function AdminParticipants() {
                   <Building2 className="w-4 h-4 text-muted-foreground" />
                   <span className="text-foreground font-numeric">Referral: {selected.referral_code}</span>
                 </div>
+                {selected.referred_by_code && (
+                  <p className="text-xs text-muted-foreground pl-7">Referred by: {selected.referred_by_code}</p>
+                )}
                 {selected.bank_name && (
                   <>
                     <div className="flex items-center gap-3 text-sm">
                       <CreditCard className="w-4 h-4 text-muted-foreground" />
                       <span className="text-foreground">{selected.bank_name} — {selected.account_number}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground pl-7">Account: {selected.account_name}</p>
+                    <p className="text-xs text-muted-foreground pl-7">Account Name: {selected.account_name}</p>
                   </>
                 )}
-                {selected.referred_by_code && (
-                  <p className="text-xs text-muted-foreground">Referred by: {selected.referred_by_code}</p>
+                {selected.preferred_receiving_bank && (
+                  <p className="text-xs text-muted-foreground pl-7">Preferred Receiving Bank: {selected.preferred_receiving_bank}</p>
                 )}
-                <p className="text-xs text-muted-foreground">Joined: {formatDate(selected.created_date)}</p>
+                {selected.relationship_officer && (
+                  <p className="text-xs text-muted-foreground pl-7">Relationship Officer: {selected.relationship_officer}</p>
+                )}
+                <p className="text-xs text-muted-foreground pl-7">Joined: {formatDate(selected.created_date)}</p>
               </div>
 
               {/* Commitments & Payment Evidence */}
@@ -259,16 +279,25 @@ export default function AdminParticipants() {
               </div>
 
               {/* Actions */}
-              <Button
-                className={`w-full h-12 ${selected.status === "suspended" ? "bg-brand hover:bg-brand-dark" : "bg-destructive hover:bg-destructive/90"}`}
-                onClick={() => toggleStatus(selected)}
-              >
-                {selected.status === "suspended" ? (
-                  <><CheckCircle2 className="w-4 h-4 mr-2" /> Reactivate Account</>
-                ) : (
-                  <><Ban className="w-4 h-4 mr-2" /> Suspend Account</>
-                )}
-              </Button>
+              {selected.status === "pending" ? (
+                <Button
+                  className="w-full h-12 bg-brand hover:bg-brand-dark"
+                  onClick={() => approveParticipant(selected)}
+                >
+                  <><CheckCircle2 className="w-4 h-4 mr-2" /> Approve Participant</>
+                </Button>
+              ) : (
+                <Button
+                  className={`w-full h-12 ${selected.status === "suspended" ? "bg-brand hover:bg-brand-dark" : "bg-destructive hover:bg-destructive/90"}`}
+                  onClick={() => toggleStatus(selected)}
+                >
+                  {selected.status === "suspended" ? (
+                    <><CheckCircle2 className="w-4 h-4 mr-2" /> Reactivate Account</>
+                  ) : (
+                    <><Ban className="w-4 h-4 mr-2" /> Suspend Account</>
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </div>

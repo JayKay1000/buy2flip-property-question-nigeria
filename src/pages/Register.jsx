@@ -102,7 +102,7 @@ export default function Register() {
             phone_number: phoneNumber,
             referral_code: refCode,
             referred_by_code: referralCode || null,
-            status: "active",
+            status: "pending",
           });
           if (referralCode) {
             await base44.entities.Referral.create({
