@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ChevronLeft, LogOut } from "lucide-react";
+import { ChevronLeft, LogOut, Shield } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 
@@ -64,6 +64,13 @@ export default function MobileHeader() {
         {title}
       </h1>
       <div className="flex items-center justify-end flex-1">
+        <button
+          onClick={() => navigate("/security-settings")}
+          aria-label="Account security"
+          className={`p-2 text-white active:opacity-70 transition-opacity ${pathname === "/security-settings" ? "opacity-100" : "opacity-90"}`}
+        >
+          <Shield className="w-5 h-5" />
+        </button>
         <button
           onClick={handleLogout}
           aria-label="Sign out"
