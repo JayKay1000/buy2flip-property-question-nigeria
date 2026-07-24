@@ -5,6 +5,7 @@ import Logo from "@/components/Logo";
 import MobileTabBar from "@/components/MobileTabBar";
 import MobileHeader from "@/components/MobileHeader";
 import LoginActivityTracker from "@/components/LoginActivityTracker";
+import IdleAutoLogout from "@/components/IdleAutoLogout";
 import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot, Banknote, ScrollText, FolderOpen, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -103,6 +104,7 @@ export default function AppLayout() {
       {/* Mobile header */}
       <MobileHeader />
       <LoginActivityTracker />
+      <IdleAutoLogout />
 
       {/* Mobile bottom tab bar */}
       <MobileTabBar
