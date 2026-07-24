@@ -177,7 +177,7 @@ export default function AdminPayments() {
                   <div className="mb-4 p-3 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
                     <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-muted-foreground">
-                      Participant is entitled to a 1% welcome package ({formatNaira((commitment.amount || 0) * 0.01)}), withdrawable once you verify this payment. Please verify before the welcome package can be paid.
+                      This commitment includes a 1% welcome package ({formatNaira((commitment.amount || 0) * 0.01)}). Approving this payment only activates the commitment — it does <span className="font-medium text-foreground">not</span> pay the welcome package. The participant must separately request it, and you will approve that request under Withdrawal Requests.
                     </p>
                   </div>
                 )}
