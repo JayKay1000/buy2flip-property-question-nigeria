@@ -14,6 +14,7 @@ const ROUTE_TITLES = {
   "/documents": "Document Centre",
   "/withdrawal-status": "Withdrawal Status",
   "/support-assistant": "Support Assistant",
+  "/security-settings": "Account Security",
   "/terms": "Terms of Service",
   "/payment": "Payment",
 };

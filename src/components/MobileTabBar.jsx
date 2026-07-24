@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt, MoreHorizontal, FolderOpen, Users, Banknote } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt, MoreHorizontal, FolderOpen, Users, Banknote, Shield } from "lucide-react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 const tabs = [
@@ -16,6 +16,7 @@ const moreItems = [
   { label: "Documents", path: "/documents", icon: FolderOpen },
   { label: "Referrals", path: "/referrals", icon: Users },
   { label: "Withdrawals", path: "/withdrawal-status", icon: Banknote },
+  { label: "Security", path: "/security-settings", icon: Shield },
 ];
 
 export default function MobileTabBar({ tabLocations = {}, onTabReset }) {

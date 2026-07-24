@@ -41,6 +41,7 @@ const AdminLeaderboard = lazy(() => import('./pages/admin/AdminLeaderboard'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
 const AdminDocuments = lazy(() => import('./pages/admin/AdminDocuments'));
+const SecuritySettings = lazy(() => import('./pages/SecuritySettings'));
 
 const PageLoader = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -84,6 +85,7 @@ const AuthenticatedApp = () => {
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/withdrawal-status" element={<WithdrawalStatus />} />
           <Route path="/documents" element={<DocumentCentre />} />
+          <Route path="/security-settings" element={<SecuritySettings />} />
           <Route path="/support" element={<Support />} />
           <Route path="/support-assistant" element={<SupportAssistant />} />
         </Route>

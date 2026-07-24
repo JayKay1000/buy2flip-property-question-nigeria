@@ -4,7 +4,8 @@ import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 import MobileTabBar from "@/components/MobileTabBar";
 import MobileHeader from "@/components/MobileHeader";
-import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot, Banknote, ScrollText, FolderOpen } from "lucide-react";
+import LoginActivityTracker from "@/components/LoginActivityTracker";
+import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot, Banknote, ScrollText, FolderOpen, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
   { label: "Referrals", path: "/referrals", icon: Users },
   { label: "Support", path: "/support", icon: LifeBuoy },
   { label: "Support Assistant", path: "/support-assistant", icon: Bot },
+  { label: "Account Security", path: "/security-settings", icon: Shield },
   { label: "Terms of Service", path: "/terms", icon: ScrollText },
 ];
 
@@ -100,6 +102,7 @@ export default function AppLayout() {
 
       {/* Mobile header */}
       <MobileHeader />
+      <LoginActivityTracker />
 
       {/* Mobile bottom tab bar */}
       <MobileTabBar
