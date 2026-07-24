@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import PasswordInput from "@/components/PasswordInput";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -132,9 +132,8 @@ export default function SecuritySettings() {
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="current-pw">Current password</Label>
-              <Input
+              <PasswordInput
                 id="current-pw"
-                type="password"
                 autoComplete="current-password"
                 value={pw.current}
                 onChange={(e) => setPw({ ...pw, current: e.target.value })}
@@ -143,9 +142,8 @@ export default function SecuritySettings() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label htmlFor="new-pw">New password</Label>
-                <Input
+                <PasswordInput
                   id="new-pw"
-                  type="password"
                   autoComplete="new-password"
                   value={pw.next}
                   onChange={(e) => setPw({ ...pw, next: e.target.value })}
@@ -153,9 +151,8 @@ export default function SecuritySettings() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="confirm-pw">Confirm new password</Label>
-                <Input
+                <PasswordInput
                   id="confirm-pw"
-                  type="password"
                   autoComplete="new-password"
                   value={pw.confirm}
                   onChange={(e) => setPw({ ...pw, confirm: e.target.value })}
