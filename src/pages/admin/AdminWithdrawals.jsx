@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Banknote, Search, CheckCircle2, Clock, X, Building2, Save } from "lucide-react";
+import { Banknote, Search, CheckCircle2, Clock, X, Building2, Save, AlertCircle } from "lucide-react";
 
 const statusConfig = {
   requested: { label: "Requested", color: "bg-gold/10 text-gold-dark", icon: Clock },
@@ -64,6 +64,23 @@ export default function AdminWithdrawals() {
   const findProfile = (userId) => profiles.find((p) => p.created_by_id === userId);
   const findCommitment = (id) => commitments.find((c) => c.id === id);
 
+  const isEarlyWithdrawal = (commitment) => {
+    if (!commitment?.maturity_date) return false;
+    return new Date(commitment.maturity_date) > new Date();
+  };
+
+  // Exact payable amount per the early-withdrawal warning the participant accepted:
+  // principal minus the 1% welcome package, with the entire expected return forfeited.
+  const computePayable = (withdrawal, commitment) => {
+    if (!commitment) return withdrawal.amount;
+    const principal = commitment.amount || 0;
+    if (isEarlyWithdrawal(commitment)) {
+      const welcomePackage = principal * 0.01;
+      return Math.max(0, Math.round(principal - welcomePackage));
+    }
+    return commitment.total_expected_value || withdrawal.amount;
+  };
+
   const filtered = withdrawals.filter((w) => {
     const profile = findProfile(w.created_by_id);
     const name = profile?.full_name || "";
@@ -84,10 +101,14 @@ export default function AdminWithdrawals() {
   const saveStatus = async () => {
     setSaving(true);
     try {
+      const editingCommitment = findCommitment(editing.commitment_id);
+      const payableAmount = computePayable(editing, editingCommitment);
       const updateData = { status: newStatus, admin_notes: adminNotes };
       if (newStatus === "paid" || newStatus === "rejected") {
         updateData.processed_at = new Date().toISOString();
       }
+      // Persist the exact agreed payout amount (early-withdrawal adjusted) on the record.
+      updateData.amount = payableAmount;
       await base44.entities.WithdrawalRequest.update(editing.id, updateData);
       if (newStatus === "paid" && editing.commitment_id) {
         await base44.entities.Commitment.update(editing.commitment_id, { status: "completed" });
@@ -179,7 +200,14 @@ export default function AdminWithdrawals() {
                         <p className="text-foreground">{commitment?.plan_name || "—"} Plan</p>
                         <p className="text-xs text-muted-foreground">{formatDate(w.created_date)}</p>
                       </td>
-                      <td className="px-4 py-3 font-numeric font-medium text-foreground">{formatNaira(w.amount)}</td>
+                      <td className="px-4 py-3">
+                        <p className="font-numeric font-medium text-foreground">{formatNaira(computePayable(w, commitment))}</p>
+                        {isEarlyWithdrawal(commitment) ? (
+                          <span className="text-[10px] font-medium text-destructive">Early · ROI forfeited</span>
+                        ) : (
+                          <span className="text-[10px] text-muted-foreground">Matured</span>
+                        )}
+                      </td>
                       <td className="px-4 py-3 hidden md:table-cell">
                         <p className="text-xs text-foreground">{w.bank_name}</p>
                         <p className="text-xs text-muted-foreground font-numeric">{w.account_number}</p>
@@ -202,12 +230,34 @@ export default function AdminWithdrawals() {
         )}
       </Card>
 
-      {editing && (
+      {editing && (() => {
+        const editingCommitment = findCommitment(editing.commitment_id);
+        const editingEarly = isEarlyWithdrawal(editingCommitment);
+        const editingPayable = computePayable(editing, editingCommitment);
+        return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 animate-fade-in" onClick={() => setEditing(null)} />
-          <Card className="relative z-10 w-full max-w-md p-6">
+          <Card className="relative z-10 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="font-heading font-semibold text-foreground mb-1">Process Withdrawal Request</h3>
-            <p className="text-sm text-muted-foreground mb-4">{formatNaira(editing.amount)}</p>
+            <p className="text-sm text-muted-foreground mb-4">
+              <span className="font-numeric font-semibold text-foreground">{formatNaira(editingPayable)}</span>
+              <span className="ml-1">to be paid</span>
+            </p>
+
+            {editingEarly && (
+              <div className="p-3 mb-4 rounded-lg bg-destructive/5 border border-destructive/30 space-y-1.5">
+                <p className="text-xs font-semibold text-destructive flex items-center gap-1.5">
+                  <AlertCircle className="w-4 h-4" /> Early Withdrawal — Adjusted Payout
+                </p>
+                <div className="text-xs space-y-1">
+                  <div className="flex justify-between"><span className="text-muted-foreground">Original Commitment</span><span className="font-numeric font-medium">{formatNaira(editingCommitment?.amount || 0)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Forfeited ROI</span><span className="font-numeric font-medium text-destructive">− {formatNaira(editingCommitment?.expected_return ?? Math.max(0, (editingCommitment?.total_expected_value || 0) - (editingCommitment?.amount || 0)))}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">1% Welcome Package</span><span className="font-numeric font-medium text-destructive">− {formatNaira((editingCommitment?.amount || 0) * 0.01)}</span></div>
+                  <div className="flex justify-between pt-1 border-t border-destructive/20"><span className="font-medium text-foreground">Payable Amount</span><span className="font-numeric font-bold text-foreground">{formatNaira(editingPayable)}</span></div>
+                </div>
+                <p className="text-[11px] text-muted-foreground pt-1">Per the early-withdrawal warning the participant accepted, only the adjusted amount may be processed.</p>
+              </div>
+            )}
 
             <div className="space-y-3 mb-4">
               <div className="p-3 rounded-lg border border-border bg-muted/20">
@@ -251,7 +301,8 @@ export default function AdminWithdrawals() {
             </div>
           </Card>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
