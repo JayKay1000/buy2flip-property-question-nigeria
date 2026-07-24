@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/format";
 import { formatNaira } from "@/lib/format";
+import { isSafeUrl } from "@/lib/urlSafe";
 import {
   FileText, Download, MapPin, Info, Shield, BookOpen,
   Building2, ChevronDown, ChevronUp, Clock, Tag
@@ -61,6 +62,7 @@ export default function DocumentCentre() {
   };
 
   const handleDownload = async (doc) => {
+    if (!isSafeUrl(doc.file_url)) return;
     setDownloading(doc.id);
     try {
       // Increment download count

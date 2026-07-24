@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isSafeUrl } from "@/lib/urlSafe";
 import {
   CreditCard, Clock, CheckCircle2, X, FileText, ExternalLink,
   AlertCircle, Building2
@@ -168,11 +169,17 @@ export default function AdminPayments() {
 
                 {payment.evidence_url && (
                   <div className="mb-4">
-                    <a href={payment.evidence_url} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="w-full">
-                        <ExternalLink className="w-3.5 h-3.5 mr-2" /> View Evidence
+                    {isSafeUrl(payment.evidence_url) ? (
+                      <a href={payment.evidence_url} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm" className="w-full">
+                          <ExternalLink className="w-3.5 h-3.5 mr-2" /> View Evidence
+                        </Button>
+                      </a>
+                    ) : (
+                      <Button variant="outline" size="sm" className="w-full" disabled>
+                        <ExternalLink className="w-3.5 h-3.5 mr-2" /> Invalid evidence link
                       </Button>
-                    </a>
+                    )}
                   </div>
                 )}
 
