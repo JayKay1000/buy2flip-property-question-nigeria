@@ -8,7 +8,7 @@ import { formatNaira, formatDate } from "@/lib/format";
 import { isSafeUrl } from "@/lib/urlSafe";
 import {
   CreditCard, Clock, CheckCircle2, X, FileText, ExternalLink,
-  AlertCircle, Building2
+  AlertCircle, Building2, Gift
 } from "lucide-react";
 
 const statusFilters = [
@@ -161,11 +161,26 @@ export default function AdminPayments() {
                       <span className="text-foreground">{commitment.plan_name} ({commitment.plan_duration_months}mo)</span>
                     </div>
                   )}
+                  {commitment && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">1% Welcome Package</span>
+                      <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * 0.01)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Account</span>
                     <span className="text-foreground text-xs">{payment.company_account_number}</span>
                   </div>
                 </div>
+
+                {payment.status === "pending" && commitment && (
+                  <div className="mb-4 p-3 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
+                    <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-muted-foreground">
+                      Participant is entitled to a 1% welcome package ({formatNaira((commitment.amount || 0) * 0.01)}), withdrawable once you verify this payment. Please verify before the welcome package can be paid.
+                    </p>
+                  </div>
+                )}
 
                 {payment.evidence_url && (
                   <div className="mb-4">

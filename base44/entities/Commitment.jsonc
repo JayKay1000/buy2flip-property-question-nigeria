@@ -46,6 +46,10 @@
     },
     "certificate_url": {
       "type": "string"
+    },
+    "welcome_package_withdrawn": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [

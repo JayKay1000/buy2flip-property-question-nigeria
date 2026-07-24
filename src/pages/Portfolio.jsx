@@ -11,9 +11,10 @@ import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
 import {
   Wallet, TrendingUp, Calendar, Download, Award, CheckCircle2,
-  Clock, FileText, Plus, Building2, Save, AlertTriangle, Trash2, ShieldAlert, Banknote
+  Clock, FileText, Plus, Building2, Save, AlertTriangle, Trash2, ShieldAlert, Banknote, Gift
 } from "lucide-react";
 import WithdrawalDialog from "@/components/WithdrawalDialog";
+import WelcomePackageWithdrawDialog from "@/components/WelcomePackageWithdrawDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +45,7 @@ export default function Portfolio() {
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const [confirmText, setConfirmText] = useState("");
+  const [withdrawWelcome, setWithdrawWelcome] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -277,6 +279,33 @@ export default function Portfolio() {
                         )}
                         </div>
 
+                        {c.status === "active" && (() => {
+                          const wp = withdrawals.find((w) => w.commitment_id === c.id && w.request_type === "welcome_package");
+                          const wpPaid = c.welcome_package_withdrawn || wp?.status === "paid";
+                          const wpPending = wp && (wp.status === "requested" || wp.status === "processing");
+                          const wpAmount = Math.round((c.amount || 0) * 0.01);
+                          return (
+                            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between gap-3">
+                              <div className="flex items-center gap-2">
+                                <Gift className="w-4 h-4 text-gold-dark" />
+                                <div>
+                                  <p className="text-xs font-medium text-foreground">1% Welcome Package</p>
+                                  <p className="text-xs text-muted-foreground">{formatNaira(wpAmount)}</p>
+                                </div>
+                              </div>
+                              {wpPaid ? (
+                                <span className="text-xs px-3 py-1.5 rounded-full font-medium bg-brand/10 text-brand"><CheckCircle2 className="w-3 h-3 inline mr-1" /> Paid</span>
+                              ) : wpPending ? (
+                                <span className="text-xs px-3 py-1.5 rounded-full font-medium bg-gold/10 text-gold-dark"><Clock className="w-3 h-3 inline mr-1" /> Processing</span>
+                              ) : (
+                                <Button size="sm" className="bg-gold hover:bg-gold-dark text-white border-0" onClick={() => setWithdrawWelcome(c)}>
+                                  <Gift className="w-4 h-4 mr-1" /> Withdraw 1%
+                                </Button>
+                              )}
+                            </div>
+                          );
+                        })()}
+
                         {(c.status === "active" || c.status === "completed") && (() => {
                         const wd = getWithdrawal(c.id);
                         if (wd && (wd.status === "requested" || wd.status === "processing")) {
@@ -496,6 +525,15 @@ export default function Portfolio() {
         </div>
       </div>
     </div>
+
+    <WelcomePackageWithdrawDialog
+      open={!!withdrawWelcome}
+      onOpenChange={(open) => !open && setWithdrawWelcome(null)}
+      commitment={withdrawWelcome}
+      profile={profile}
+      onSubmitted={handleWithdrawalSubmitted}
+      onRevert={handleWithdrawalRevert}
+    />
 
     <WithdrawalDialog
       open={!!withdrawCommitment}

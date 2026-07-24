@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Banknote, Search, CheckCircle2, Clock, X, Building2, Save, AlertCircle } from "lucide-react";
+import { Banknote, Search, CheckCircle2, Clock, X, Building2, Save, AlertCircle, Gift } from "lucide-react";
 
 const statusConfig = {
   requested: { label: "Requested", color: "bg-gold/10 text-gold-dark", icon: Clock },
@@ -64,6 +64,8 @@ export default function AdminWithdrawals() {
   const findProfile = (userId) => profiles.find((p) => p.created_by_id === userId);
   const findCommitment = (id) => commitments.find((c) => c.id === id);
 
+  const isWelcomePackage = (w) => w?.request_type === "welcome_package";
+
   const isEarlyWithdrawal = (commitment) => {
     if (!commitment?.maturity_date) return false;
     return new Date(commitment.maturity_date) > new Date();
@@ -71,7 +73,9 @@ export default function AdminWithdrawals() {
 
   // Exact payable amount per the early-withdrawal warning the participant accepted:
   // principal minus the 1% welcome package, with the entire expected return forfeited.
+  // Welcome-package requests pay out the stored 1% amount as-is.
   const computePayable = (withdrawal, commitment) => {
+    if (isWelcomePackage(withdrawal)) return withdrawal.amount;
     if (!commitment) return withdrawal.amount;
     const principal = commitment.amount || 0;
     if (isEarlyWithdrawal(commitment)) {
@@ -111,7 +115,11 @@ export default function AdminWithdrawals() {
       updateData.amount = payableAmount;
       await base44.entities.WithdrawalRequest.update(editing.id, updateData);
       if (newStatus === "paid" && editing.commitment_id) {
-        await base44.entities.Commitment.update(editing.commitment_id, { status: "completed" });
+        if (isWelcomePackage(editing)) {
+          await base44.entities.Commitment.update(editing.commitment_id, { welcome_package_withdrawn: true });
+        } else {
+          await base44.entities.Commitment.update(editing.commitment_id, { status: "completed" });
+        }
       }
       await loadData();
       setEditing(null);
@@ -202,7 +210,9 @@ export default function AdminWithdrawals() {
                       </td>
                       <td className="px-4 py-3">
                         <p className="font-numeric font-medium text-foreground">{formatNaira(computePayable(w, commitment))}</p>
-                        {isEarlyWithdrawal(commitment) ? (
+                        {isWelcomePackage(w) ? (
+                          <span className="text-[10px] font-medium text-gold-dark">Welcome Package</span>
+                        ) : isEarlyWithdrawal(commitment) ? (
                           <span className="text-[10px] font-medium text-destructive">Early · ROI forfeited</span>
                         ) : (
                           <span className="text-[10px] text-muted-foreground">Matured</span>
@@ -233,6 +243,7 @@ export default function AdminWithdrawals() {
       {editing && (() => {
         const editingCommitment = findCommitment(editing.commitment_id);
         const editingEarly = isEarlyWithdrawal(editingCommitment);
+        const editingWelcome = isWelcomePackage(editing);
         const editingPayable = computePayable(editing, editingCommitment);
         return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -243,6 +254,17 @@ export default function AdminWithdrawals() {
               <span className="font-numeric font-semibold text-foreground">{formatNaira(editingPayable)}</span>
               <span className="ml-1">to be paid</span>
             </p>
+
+            {editingWelcome && (
+              <div className="p-3 mb-4 rounded-lg bg-gold/5 border border-gold/20 space-y-1">
+                <p className="text-xs font-semibold text-gold-dark flex items-center gap-1.5">
+                  <Gift className="w-4 h-4" /> 1% Welcome Package Withdrawal
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  This is the participant's upfront 1% welcome package ({formatNaira(editingPayable)}), requested after their payment was verified. Please manually verify before paying. Their full commitment and ROI remain payable at maturity.
+                </p>
+              </div>
+            )}
 
             {editingEarly && (
               <div className="p-3 mb-4 rounded-lg bg-destructive/5 border border-destructive/30 space-y-1.5">

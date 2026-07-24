@@ -8,6 +8,14 @@
     "amount": {
       "type": "number"
     },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "maturity",
+        "welcome_package"
+      ],
+      "default": "maturity"
+    },
     "status": {
       "type": "string",
       "enum": [

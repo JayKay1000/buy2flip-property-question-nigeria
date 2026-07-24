@@ -10,7 +10,7 @@ import CommitmentAmountSlider from "@/components/CommitmentAmountSlider";
 import { formatNaira } from "@/lib/format";
 import {
   Copy, Check, Upload, FileCheck, ArrowRight, ArrowLeft, Clock,
-  Building2, AlertCircle, CheckCircle2, Loader2, X
+  Building2, AlertCircle, CheckCircle2, Loader2, X, Gift
 } from "lucide-react";
 
 export default function Payment() {
@@ -199,6 +199,14 @@ export default function Payment() {
             </div>
           </div>
 
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-gold/5 border border-gold/20">
+            <Gift className="w-5 h-5 text-gold-dark flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-foreground">1% Welcome Package — {formatNaira(Math.round(validAmount * 0.01))}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">You'll receive a 1% welcome package of your commitment, withdrawable immediately once your payment is verified by our team.</p>
+            </div>
+          </div>
+
           <Button className="w-full h-12 bg-brand hover:bg-brand-dark" onClick={proceedToAccount}>
             Proceed to Payment <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
@@ -356,6 +364,10 @@ export default function Payment() {
             <div className="flex justify-between text-sm pt-2 border-t border-border">
               <span className="text-muted-foreground">Total at Maturity</span>
               <span className="font-numeric font-bold text-gold-dark">{formatNaira(totalValue)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">1% Welcome Package</span>
+              <span className="font-numeric font-medium text-gold-dark">{formatNaira(Math.round(validAmount * 0.01))}</span>
             </div>
           </div>
           <div className="flex gap-3 justify-center pt-2">
