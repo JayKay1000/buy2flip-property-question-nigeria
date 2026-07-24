@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate } from "@/lib/format";
 import {
   Users, CreditCard, TrendingUp, CheckCircle2, Clock, AlertCircle,
-  ArrowRight, Award, Banknote
+  ArrowRight, Award, Banknote, Download, Loader2
 } from "lucide-react";
+import {
+  downloadCsv, participantColumns, commitmentColumns,
+} from "@/lib/exportCsv";
 
 export default function AdminOverview() {
   const [loading, setLoading] = useState(true);
@@ -15,10 +18,27 @@ export default function AdminOverview() {
   const [commitments, setCommitments] = useState([]);
   const [payments, setPayments] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     loadData();
   }, []);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const [parts, comms] = await Promise.all([
+        base44.entities.ParticipantProfile.list(),
+        base44.entities.Commitment.list(),
+      ]);
+      const stamp = new Date().toISOString().split("T")[0];
+      downloadCsv(`participants-${stamp}.csv`, participantColumns, parts);
+      setTimeout(() => downloadCsv(`commitments-${stamp}.csv`, commitmentColumns, comms), 400);
+    } catch {
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -68,8 +88,15 @@ export default function AdminOverview() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Admin Overview</h1>
-        <p className="text-muted-foreground mt-1">Platform-wide statistics and recent activity.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Admin Overview</h1>
+            <p className="text-muted-foreground mt-1">Platform-wide statistics and recent activity.</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleExport} disabled={exporting}>
+            {exporting ? <><Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> Exporting...</> : <><Download className="w-4 h-4 mr-1.5" /> Export Records (CSV)</>}
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
