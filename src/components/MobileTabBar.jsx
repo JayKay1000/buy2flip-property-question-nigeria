@@ -55,7 +55,7 @@ export default function MobileTabBar({ tabLocations = {}, onTabReset }) {
               key={tab.path}
               to={dest}
               onClick={(e) => handleClick(e, tab)}
-              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 flex-1 transition-colors ${
+              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-1.5 flex-1 min-w-0 transition-colors ${
                 active ? "text-brand" : "text-muted-foreground"
               }`}
             >
@@ -67,7 +67,7 @@ export default function MobileTabBar({ tabLocations = {}, onTabReset }) {
         <button
           type="button"
           onClick={() => setMoreOpen(true)}
-          className={`flex flex-col items-center justify-center gap-0.5 py-2 px-3 flex-1 transition-colors ${
+          className={`flex flex-col items-center justify-center gap-0.5 py-2 px-1.5 flex-1 min-w-0 transition-colors ${
             isMoreActive ? "text-brand" : "text-muted-foreground"
           }`}
         >
