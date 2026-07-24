@@ -8,6 +8,7 @@ import { UserPlus, Mail, Lock, Loader2, Phone, User, Gift, CheckCircle2 } from "
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
+import PasswordInput from "@/components/PasswordInput";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
@@ -235,19 +236,29 @@ export default function Register() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input id="password" type="password" autoComplete="new-password" placeholder="••••••••"
-                value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10 h-12" required />
-            </div>
+            <PasswordInput
+              id="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="h-12"
+              leftIcon={<Lock className="w-4 h-4" />}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm">Confirm Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input id="confirm" type="password" autoComplete="new-password" placeholder="••••••••"
-                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="pl-10 h-12" required />
-            </div>
+            <PasswordInput
+              id="confirm"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="h-12"
+              leftIcon={<Lock className="w-4 h-4" />}
+              required
+            />
           </div>
         </div>
         <div className="space-y-2">
