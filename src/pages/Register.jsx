@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,12 @@ export default function Register() {
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [verified, setVerified] = useState(false);
+
+  // Stable callback so the success screen's auto-redirect timer isn't reset
+  // by unrelated re-renders (e.g. the resend-cooldown ticking).
+  const goToDashboard = useCallback(() => {
+    window.location.href = "/dashboard";
+  }, []);
 
   const fireConfetti = () => {
     try {
@@ -135,7 +141,7 @@ export default function Register() {
   };
 
   if (verified) {
-    return <VerificationSuccess onContinue={() => { window.location.href = "/dashboard"; }} autoRedirectMs={3000} />;
+    return <VerificationSuccess onContinue={goToDashboard} autoRedirectMs={3000} />;
   }
 
   if (showOtp) {
