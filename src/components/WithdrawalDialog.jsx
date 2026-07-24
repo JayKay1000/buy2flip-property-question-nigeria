@@ -11,7 +11,7 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-import { Building2, Banknote, AlertCircle } from "lucide-react";
+import { Building2, Banknote, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function WithdrawalDialog({ open, onOpenChange, commitment, profile, onSubmitted, onRevert }) {
   const [submitting, setSubmitting] = useState(false);
@@ -24,13 +24,21 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
 
   const isEarlyWithdrawal = (() => {
     if (!commitment?.maturity_date) return false;
-    return new Date(commitment.maturity_date) > new Date();
+    // A commitment is considered matured once its maturity date is reached,
+    // inclusive of the entire local calendar day of maturity.
+    const maturity = new Date(commitment.maturity_date + "T00:00:00");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return maturity > today;
   })();
 
   const principal = commitment?.amount || 0;
   const expectedReturn = commitment?.expected_return != null ? commitment.expected_return : Math.max(0, (commitment?.total_expected_value || 0) - principal);
   const welcomePackage = principal * 0.01;
   const earlyPayout = principal - welcomePackage;
+  // At maturity the participant receives their full commitment (principal, with the
+  // 1% welcome package preserved) plus the entire expected return — no penalties.
+  const maturedPayout = commitment?.total_expected_value || (principal + expectedReturn);
 
   const submitWithdrawal = async () => {
     setError("");
@@ -85,8 +93,25 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
           <div className="p-4 rounded-lg bg-brand/5 border border-brand/15">
             <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Withdrawal Amount</p>
             <p className="font-numeric font-bold text-xl text-brand">{formatNaira(amount)}</p>
-            <p className="text-xs text-muted-foreground mt-1">Principal + Expected Returns</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {isEarlyWithdrawal ? "Requested (subject to early-withdrawal penalty)" : "Full commitment + ROI (1% welcome package preserved)"}
+            </p>
           </div>
+
+          {!isEarlyWithdrawal && (
+            <div className="p-4 rounded-lg bg-brand/5 border border-brand/20 space-y-2">
+              <p className="text-sm font-semibold text-brand flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4" /> Maturity Reached — Full Payout
+              </p>
+              <div className="text-sm space-y-1">
+                <div className="flex justify-between"><span className="text-muted-foreground">Original Commitment</span><span className="font-numeric font-medium">{formatNaira(principal)}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Expected Return (ROI)</span><span className="font-numeric font-medium text-brand">+ {formatNaira(expectedReturn)}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">1% Welcome Package</span><span className="font-numeric font-medium text-brand">Preserved</span></div>
+                <div className="flex justify-between pt-1.5 border-t border-brand/15"><span className="font-medium text-foreground">Total Payable</span><span className="font-numeric font-bold text-brand">{formatNaira(maturedPayout)}</span></div>
+              </div>
+              <p className="text-[11px] text-muted-foreground">Your commitment has matured. You will receive your full principal, your full expected return, and your 1% welcome package — no penalties apply.</p>
+            </div>
+          )}
 
           <div className="p-4 rounded-lg border border-border">
             <p className="text-xs font-medium text-foreground mb-3 flex items-center gap-1.5">
