@@ -44,8 +44,8 @@ export default function MobileTabBar({ tabLocations = {}, onTabReset }) {
   return (
     <>
       <nav
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border flex items-center justify-around pb-safe will-change-transform"
-        style={{ boxShadow: "0 -2px 12px rgba(0,0,0,0.06)", transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}
+        className="lg:hidden sticky bottom-0 z-50 bg-card border-t border-border flex items-center justify-around pb-safe"
+        style={{ boxShadow: "0 -2px 12px rgba(0,0,0,0.06)" }}
       >
         {tabs.map((tab) => {
           const active = location.pathname.startsWith(tab.path);

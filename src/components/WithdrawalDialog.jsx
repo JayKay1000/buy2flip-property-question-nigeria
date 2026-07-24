@@ -71,8 +71,8 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
 
   return (
     <AlertDialog open={open} onOpenChange={(v) => { if (!v) { setShowWarning(false); setAcknowledged(false); setError(""); } onOpenChange(v); }}>
-      <AlertDialogContent className="max-w-md">
-        <AlertDialogHeader>
+      <AlertDialogContent className="max-w-md max-h-[90vh] flex flex-col overflow-hidden">
+        <AlertDialogHeader className="shrink-0">
           <AlertDialogTitle className="flex items-center gap-2">
             <Banknote className="w-5 h-5 text-brand" /> Withdraw Commitment
           </AlertDialogTitle>
@@ -81,7 +81,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="space-y-4 py-2">
+        <div className="space-y-4 py-2 overflow-y-auto flex-1 min-h-0 -mx-1 px-1">
           <div className="p-4 rounded-lg bg-brand/5 border border-brand/15">
             <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Withdrawal Amount</p>
             <p className="font-numeric font-bold text-xl text-brand">{formatNaira(amount)}</p>
@@ -135,7 +135,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
           {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
 
-        <AlertDialogFooter>
+        <AlertDialogFooter className="shrink-0">
           {showWarning ? (
             <>
               <AlertDialogCancel onClick={() => { setShowWarning(false); setAcknowledged(false); }}>Back</AlertDialogCancel>
