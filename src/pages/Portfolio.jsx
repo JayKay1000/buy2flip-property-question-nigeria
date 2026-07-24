@@ -87,7 +87,7 @@ export default function Portfolio() {
     const previousBankForm = { ...bankForm };
     const optimisticProfile = profile
       ? { ...profile, ...bankForm }
-      : { ...bankForm, status: "active" };
+      : { ...bankForm, status: "pending" };
     setProfile(optimisticProfile);
     setEditingBank(false);
     setSavingBank(true);
@@ -109,7 +109,6 @@ export default function Portfolio() {
           full_name: me.full_name || me.email,
           phone_number: me.phone_number || "0000000000",
           referral_code: refCode,
-          status: "active",
         });
       }
       setProfile(savedProfile);

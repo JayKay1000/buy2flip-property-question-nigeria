@@ -64,19 +64,22 @@ export default function DocumentCentre() {
   const handleDownload = async (doc) => {
     if (!isSafeUrl(doc.file_url)) return;
     setDownloading(doc.id);
+    // Open the file immediately; track the download server-side via a function
+    // so clients never need write access to ProjectDocument metadata.
+    window.open(doc.file_url, "_blank", "noopener,noreferrer");
     try {
-      // Increment download count
-      await base44.entities.ProjectDocument.update(doc.id, {
-        download_count: (doc.download_count || 0) + 1,
-      });
-      // Open file in new tab
-      window.open(doc.file_url, "_blank", "noopener,noreferrer");
-      // Update local state
+      const res = await base44.functions.invoke("incrementDownloadCount", { documentId: doc.id });
+      const next = res?.data?.download_count;
+      setDocuments((prev) =>
+        prev.map((d) => d.id === doc.id
+          ? { ...d, download_count: typeof next === "number" ? next : (d.download_count || 0) + 1 }
+          : d)
+      );
+    } catch {
+      // Fallback: optimistically reflect the increment locally on tracking failure
       setDocuments((prev) =>
         prev.map((d) => d.id === doc.id ? { ...d, download_count: (d.download_count || 0) + 1 } : d)
       );
-    } catch {
-      window.open(doc.file_url, "_blank", "noopener,noreferrer");
     } finally {
       setDownloading(null);
     }
