@@ -24,7 +24,7 @@ const stats = [
 { value: "₦2B+", label: "COMMITMENTS" },
 { value: "500+", label: "Buy2Flip Participants" },
 { value: "65%", label: "Maximum Expected Return" },
-{ value: "100%", label: "Land-Backed Security" }];
+{ value: "100%", label: "Land-EDGED Security" }];
 
 
 export default function Landing() {
