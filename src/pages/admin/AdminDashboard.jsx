@@ -42,6 +42,17 @@ export default function AdminDashboard() {
     }
   };
 
+  // Real-time: refresh when participants or referrals change.
+  useEffect(() => {
+    const refresh = () => loadData();
+    const unsubP = base44.entities.ParticipantProfile.subscribe(refresh);
+    const unsubR = base44.entities.Referral.subscribe(refresh);
+    return () => {
+      unsubP?.();
+      unsubR?.();
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
