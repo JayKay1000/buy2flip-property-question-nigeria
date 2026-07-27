@@ -45,9 +45,9 @@ export default function MobileHeader() {
 
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-brand text-white z-40 flex items-center shadow-md pt-safe px-1">
-      <div className="flex items-center flex-1 min-w-0">
+      <div className="flex items-center flex-shrink-0">
         {isTabRoot ? (
-          <button onClick={() => navigate("/dashboard")} className="p-2">
+          <button onClick={() => navigate("/dashboard")} className="p-2 flex items-center" aria-label="Home">
             <Logo light size="sm" />
           </button>
         ) : (
@@ -60,10 +60,10 @@ export default function MobileHeader() {
           </button>
         )}
       </div>
-      <h1 className="font-heading font-semibold text-white text-base truncate max-w-[55%] text-center px-2">
+      <h1 className="flex-1 min-w-0 font-heading font-semibold text-white text-sm sm:text-base text-center px-2 truncate">
         {title}
       </h1>
-      <div className="flex items-center justify-end flex-1">
+      <div className="flex items-center justify-end flex-shrink-0">
         <button
           onClick={() => navigate("/security-settings")}
           aria-label="Account security"
