@@ -9,6 +9,8 @@ import {
   Users, Copy, Check, Share2, Gift, TrendingUp, Clock,
   CheckCircle2, Link2, ChevronRight, Trophy
 } from "lucide-react";
+import ReferralWithdrawalCard from "@/components/ReferralWithdrawalCard";
+import { toast } from "@/components/ui/use-toast";
 
 export default function Referrals() {
   const [profile, setProfile] = useState(null);
@@ -16,6 +18,7 @@ export default function Referrals() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [featured, setFeatured] = useState(null);
   const [myCode, setMyCode] = useState(null);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copiedField, setCopiedField] = useState("");
 
@@ -42,10 +45,22 @@ export default function Referrals() {
         const f = await base44.functions.invoke("getPublishedLeaderboard", {});
         setFeatured(f.data?.latest || null);
       } catch { /* featured unavailable */ }
+      try {
+        const reqs = await base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date");
+        setRequests(reqs.filter((r) => r.request_type === "referral"));
+      } catch { /* requests unavailable */ }
     } catch {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleWithdrawSubmitted = () => {
+    toast({
+      title: "Withdrawal requested",
+      description: "Your 30-day payout countdown has started.",
+    });
+    loadData();
   };
 
   if (loading) {
@@ -260,6 +275,14 @@ export default function Referrals() {
           </div>
         )}
       </Card>
+
+      {/* Withdraw referral earnings — placed beside the downline lists */}
+      <ReferralWithdrawalCard
+        profile={profile}
+        referrals={referrals}
+        requests={requests}
+        onSubmitted={handleWithdrawSubmitted}
+      />
 
       {/* Referral tree */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
