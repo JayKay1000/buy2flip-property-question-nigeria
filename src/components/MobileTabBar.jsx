@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt, MoreHorizontal, FolderOpen, Users, Banknote, Shield } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, LifeBuoy, Receipt, MoreHorizontal, FolderOpen, Users, Banknote, Shield, Gift, BarChart3 } from "lucide-react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 const tabs = [
@@ -15,6 +15,8 @@ const tabs = [
 const moreItems = [
   { label: "Documents", path: "/documents", icon: FolderOpen },
   { label: "Referrals", path: "/referrals", icon: Users },
+  { label: "Referral Analytics", path: "/referral-analytics", icon: BarChart3 },
+  { label: "Welcome Package", path: "/welcome-package", icon: Gift },
   { label: "Withdrawals", path: "/withdrawal-status", icon: Banknote },
   { label: "Security", path: "/security-settings", icon: Shield },
 ];

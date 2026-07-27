@@ -42,6 +42,10 @@ const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
 const AdminDocuments = lazy(() => import('./pages/admin/AdminDocuments'));
 const SecuritySettings = lazy(() => import('./pages/SecuritySettings'));
+const WelcomePackage = lazy(() => import('./pages/WelcomePackage'));
+const ReferralAnalytics = lazy(() => import('./pages/ReferralAnalytics'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminVerification = lazy(() => import('./pages/admin/AdminVerification'));
 
 const PageLoader = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -88,7 +92,13 @@ const AuthenticatedApp = () => {
           <Route path="/security-settings" element={<SecuritySettings />} />
           <Route path="/support" element={<Support />} />
           <Route path="/support-assistant" element={<SupportAssistant />} />
+          <Route path="/welcome-package" element={<WelcomePackage />} />
+          <Route path="/referral-analytics" element={<ReferralAnalytics />} />
         </Route>
+      </Route>
+      <Route element={<AdminRoute><AdminLayout /></AdminRoute>}>
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-verification" element={<AdminVerification />} />
       </Route>
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminOverview />} />

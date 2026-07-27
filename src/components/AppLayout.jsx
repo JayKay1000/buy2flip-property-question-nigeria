@@ -6,7 +6,7 @@ import MobileTabBar from "@/components/MobileTabBar";
 import MobileHeader from "@/components/MobileHeader";
 import LoginActivityTracker from "@/components/LoginActivityTracker";
 import IdleAutoLogout from "@/components/IdleAutoLogout";
-import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot, Banknote, ScrollText, FolderOpen, Shield } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Bot, Banknote, ScrollText, FolderOpen, Shield, Gift, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
@@ -17,6 +17,8 @@ const navItems = [
   { label: "Transactions", path: "/transactions", icon: Receipt },
   { label: "Documents", path: "/documents", icon: FolderOpen },
   { label: "Referrals", path: "/referrals", icon: Users },
+  { label: "Referral Analytics", path: "/referral-analytics", icon: BarChart3 },
+  { label: "Welcome Package", path: "/welcome-package", icon: Gift },
   { label: "Support", path: "/support", icon: LifeBuoy },
   { label: "Support Assistant", path: "/support-assistant", icon: Bot },
   { label: "Account Security", path: "/security-settings", icon: Shield },

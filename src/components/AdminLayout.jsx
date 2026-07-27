@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { label: "Overview", path: "/admin", icon: LayoutDashboard, exact: true },
+  { label: "Dashboard", path: "/admin-dashboard", icon: LayoutDashboard },
+  { label: "Verification Portal", path: "/admin-verification", icon: ShieldCheck },
   { label: "Participants", path: "/admin/participants", icon: Users },
   { label: "User Management", path: "/admin/users", icon: UserCog },
   { label: "Payments", path: "/admin/payments", icon: CreditCard },
