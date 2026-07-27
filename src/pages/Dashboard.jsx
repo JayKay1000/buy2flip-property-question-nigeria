@@ -278,7 +278,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="font-medium text-foreground text-sm">{profile?.relationship_officer || "Assigned Officer"}</p>
-                <p className="text-xs text-muted-foreground">Property Question Nigeria Ltd</p>
+                <p className="text-xs text-muted-foreground">Property Question Nigeria Limited</p>
               </div>
             </div>
             <div className="space-y-2">
