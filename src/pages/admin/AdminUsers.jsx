@@ -8,6 +8,7 @@ import {
   Users, Search, Phone, Mail, Building2, CreditCard, Ban,
   CheckCircle2, X, MessageSquare, Clock, ShieldCheck, UserCircle
 } from "lucide-react";
+import UserReferralsList from "@/components/admin/UserReferralsList";
 
 export default function AdminUsers() {
   const [participants, setParticipants] = useState([]);
@@ -254,6 +255,12 @@ export default function AdminUsers() {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Referrals (real-time) */}
+              <div>
+                <h4 className="font-heading font-semibold text-sm text-foreground mb-3">Referrals</h4>
+                <UserReferralsList referralCode={selected.referral_code} />
               </div>
 
               {/* Contact history */}
