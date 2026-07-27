@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate } from "@/lib/format";
 import { Trophy, Sparkles, Loader2, History } from "lucide-react";
+import LiveTopReferrers from "@/components/admin/LiveTopReferrers";
 
 export default function AdminLeaderboard() {
   const [snapshots, setSnapshots] = useState([]);
@@ -60,6 +61,9 @@ export default function AdminLeaderboard() {
           {message}
         </div>
       )}
+
+      {/* Live current top 10 */}
+      <LiveTopReferrers />
 
       {/* Latest published */}
       {snapshots.length > 0 && (
