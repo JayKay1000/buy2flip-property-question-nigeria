@@ -15,8 +15,13 @@ export default async function(req) {
     if (!commitmentId) return Response.json({ error: "Missing commitmentId." }, { status: 400 });
 
     // Load the commitment (service role) and resolve the owner's email.
-    const commitment = await base44.asServiceRole.entities.Commitment.get(commitmentId);
-    if (!commitment) return Response.json({ error: "Commitment not found." }, { status: 404 });
+    let commitment = null;
+    try {
+      commitment = await base44.asServiceRole.entities.Commitment.get(commitmentId);
+    } catch {
+      return Response.json({ updated: 0, reason: "Commitment not found." });
+    }
+    if (!commitment) return Response.json({ updated: 0, reason: "Commitment not found." });
     const ownerId = commitment.created_by_id;
     if (!ownerId) return Response.json({ updated: 0 });
 

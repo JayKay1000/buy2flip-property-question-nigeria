@@ -15,6 +15,7 @@ export default function AdminParticipants() {
   const [commitments, setCommitments] = useState([]);
   const [payments, setPayments] = useState([]);
   const [users, setUsers] = useState([]);
+  const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -26,16 +27,18 @@ export default function AdminParticipants() {
 
   const loadData = async () => {
     try {
-      const [parts, comms, pays, usrs] = await Promise.all([
+      const [parts, comms, pays, usrs, refs] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
         base44.entities.Commitment.list(),
         base44.entities.Payment.list(),
         base44.entities.User.list(),
+        base44.entities.Referral.list(),
       ]);
       setParticipants(parts);
       setCommitments(comms);
       setPayments(pays);
       setUsers(usrs);
+      setReferrals(refs);
     } catch {
     } finally {
       setLoading(false);
@@ -77,6 +80,9 @@ export default function AdminParticipants() {
   const getCommitmentPayments = (commitmentId) =>
     payments.filter((p) => p.commitment_id === commitmentId);
 
+  const getParticipantReferrals = (code) =>
+    referrals.filter((r) => r.referrer_code === code);
+
   const approvePayment = async (payment) => {
     setProcessing(true);
     try {
@@ -86,6 +92,9 @@ export default function AdminParticipants() {
       });
       if (payment.commitment_id) {
         await base44.entities.Commitment.update(payment.commitment_id, { status: "active" });
+        try {
+          await base44.functions.invoke("applyReferralRewards", { commitmentId: payment.commitment_id });
+        } catch {}
       }
       await loadData();
     } catch {
@@ -276,6 +285,48 @@ export default function AdminParticipants() {
                     })}
                   </div>
                 )}
+              </div>
+
+              {/* Referral Network */}
+              <div>
+                <h4 className="font-heading font-semibold text-sm text-foreground mb-3">Referral Network</h4>
+                {(() => {
+                  const refs = getParticipantReferrals(selected.referral_code);
+                  const first = refs.filter((r) => r.level === 1);
+                  const second = refs.filter((r) => r.level === 2);
+                  if (refs.length === 0) return <p className="text-sm text-muted-foreground">No referrals yet.</p>;
+                  const renderList = (list) =>
+                    list.length === 0 ? (
+                      <p className="text-xs text-muted-foreground">None</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {list.map((r) => (
+                          <div key={r.id} className="flex items-center justify-between border border-border rounded-lg p-2">
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">{r.referred_name}</p>
+                              <p className="text-xs text-muted-foreground truncate">{r.referred_email}</p>
+                            </div>
+                            <div className="text-right flex-shrink-0 ml-2">
+                              <p className="font-numeric text-xs text-foreground">{formatNaira(r.reward_amount || 0)}</p>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>{r.status}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  return (
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-2">First Line (2%) — {first.length}</p>
+                        {renderList(first)}
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Second Line (0.5%) — {second.length}</p>
+                        {renderList(second)}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Actions */}

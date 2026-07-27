@@ -281,9 +281,12 @@ export default function Referrals() {
                     <p className="text-sm font-medium text-foreground truncate">{r.referred_name}</p>
                     <p className="text-xs text-muted-foreground">{formatDate(r.created_date)}</p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                    {r.status}
-                  </span>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
+                      {r.status}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -309,9 +312,12 @@ export default function Referrals() {
                     <p className="text-sm font-medium text-foreground truncate">{r.referred_name}</p>
                     <p className="text-xs text-muted-foreground">{formatDate(r.created_date)}</p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                    {r.status}
-                  </span>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
+                      {r.status}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

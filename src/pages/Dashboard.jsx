@@ -8,7 +8,7 @@ import { REFERRAL_REWARDS } from "@/lib/plans";
 import {
   Wallet, TrendingUp, Calendar, Users, Bell, Download, LifeBuoy,
   ArrowRight, CheckCircle2, Clock, AlertCircle, Building2, Phone, Mail,
-  Plus, Award, MapPin, Landmark
+  Plus, Award, MapPin, Landmark, Gift
 } from "lucide-react";
 import PullToRefresh from "@/components/PullToRefresh";
 
@@ -55,6 +55,7 @@ export default function Dashboard() {
   const pendingCommitments = commitments.filter((c) => c.status === "pending_payment");
   const currentCommitment = activeCommitments[0];
   const referralEarnings = referrals.filter((r) => r.status === "paid").reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+  const indirectEarnings = referrals.filter((r) => r.level === 2 && r.status === "paid").reduce((sum, r) => sum + (r.reward_amount || 0), 0);
   const pendingRewards = referrals.filter((r) => r.status === "pending").length;
   const portfolioValue = activeCommitments.reduce((sum, c) => sum + (c.total_expected_value || 0), 0);
   const totalCommitted = activeCommitments.reduce((sum, c) => sum + (c.amount || 0), 0);
@@ -102,6 +103,14 @@ export default function Dashboard() {
       icon: Users,
       color: "text-brand",
       bg: "bg-brand/10",
+    },
+    {
+      label: "Indirect Earnings",
+      value: formatNaira(indirectEarnings),
+      sub: "0.5% from your direct downline",
+      icon: Gift,
+      color: "text-gold-dark",
+      bg: "bg-gold/10",
     },
     {
       label: "Payment Status",

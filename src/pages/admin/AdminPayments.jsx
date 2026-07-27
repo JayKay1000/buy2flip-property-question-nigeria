@@ -60,6 +60,9 @@ export default function AdminPayments() {
       });
       if (payment.commitment_id) {
         await base44.entities.Commitment.update(payment.commitment_id, { status: "active" });
+        try {
+          await base44.functions.invoke("applyReferralRewards", { commitmentId: payment.commitment_id });
+        } catch {}
       }
       await loadData();
       setSelected(null);

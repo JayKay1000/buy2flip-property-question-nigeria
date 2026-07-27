@@ -106,14 +106,13 @@ export default function Register() {
             status: "pending",
           });
           if (referralCode) {
-            await base44.entities.Referral.create({
-              referrer_code: referralCode,
-              referred_name: fullName,
-              referred_email: email,
-              level: 1,
-              reward_percentage: 2,
-              status: "pending",
-            });
+            try {
+              await base44.functions.invoke("recordReferral", {
+                referrerCode: referralCode,
+                referredName: fullName,
+                referredEmail: email,
+              });
+            } catch {}
           }
         } catch {}
       }
