@@ -82,8 +82,26 @@
     @apply border-border outline-ring/50;
   }
 
+  html,
+  body {
+    max-width: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-body antialiased;
+    /* Allow long words, numbers (e.g. ₦ amounts, account numbers) and unbroken
+       strings to wrap anywhere so content never spills outside its box, on any
+       screen size. Inherits to all descendants. */
+    overflow-wrap: anywhere;
+  }
+
+  /* Media must never exceed its container width. */
+  img,
+  svg,
+  video,
+  canvas,
+  iframe {
+    max-width: 100%;
   }
 
   h1, h2, h3, h4, h5, h6 {
