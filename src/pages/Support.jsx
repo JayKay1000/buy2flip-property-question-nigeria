@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import AdaptiveSelect from "@/components/AdaptiveSelect";
+import SupportAssistantChat from "@/components/SupportAssistantChat";
 import { formatDateTime } from "@/lib/format";
 import {
   LifeBuoy, MessageSquare, Phone, Mail, Building2, HelpCircle,
-  Send, CheckCircle2, Clock, ChevronDown, Bot
+  Send, CheckCircle2, Clock, ChevronDown, Sparkles
 } from "lucide-react";
 
 const faqs = [
@@ -110,11 +110,7 @@ export default function Support() {
           <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Support Centre</h1>
           <p className="text-muted-foreground mt-1">We're here to help with any questions or concerns.</p>
         </div>
-        <Link to="/support-assistant">
-          <Button className="bg-brand hover:bg-brand-dark">
-            <Bot className="w-4 h-4 mr-2" /> Check Ticket Status
-          </Button>
-        </Link>
+
       </div>
 
       {/* Quick support options */}
@@ -239,6 +235,15 @@ export default function Support() {
             )}
           </Card>
         </div>
+      </div>
+
+      {/* Support Assistant */}
+      <div className="mt-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="w-5 h-5 text-brand" />
+          <h2 className="font-heading font-semibold text-foreground">Support Assistant</h2>
+        </div>
+        <SupportAssistantChat />
       </div>
 
       {/* FAQ */}

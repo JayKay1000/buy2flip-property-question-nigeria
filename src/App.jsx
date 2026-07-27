@@ -26,7 +26,7 @@ const Payment = lazy(() => import('./pages/Payment'));
 const Portfolio = lazy(() => import('./pages/Portfolio'));
 const Referrals = lazy(() => import('./pages/Referrals'));
 const Support = lazy(() => import('./pages/Support'));
-const SupportAssistant = lazy(() => import('./pages/SupportAssistant'));
+
 const Terms = lazy(() => import('./pages/Terms'));
 const Transactions = lazy(() => import('./pages/Transactions'));
 const WithdrawalStatus = lazy(() => import('./pages/WithdrawalStatus'));
@@ -91,7 +91,7 @@ const AuthenticatedApp = () => {
           <Route path="/documents" element={<DocumentCentre />} />
           <Route path="/security-settings" element={<SecuritySettings />} />
           <Route path="/support" element={<Support />} />
-          <Route path="/support-assistant" element={<SupportAssistant />} />
+
           <Route path="/welcome-package" element={<WelcomePackage />} />
           <Route path="/referral-analytics" element={<ReferralAnalytics />} />
         </Route>
