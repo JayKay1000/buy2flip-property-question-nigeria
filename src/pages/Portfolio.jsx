@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatNaira, formatDate, daysBetween } from "@/lib/format";
+import { formatNaira, formatDate } from "@/lib/format";
 import { generateCommitmentCertificate } from "@/lib/certificate";
 import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
@@ -27,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import PullToRefresh from "@/components/PullToRefresh";
+import MaturityCountdown from "@/components/MaturityCountdown";
 import PortfolioDocuments from "@/components/PortfolioDocuments";
 
 export default function Portfolio() {
@@ -273,8 +274,8 @@ export default function Portfolio() {
                         </div>
                         {c.status === "active" && (
                           <div>
-                            <p className="text-xs text-muted-foreground">Days Left</p>
-                            <p className="font-numeric font-medium text-gold-dark">{daysBetween(new Date(), c.maturity_date)}</p>
+                            <p className="text-xs text-muted-foreground">Time to Maturity</p>
+                            <MaturityCountdown maturityDate={c.maturity_date} />
                           </div>
                         )}
                         </div>
