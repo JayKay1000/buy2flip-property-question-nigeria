@@ -5,6 +5,9 @@
     "referrer_code": {
       "type": "string"
     },
+    "referrer_user_id": {
+      "type": "string"
+    },
     "referred_name": {
       "type": "string"
     },
@@ -46,6 +49,9 @@
       "$or": [
         {
           "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.referrer_user_id": "{{user.id}}"
         },
         {
           "user_condition": {
