@@ -125,10 +125,10 @@ export default function ReferralWithdrawalCard({ profile, referrals, requests, o
         <div className="flex items-start gap-2 p-3 rounded-lg bg-gold/5 border border-gold/30 mb-4">
           <Clock className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
           <p className="text-xs text-foreground/80">
-            <span className="font-medium text-foreground">30-day payout hold:</span> Referral
-            earnings are held for a 30-day cooling-off period before disbursement. When you
-            request a withdrawal, a 30-day countdown begins — your payout is released to your
-            bank account only after the countdown completes and our team verifies it.
+            <span className="font-medium text-foreground">30-day payout hold:</span> You will
+            receive your referral earnings in your bank account 30 days after you request a
+            withdrawal. When you withdraw, a 30-day countdown begins — the payout is released
+            to your bank only after the countdown completes and our team verifies it.
           </p>
         </div>
 
