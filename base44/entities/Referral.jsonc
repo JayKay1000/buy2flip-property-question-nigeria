@@ -37,6 +37,10 @@
         "paid"
       ],
       "default": "pending"
+    },
+    "withdrawn": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [

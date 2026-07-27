@@ -12,7 +12,8 @@
       "type": "string",
       "enum": [
         "maturity",
-        "welcome_package"
+        "welcome_package",
+        "referral"
       ],
       "default": "maturity"
     },
@@ -44,7 +45,6 @@
     }
   },
   "required": [
-    "commitment_id",
     "amount"
   ],
   "rls": {

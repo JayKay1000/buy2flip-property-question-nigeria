@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Banknote, Search, CheckCircle2, Clock, X, Building2, Save, AlertCircle, Gift } from "lucide-react";
+import { Banknote, Search, CheckCircle2, Clock, X, Building2, Save, AlertCircle, Gift, Users } from "lucide-react";
 
 const statusConfig = {
   requested: { label: "Requested", color: "bg-gold/10 text-gold-dark", icon: Clock },
@@ -33,6 +33,7 @@ export default function AdminWithdrawals() {
   const [withdrawals, setWithdrawals] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [commitments, setCommitments] = useState([]);
+  const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -47,14 +48,16 @@ export default function AdminWithdrawals() {
 
   const loadData = async () => {
     try {
-      const [wd, parts, comms] = await Promise.all([
+      const [wd, parts, comms, refs] = await Promise.all([
         base44.entities.WithdrawalRequest.list("-created_date"),
         base44.entities.ParticipantProfile.list(),
         base44.entities.Commitment.list(),
+        base44.entities.Referral.list("-created_date"),
       ]);
       setWithdrawals(wd);
       setProfiles(parts);
       setCommitments(comms);
+      setReferrals(refs);
     } catch {
     } finally {
       setLoading(false);
@@ -65,6 +68,8 @@ export default function AdminWithdrawals() {
   const findCommitment = (id) => commitments.find((c) => c.id === id);
 
   const isWelcomePackage = (w) => w?.request_type === "welcome_package";
+  const isReferral = (w) => w?.request_type === "referral";
+  const findReferralsFor = (userId) => referrals.filter((r) => r.referrer_user_id === userId);
 
   const isEarlyWithdrawal = (commitment) => {
     if (!commitment?.maturity_date) return false;
@@ -75,6 +80,7 @@ export default function AdminWithdrawals() {
   // principal minus the 1% welcome package, with the entire expected return forfeited.
   // Welcome-package requests pay out the stored 1% amount as-is.
   const computePayable = (withdrawal, commitment) => {
+    if (isReferral(withdrawal)) return withdrawal.amount;
     if (isWelcomePackage(withdrawal)) return withdrawal.amount;
     if (!commitment) return withdrawal.amount;
     const principal = commitment.amount || 0;
@@ -114,11 +120,18 @@ export default function AdminWithdrawals() {
       // Persist the exact agreed payout amount (early-withdrawal adjusted) on the record.
       updateData.amount = payableAmount;
       await base44.entities.WithdrawalRequest.update(editing.id, updateData);
-      if (newStatus === "paid" && editing.commitment_id) {
-        if (isWelcomePackage(editing)) {
-          await base44.entities.Commitment.update(editing.commitment_id, { welcome_package_withdrawn: true });
-        } else {
-          await base44.entities.Commitment.update(editing.commitment_id, { status: "completed" });
+      if (newStatus === "paid") {
+        if (isReferral(editing) && editing.created_by_id) {
+          await base44.entities.Referral.updateMany(
+            { referrer_user_id: editing.created_by_id, status: "paid", created_date: { $lte: editing.created_date } },
+            { $set: { withdrawn: true } }
+          );
+        } else if (editing.commitment_id) {
+          if (isWelcomePackage(editing)) {
+            await base44.entities.Commitment.update(editing.commitment_id, { welcome_package_withdrawn: true });
+          } else {
+            await base44.entities.Commitment.update(editing.commitment_id, { status: "completed" });
+          }
         }
       }
       await loadData();
@@ -205,12 +218,14 @@ export default function AdminWithdrawals() {
                         <p className="text-xs text-muted-foreground">{profile?.phone_number}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-foreground">{commitment?.plan_name || "—"} Plan</p>
+                        <p className="text-foreground">{isReferral(w) ? "Referral Payout" : `${commitment?.plan_name || "—"} Plan`}</p>
                         <p className="text-xs text-muted-foreground">{formatDate(w.created_date)}</p>
                       </td>
                       <td className="px-4 py-3">
                         <p className="font-numeric font-medium text-foreground">{formatNaira(computePayable(w, commitment))}</p>
-                        {isWelcomePackage(w) ? (
+                        {isReferral(w) ? (
+                          <span className="text-[10px] font-medium text-brand">Referral Earnings</span>
+                        ) : isWelcomePackage(w) ? (
                           <span className="text-[10px] font-medium text-gold-dark">Welcome Package</span>
                         ) : isEarlyWithdrawal(commitment) ? (
                           <span className="text-[10px] font-medium text-destructive">Early · ROI forfeited</span>
@@ -244,6 +259,7 @@ export default function AdminWithdrawals() {
         const editingCommitment = findCommitment(editing.commitment_id);
         const editingEarly = isEarlyWithdrawal(editingCommitment);
         const editingWelcome = isWelcomePackage(editing);
+        const editingReferral = isReferral(editing);
         const editingPayable = computePayable(editing, editingCommitment);
         return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -265,6 +281,25 @@ export default function AdminWithdrawals() {
                 </p>
               </div>
             )}
+
+            {editingReferral && (() => {
+              const userRefs = findReferralsFor(editing.created_by_id);
+              const l1 = userRefs.filter((r) => r.level === 1 && r.status === "paid" && !r.withdrawn).reduce((s, r) => s + (r.reward_amount || 0), 0);
+              const l2 = userRefs.filter((r) => r.level === 2 && r.status === "paid" && !r.withdrawn).reduce((s, r) => s + (r.reward_amount || 0), 0);
+              return (
+                <div className="p-3 mb-4 rounded-lg bg-brand/5 border border-brand/20 space-y-1.5">
+                  <p className="text-xs font-semibold text-brand flex items-center gap-1.5">
+                    <Users className="w-4 h-4" /> Referral Earnings Withdrawal
+                  </p>
+                  <div className="text-xs space-y-1">
+                    <div className="flex justify-between"><span className="text-muted-foreground">1st Line Entitled (2%)</span><span className="font-numeric font-medium">{formatNaira(l1)}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">2nd Line Entitled (0.5%)</span><span className="font-numeric font-medium">{formatNaira(l2)}</span></div>
+                    <div className="flex justify-between pt-1 border-t border-border"><span className="font-medium text-foreground">Requested Amount</span><span className="font-numeric font-bold text-foreground">{formatNaira(editingPayable)}</span></div>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground pt-1">Approving marks the participant's accrued referral rewards (up to the request date) as withdrawn.</p>
+                </div>
+              );
+            })()}
 
             {editingEarly && (
               <div className="p-3 mb-4 rounded-lg bg-destructive/5 border border-destructive/30 space-y-1.5">

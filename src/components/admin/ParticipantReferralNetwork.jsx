@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Network } from "lucide-react";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatNaira } from "@/lib/format";
 import { downloadCsv } from "@/lib/exportCsv";
 
 export default function ParticipantReferralNetwork({ participants, referrals }) {
@@ -37,11 +37,15 @@ export default function ParticipantReferralNetwork({ participants, referrals }) 
       status: p.status,
       level1_count: net.level1.length,
       level1_names: net.level1.map((r) => r.referred_name).join("; "),
+      level1_entitled: net.level1.filter((r) => r.status === "paid").reduce((s, r) => s + (r.reward_amount || 0), 0),
       level2_count: net.level2.length,
       level2_names: net.level2.map((r) => r.referred_name).join("; "),
+      level2_entitled: net.level2.filter((r) => r.status === "paid").reduce((s, r) => s + (r.reward_amount || 0), 0),
+      total_entitled: 0,
       created_date: p.created_date,
     };
   });
+  rows.forEach((r) => { r.total_entitled = r.level1_entitled + r.level2_entitled; });
 
   const columns = [
     { label: "Full Name", key: "full_name" },
@@ -51,8 +55,11 @@ export default function ParticipantReferralNetwork({ participants, referrals }) 
     { label: "Status", key: "status" },
     { label: "1st Line Count", key: "level1_count" },
     { label: "1st Line Referrals", key: "level1_names" },
+    { label: "1st Line Entitled (₦)", key: "level1_entitled" },
     { label: "2nd Line Count", key: "level2_count" },
     { label: "2nd Line Referrals", key: "level2_names" },
+    { label: "2nd Line Entitled (₦)", key: "level2_entitled" },
+    { label: "Total Entitled (₦)", key: "total_entitled" },
     { label: "Created Date", key: "created_date" },
   ];
 
@@ -104,12 +111,14 @@ export default function ParticipantReferralNetwork({ participants, referrals }) 
                   <span className="inline-flex items-center justify-center min-w-[1.5rem] px-2 py-0.5 rounded-full bg-brand/10 text-brand text-xs font-medium">
                     {r.level1_count}
                   </span>
+                  <p className="text-[10px] font-numeric text-brand mt-1">{formatNaira(r.level1_entitled)}</p>
                 </td>
                 <td className="py-2 pr-3 text-xs text-muted-foreground max-w-[16rem]">{r.level1_names || "—"}</td>
                 <td className="py-2 pr-3 text-center">
                   <span className="inline-flex items-center justify-center min-w-[1.5rem] px-2 py-0.5 rounded-full bg-gold/10 text-gold-dark text-xs font-medium">
                     {r.level2_count}
                   </span>
+                  <p className="text-[10px] font-numeric text-gold-dark mt-1">{formatNaira(r.level2_entitled)}</p>
                 </td>
                 <td className="py-2 pr-3 text-xs text-muted-foreground max-w-[16rem]">{r.level2_names || "—"}</td>
                 <td className="py-2 pr-3">

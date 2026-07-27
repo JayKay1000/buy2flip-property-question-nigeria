@@ -145,7 +145,7 @@ function PendingRequestCard({ withdrawal, commitment }) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
           <p className="font-heading font-semibold text-foreground text-lg">
-            {commitment?.plan_name ? `${commitment.plan_name} Plan` : "Withdrawal Request"}
+            {withdrawal.request_type === "referral" ? "Referral Earnings" : commitment?.plan_name ? `${commitment.plan_name} Plan` : "Withdrawal Request"}
           </p>
           <p className="text-sm text-muted-foreground">Requested on {formatDateTime(withdrawal.created_date)}</p>
         </div>
@@ -238,7 +238,7 @@ function ResolvedCard({ withdrawal, commitment }) {
           </div>
           <div className="min-w-0">
             <p className="font-medium text-foreground truncate">
-              {commitment?.plan_name ? `${commitment.plan_name} Plan` : "Withdrawal Request"}
+              {withdrawal.request_type === "referral" ? "Referral Earnings" : commitment?.plan_name ? `${commitment.plan_name} Plan` : "Withdrawal Request"}
             </p>
             <p className="text-xs text-muted-foreground">
               {withdrawal.status === "paid"

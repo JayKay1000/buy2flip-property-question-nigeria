@@ -7,16 +7,21 @@ import { formatNaira, formatDate } from "@/lib/format";
 import { REFERRAL_REWARDS } from "@/lib/plans";
 import {
   Users, TrendingUp, Clock, ArrowLeft, Gift,
-  Network, ChevronRight,
+  Network, ChevronRight, Wallet, Search, Banknote,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import ReferralWithdrawDialog from "@/components/ReferralWithdrawDialog";
 
 export default function ReferralAnalytics() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
+  const [search, setSearch] = useState("");
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -53,6 +58,21 @@ export default function ReferralAnalytics() {
   const directPending = direct.filter((r) => r.status === "pending").reduce((s, r) => s + (r.reward_amount || 0), 0);
   const indirectPending = indirect.filter((r) => r.status === "pending").reduce((s, r) => s + (r.reward_amount || 0), 0);
   const totalEarnings = directEarnings + indirectEarnings;
+
+  const isAvailable = (r) => r.status === "paid" && !r.withdrawn;
+  const directAvailable = direct.filter(isAvailable).reduce((s, r) => s + (r.reward_amount || 0), 0);
+  const indirectAvailable = indirect.filter(isAvailable).reduce((s, r) => s + (r.reward_amount || 0), 0);
+  const totalAvailable = directAvailable + indirectAvailable;
+
+  const searchQuery = search.trim().toLowerCase();
+  const matchesSearch = (r) => !searchQuery || (r.referred_name || "").toLowerCase().includes(searchQuery);
+  const directShown = direct.filter(matchesSearch);
+  const indirectShown = indirect.filter(matchesSearch);
+
+  const handleWithdrawSubmitted = () => {
+    toast({ title: "Withdrawal requested", description: "Your referral earnings withdrawal is pending admin approval." });
+    loadData();
+  };
 
   const stats = [
     { label: "Direct Referrals", value: direct.length, sub: "1st level", icon: Users, color: "text-brand", bg: "bg-brand/10" },
@@ -103,6 +123,17 @@ export default function ReferralAnalytics() {
         <p className="text-muted-foreground mt-1">A detailed breakdown of your downline and earnings across both referral levels.</p>
       </div>
 
+      {/* Search */}
+      <div className="relative mb-6 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search your downline by name..."
+          className="pl-9 h-10"
+        />
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((stat) => (
@@ -116,6 +147,36 @@ export default function ReferralAnalytics() {
           </Card>
         ))}
       </div>
+
+      {/* Entitlement + withdraw */}
+      <Card className="p-6 mb-8 bg-gradient-to-br from-brand to-brand-dark text-white">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 className="font-heading font-semibold text-lg flex items-center gap-2"><Wallet className="w-5 h-5 text-gold" /> Your Referral Entitlement</h2>
+            <p className="text-sm text-white/70 mt-1">Amounts you are entitled to withdraw, computed by level.</p>
+          </div>
+          <Button onClick={() => setWithdrawOpen(true)} disabled={totalAvailable <= 0} className="bg-gold hover:bg-gold-dark text-white border-0 w-full sm:w-auto">
+            <Banknote className="w-4 h-4 mr-2" /> Withdraw Referral Earnings
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="bg-white/10 rounded-xl p-4">
+            <p className="text-white/60 text-xs">1st Line Available (2%)</p>
+            <p className="font-numeric font-bold text-lg mt-1">{formatNaira(directAvailable)}</p>
+          </div>
+          <div className="bg-gold/20 rounded-xl p-4 border border-gold/30">
+            <p className="text-gold-light text-xs">2nd Line Available (0.5%)</p>
+            <p className="font-numeric font-bold text-lg mt-1">{formatNaira(indirectAvailable)}</p>
+          </div>
+          <div className="bg-white/10 rounded-xl p-4">
+            <p className="text-white/60 text-xs">Total Available</p>
+            <p className="font-numeric font-bold text-lg mt-1">{formatNaira(totalAvailable)}</p>
+          </div>
+        </div>
+        {totalAvailable <= 0 && (
+          <p className="text-xs text-white/60 mt-3">No withdrawable referral earnings yet. Rewards become available once your referrals' commitments are verified.</p>
+        )}
+      </Card>
 
       {/* Earnings chart */}
       <Card className="p-6 mb-8">
@@ -154,7 +215,7 @@ export default function ReferralAnalytics() {
               {(REFERRAL_REWARDS.direct * 100).toFixed(1)}% · {formatNaira(directEarnings)} paid
             </span>
           </div>
-          {renderBranch(direct, "bg-brand/10 text-brand")}
+          {renderBranch(directShown, "bg-brand/10 text-brand")}
           {direct.length > 0 && (
             <Link to="/referrals" className="mt-4 flex items-center justify-center gap-1 text-sm text-brand font-medium hover:underline">
               Manage referral code <ChevronRight className="w-4 h-4" />
@@ -172,7 +233,7 @@ export default function ReferralAnalytics() {
               {(REFERRAL_REWARDS.indirect * 100).toFixed(1)}% · {formatNaira(indirectEarnings)} paid
             </span>
           </div>
-          {renderBranch(indirect, "bg-gold/10 text-gold-dark")}
+          {renderBranch(indirectShown, "bg-gold/10 text-gold-dark")}
         </Card>
       </div>
 
@@ -191,6 +252,15 @@ export default function ReferralAnalytics() {
           </Button>
         </Link>
       </Card>
+
+      <ReferralWithdrawDialog
+        open={withdrawOpen}
+        onOpenChange={setWithdrawOpen}
+        profile={profile}
+        referrals={referrals}
+        onSubmitted={handleWithdrawSubmitted}
+        onRevert={() => {}}
+      />
     </div>
   );
 }
