@@ -37,10 +37,10 @@ export default function ParticipantReferralNetwork({ participants, referrals }) 
       status: p.status,
       level1_count: net.level1.length,
       level1_names: net.level1.map((r) => r.referred_name).join("; "),
-      level1_entitled: net.level1.filter((r) => r.status === "paid").reduce((s, r) => s + (r.reward_amount || 0), 0),
+      level1_entitled: net.level1.filter((r) => (r.reward_amount || 0) > 0 && !r.withdrawn).reduce((s, r) => s + (r.reward_amount || 0), 0),
       level2_count: net.level2.length,
       level2_names: net.level2.map((r) => r.referred_name).join("; "),
-      level2_entitled: net.level2.filter((r) => r.status === "paid").reduce((s, r) => s + (r.reward_amount || 0), 0),
+      level2_entitled: net.level2.filter((r) => (r.reward_amount || 0) > 0 && !r.withdrawn).reduce((s, r) => s + (r.reward_amount || 0), 0),
       total_entitled: 0,
       created_date: p.created_date,
     };

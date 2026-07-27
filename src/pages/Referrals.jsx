@@ -68,8 +68,9 @@ export default function Referrals() {
   const directReferrals = referrals.filter((r) => r.level === 1);
   const indirectReferrals = referrals.filter((r) => r.level === 2);
   const paidRewards = referrals.filter((r) => r.status === "paid");
-  const pendingRewards = referrals.filter((r) => r.status === "pending");
-  const totalEarnings = paidRewards.reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+  const pendingRewards = referrals.filter((r) => (r.reward_amount || 0) === 0 && !r.withdrawn);
+  const accruedRewards = referrals.filter((r) => (r.reward_amount || 0) > 0 && !r.withdrawn);
+  const totalEarnings = accruedRewards.reduce((sum, r) => sum + (r.reward_amount || 0), 0);
 
   const stats = [
     { label: "Total Referrals", value: referrals.length, icon: Users, color: "text-brand", bg: "bg-brand/10" },

@@ -23,7 +23,7 @@ export default function ReferralWithdrawDialog({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const isAvailable = (r) => r.status === "paid" && !r.withdrawn;
+  const isAvailable = (r) => (r.reward_amount || 0) > 0 && !r.withdrawn;
   const directAvailable = referrals
     .filter((r) => r.level === 1 && isAvailable(r))
     .reduce((s, r) => s + (r.reward_amount || 0), 0);

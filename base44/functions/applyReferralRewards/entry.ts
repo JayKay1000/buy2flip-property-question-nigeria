@@ -49,10 +49,12 @@ export default async function(req) {
       const pct = REWARD_BY_LEVEL[r.level];
       if (!pct) continue;
       const rewardAmount = Math.round(basis * pct);
+      // Compute and store the reward amount, but keep status "pending" — a referral
+      // reward is only marked "paid" once the participant manually requests a
+      // withdrawal and an administrator manually processes it.
       await base44.asServiceRole.entities.Referral.update(r.id, {
         commitment_amount: basis,
         reward_amount: rewardAmount,
-        status: "paid",
       });
       updated += 1;
     }

@@ -123,8 +123,8 @@ export default function AdminWithdrawals() {
       if (newStatus === "paid") {
         if (isReferral(editing) && editing.created_by_id) {
           await base44.entities.Referral.updateMany(
-            { referrer_user_id: editing.created_by_id, status: "paid", created_date: { $lte: editing.created_date } },
-            { $set: { withdrawn: true } }
+            { referrer_user_id: editing.created_by_id, withdrawn: { $ne: true }, reward_amount: { $gt: 0 }, created_date: { $lte: editing.created_date } },
+            { $set: { withdrawn: true, status: "paid" } }
           );
         } else if (editing.commitment_id) {
           if (isWelcomePackage(editing)) {

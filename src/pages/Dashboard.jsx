@@ -54,9 +54,9 @@ export default function Dashboard() {
   const activeCommitments = commitments.filter((c) => c.status === "active");
   const pendingCommitments = commitments.filter((c) => c.status === "pending_payment");
   const currentCommitment = activeCommitments[0];
-  const referralEarnings = referrals.filter((r) => r.status === "paid").reduce((sum, r) => sum + (r.reward_amount || 0), 0);
-  const indirectEarnings = referrals.filter((r) => r.level === 2 && r.status === "paid").reduce((sum, r) => sum + (r.reward_amount || 0), 0);
-  const pendingRewards = referrals.filter((r) => r.status === "pending").length;
+  const referralEarnings = referrals.filter((r) => (r.reward_amount || 0) > 0 && !r.withdrawn).reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+  const indirectEarnings = referrals.filter((r) => r.level === 2 && (r.reward_amount || 0) > 0 && !r.withdrawn).reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+  const pendingRewards = referrals.filter((r) => (r.reward_amount || 0) === 0 && !r.withdrawn).length;
   const portfolioValue = activeCommitments.reduce((sum, c) => sum + (c.total_expected_value || 0), 0);
   const totalCommitted = activeCommitments.reduce((sum, c) => sum + (c.amount || 0), 0);
 

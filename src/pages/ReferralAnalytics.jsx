@@ -53,16 +53,20 @@ export default function ReferralAnalytics() {
 
   const direct = referrals.filter((r) => r.level === 1);
   const indirect = referrals.filter((r) => r.level === 2);
-  const directEarnings = direct.filter((r) => r.status === "paid").reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const indirectEarnings = indirect.filter((r) => r.status === "paid").reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const directPending = direct.filter((r) => r.status === "pending").reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const indirectPending = indirect.filter((r) => r.status === "pending").reduce((s, r) => s + (r.reward_amount || 0), 0);
+  // "Accrued" = reward computed & not yet withdrawn (available to claim).
+  // "Awaiting" = referral recorded but the referred commitment isn't verified yet.
+  const isAccrued = (r) => (r.reward_amount || 0) > 0 && !r.withdrawn;
+  const isAwaiting = (r) => (r.reward_amount || 0) === 0 && !r.withdrawn;
+  const directEarnings = direct.filter(isAccrued).reduce((s, r) => s + (r.reward_amount || 0), 0);
+  const indirectEarnings = indirect.filter(isAccrued).reduce((s, r) => s + (r.reward_amount || 0), 0);
+  const directPending = direct.filter(isAwaiting).reduce((s, r) => s + (r.reward_amount || 0), 0);
+  const indirectPending = indirect.filter(isAwaiting).reduce((s, r) => s + (r.reward_amount || 0), 0);
   const totalEarnings = directEarnings + indirectEarnings;
 
-  const isAvailable = (r) => r.status === "paid" && !r.withdrawn;
-  const directAvailable = direct.filter(isAvailable).reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const indirectAvailable = indirect.filter(isAvailable).reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const totalAvailable = directAvailable + indirectAvailable;
+  const isAvailable = isAccrued;
+  const directAvailable = directEarnings;
+  const indirectAvailable = indirectEarnings;
+  const totalAvailable = totalEarnings;
 
   const searchQuery = search.trim().toLowerCase();
   const matchesSearch = (r) => !searchQuery || (r.referred_name || "").toLowerCase().includes(searchQuery);
@@ -77,7 +81,7 @@ export default function ReferralAnalytics() {
   const stats = [
     { label: "Direct Referrals", value: direct.length, sub: "1st level", icon: Users, color: "text-brand", bg: "bg-brand/10" },
     { label: "Indirect Referrals", value: indirect.length, sub: "2nd level", icon: Network, color: "text-gold-dark", bg: "bg-gold/10" },
-    { label: "Total Earnings", value: formatNaira(totalEarnings), sub: "paid to date", icon: TrendingUp, color: "text-brand", bg: "bg-brand/10" },
+    { label: "Total Earnings", value: formatNaira(totalEarnings), sub: "earned to date", icon: TrendingUp, color: "text-brand", bg: "bg-brand/10" },
     { label: "Pending Rewards", value: formatNaira(directPending + indirectPending), sub: "awaiting commitment approval", icon: Clock, color: "text-gold-dark", bg: "bg-gold/10" },
   ];
 
@@ -192,14 +196,14 @@ export default function ReferralAnalytics() {
                 contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", fontSize: 12 }}
                 cursor={{ fill: "hsl(var(--muted))" }}
               />
-              <Bar dataKey="paid" name="Paid" fill="hsl(var(--brand))" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="pending" name="Pending" fill="hsl(var(--gold))" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="paid" name="Earned" fill="hsl(var(--brand))" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="pending" name="Awaiting Approval" fill="hsl(var(--gold))" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
         <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-brand" /> Paid</span>
-          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-gold" /> Pending</span>
+          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-brand" /> Earned</span>
+          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-gold" /> Awaiting Approval</span>
         </div>
       </Card>
 
@@ -212,7 +216,7 @@ export default function ReferralAnalytics() {
               <h2 className="font-heading font-semibold text-foreground">1st Level Downline</h2>
             </div>
             <span className="text-xs px-2 py-1 rounded-full bg-brand/10 text-brand font-medium">
-              {(REFERRAL_REWARDS.direct * 100).toFixed(1)}% · {formatNaira(directEarnings)} paid
+              {(REFERRAL_REWARDS.direct * 100).toFixed(1)}% · {formatNaira(directEarnings)} earned
             </span>
           </div>
           {renderBranch(directShown, "bg-brand/10 text-brand")}
@@ -230,7 +234,7 @@ export default function ReferralAnalytics() {
               <h2 className="font-heading font-semibold text-foreground">2nd Level Downline</h2>
             </div>
             <span className="text-xs px-2 py-1 rounded-full bg-gold/10 text-gold-dark font-medium">
-              {(REFERRAL_REWARDS.indirect * 100).toFixed(1)}% · {formatNaira(indirectEarnings)} paid
+              {(REFERRAL_REWARDS.indirect * 100).toFixed(1)}% · {formatNaira(indirectEarnings)} earned
             </span>
           </div>
           {renderBranch(indirectShown, "bg-gold/10 text-gold-dark")}

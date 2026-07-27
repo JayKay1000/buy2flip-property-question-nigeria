@@ -146,7 +146,7 @@ export default function AdminDashboard() {
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                     w.request_type === "welcome_package" ? "bg-gold/10 text-gold-dark" : "bg-brand/10 text-brand"
                   }`}>
-                    {w.request_type === "welcome_package" ? "Welcome Package" : "Maturity"}
+                    {w.request_type === "welcome_package" ? "Welcome Package" : w.request_type === "referral" ? "Referral" : "Maturity"}
                   </span>
                 </div>
               ))}
