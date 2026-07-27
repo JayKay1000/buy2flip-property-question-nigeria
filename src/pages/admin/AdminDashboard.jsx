@@ -8,6 +8,7 @@ import {
   Users, CreditCard, TrendingUp, Banknote, Clock, ArrowRight,
   UserPlus, AlertCircle, Gift,
 } from "lucide-react";
+import ParticipantReferralNetwork from "@/components/admin/ParticipantReferralNetwork";
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
@@ -15,6 +16,7 @@ export default function AdminDashboard() {
   const [commitments, setCommitments] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [referrals, setReferrals] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -22,16 +24,18 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     try {
-      const [parts, comms, wd, pays] = await Promise.all([
+      const [parts, comms, wd, pays, refs] = await Promise.all([
         base44.entities.ParticipantProfile.list("-created_date"),
         base44.entities.Commitment.list(),
         base44.entities.WithdrawalRequest.list(),
         base44.entities.Payment.list(),
+        base44.entities.Referral.list("-created_date"),
       ]);
       setParticipants(parts);
       setCommitments(comms);
       setWithdrawals(wd);
       setPayments(pays);
+      setReferrals(refs);
     } catch {
     } finally {
       setLoading(false);
@@ -170,6 +174,9 @@ export default function AdminDashboard() {
           )}
         </Card>
       </div>
+
+      {/* Participant referral network with CSV export */}
+      <ParticipantReferralNetwork participants={participants} referrals={referrals} />
     </div>
   );
 }
