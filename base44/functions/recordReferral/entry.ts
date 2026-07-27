@@ -19,6 +19,19 @@ export default async function(req) {
       return Response.json({ error: "Missing referrer code or referred email." }, { status: 400 });
     }
 
+    // Trust boundary: the referred participant must be the authenticated caller.
+    // A participant can only bind a referral to their own account — never to an
+    // arbitrary victim's email, which would let an attacker hijack referral rewards.
+    if (!user.email || user.email.trim().toLowerCase() !== referredEmail) {
+      return Response.json({ error: "Referred email must match the signed-in participant." }, { status: 403 });
+    }
+
+    // Idempotency guard: never re-bind a participant who already has a referrer.
+    const existing = await base44.asServiceRole.entities.Referral.filter({ referred_email: referredEmail });
+    if (existing && existing.length > 0) {
+      return Response.json({ created: false, reason: "Participant already has a referrer." });
+    }
+
     // Look up the direct referrer's profile (service role bypasses RLS so we can
     // see another participant's record and resolve the grandparent referrer).
     const profiles = await base44.asServiceRole.entities.ParticipantProfile.filter({ referral_code: referrerCode });
