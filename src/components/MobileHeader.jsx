@@ -47,34 +47,34 @@ export default function MobileHeader() {
     <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-brand text-white z-40 flex items-center shadow-md pt-safe px-1">
       <div className="flex items-center flex-shrink-0">
         {isTabRoot ? (
-          <button onClick={() => navigate("/dashboard")} className="p-2 flex items-center" aria-label="Home">
+          <button onClick={() => navigate("/dashboard")} aria-label="Home" className="h-10 w-10 flex items-center justify-center rounded-lg active:bg-white/10 transition-colors">
             <Logo light size="sm" />
           </button>
         ) : (
           <button
             onClick={handleBack}
             aria-label="Back"
-            className="flex items-center px-2 py-2 text-white active:opacity-70 transition-opacity"
+            className="h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
         )}
       </div>
       <h1 className="flex-1 min-w-0 font-heading font-semibold text-white text-sm sm:text-base text-center px-2 truncate">
         {title}
       </h1>
-      <div className="flex items-center justify-end flex-shrink-0">
+      <div className="flex items-center justify-end flex-shrink-0 gap-1">
         <button
           onClick={() => navigate("/security-settings")}
           aria-label="Account security"
-          className={`p-2 text-white active:opacity-70 transition-opacity ${pathname === "/security-settings" ? "opacity-100" : "opacity-90"}`}
+          className={`h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors ${pathname === "/security-settings" ? "opacity-100" : "opacity-90"}`}
         >
           <Shield className="w-5 h-5" />
         </button>
         <button
           onClick={handleLogout}
           aria-label="Sign out"
-          className="p-2 text-white active:opacity-70 transition-opacity"
+          className="h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors"
         >
           <LogOut className="w-5 h-5" />
         </button>
