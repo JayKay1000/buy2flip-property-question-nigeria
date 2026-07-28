@@ -1,0 +1,72 @@
+{
+  "name": "Re-engage Inactive Participants",
+  "description": "Weekly: emails participants with no login activity in 30 days about the latest project documents, then waits 3 days and checks who logged back in.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 9 * * 1",
+      "one_time_date": null,
+      "timezone": "Africa/Lagos",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "reengage_inactive_participants",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_reengagement": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendReengagementEmails",
+            "args": {}
+          },
+          "then": "wait_for_relogin",
+          "x-base44": {
+            "title": "Send re-engagement emails",
+            "description": "Email inactive users latest project docs"
+          }
+        }
+      },
+      {
+        "wait_for_relogin": {
+          "wait": "P3D",
+          "then": "check_relogins",
+          "x-base44": {
+            "title": "Wait 3 days",
+            "description": "See if recipients log back in"
+          }
+        }
+      },
+      {
+        "check_relogins": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "checkReengagementLogins",
+            "args": {
+              "user_ids": "${ .send_reengagement.notified_user_ids }",
+              "sent_at": "${ .send_reengagement.sent_at }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Check who logged back in",
+            "description": "Compare post-email login activity"
+          }
+        }
+      }
+    ]
+  }
+}
