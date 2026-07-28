@@ -44,7 +44,7 @@ export default function MobileHeader() {
   const handleLogout = () => base44.auth.logout("/");
 
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 bg-brand text-white z-40 pt-safe shadow-md">
+    <header className="lg:hidden bg-brand text-white z-40 pt-safe shadow-md">
       <div className="h-14 flex items-center px-1">
         <div className="flex items-center flex-shrink-0">
           {isTabRoot ? (

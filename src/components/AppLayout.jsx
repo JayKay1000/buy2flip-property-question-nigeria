@@ -122,7 +122,7 @@ export default function AppLayout() {
       />
 
       {/* Main content */}
-      <main className="lg:ml-72 pt-[calc(3.5rem+max(env(safe-area-inset-top,0px),1.5rem))] lg:pt-0 min-h-screen pb-20 lg:pb-0">
+      <main className="lg:ml-72 pt-0 min-h-screen pb-20 lg:pb-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
