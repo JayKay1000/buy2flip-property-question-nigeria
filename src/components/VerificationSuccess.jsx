@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
 
 const SUCCESS_IMAGE =
   "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/602f5ec6f_EngineerFemiSmiling.png";
@@ -126,14 +125,14 @@ export default function VerificationSuccess({ onContinue, autoRedirectMs = 3000 
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#0F5C3F]/10 to-[#C9A227]/10 blur-2xl scale-110" />
             <div className="relative w-44 h-44 sm:w-52 sm:h-52 md:w-56 md:h-56 rounded-full overflow-hidden ring-4 ring-white shadow-2xl">
-              <Image
+              <img
                 src={SUCCESS_IMAGE}
                 alt="Property Question Nigeria representative giving a thumbs up"
-                className="w-full h-full"
-                fittingType="fill"
-                focalPointX={0.5}
-                focalPointY={0.4}
+                className="w-full h-full object-cover"
+                style={{ objectPosition: "center 25%" }}
                 loading="eager"
+                decoding="async"
+                fetchpriority="high"
               />
             </div>
             {/* Thumbs-up pulse ring */}
