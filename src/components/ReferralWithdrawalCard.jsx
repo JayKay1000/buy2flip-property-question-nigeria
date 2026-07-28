@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { formatNaira, formatDateTime } from "@/lib/format";
 import { Wallet, Banknote, Clock, ShieldCheck, AlertCircle } from "lucide-react";
 import ReferralWithdrawDialog from "@/components/ReferralWithdrawDialog";
+import { availableToWithdraw } from "@/lib/referralEarnings";
 
 const HOLDING_DAYS = 30;
 const HOLDING_MS = HOLDING_DAYS * 24 * 60 * 60 * 1000;
@@ -28,10 +29,9 @@ function useCountdown(targetMs) {
 export default function ReferralWithdrawalCard({ profile, referrals, requests, onSubmitted }) {
   const [open, setOpen] = useState(false);
 
-  const isAvailable = (r) => (r.reward_amount || 0) > 0 && !r.withdrawn;
-  const totalAvailable = referrals
-    .filter(isAvailable)
-    .reduce((s, r) => s + (r.reward_amount || 0), 0);
+  // Withdrawable balance subtracts rewards already locked in active
+  // (requested/processing) referral withdrawal requests.
+  const totalAvailable = availableToWithdraw(referrals, requests);
 
   const sorted = [...(requests || [])].sort(
     (a, b) => new Date(b.created_date) - new Date(a.created_date)
@@ -155,6 +155,7 @@ export default function ReferralWithdrawalCard({ profile, referrals, requests, o
         onOpenChange={setOpen}
         profile={profile}
         referrals={referrals}
+        requests={requests}
         onSubmitted={handleSubmitted}
         onRevert={() => {}}
       />

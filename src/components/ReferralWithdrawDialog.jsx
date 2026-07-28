@@ -11,26 +11,28 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
+import { availableToWithdraw, accruedByLevel, alreadyRequestedAmount } from "@/lib/referralEarnings";
 
 export default function ReferralWithdrawDialog({
   open,
   onOpenChange,
   profile,
   referrals,
+  requests,
   onSubmitted,
   onRevert,
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const isAvailable = (r) => (r.reward_amount || 0) > 0 && !r.withdrawn;
-  const directAvailable = referrals
-    .filter((r) => r.level === 1 && isAvailable(r))
-    .reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const indirectAvailable = referrals
-    .filter((r) => r.level === 2 && isAvailable(r))
-    .reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const totalAvailable = directAvailable + indirectAvailable;
+  // Accrued earnings by level (informational breakdown).
+  const directAvailable = accruedByLevel(referrals, 1);
+  const indirectAvailable = accruedByLevel(referrals, 2);
+  // Withdrawable balance = accrued so far minus amounts already locked inside
+  // active (not-yet-resolved) referral withdrawal requests. This prevents a
+  // participant from re-requesting rewards they have already withdrawn.
+  const alreadyRequested = alreadyRequestedAmount(requests);
+  const totalAvailable = availableToWithdraw(referrals, requests);
 
   const hasBank = !!(profile?.bank_name && profile?.account_number && profile?.account_name);
   const canRequest = hasBank && totalAvailable > 0;
@@ -42,7 +44,7 @@ export default function ReferralWithdrawDialog({
       return;
     }
     if (totalAvailable <= 0) {
-      setError("You have no referral earnings available to withdraw yet.");
+      setError("Your accrued referral earnings are already covered by an active withdrawal request. New rewards will become available to withdraw as they accrue.");
       return;
     }
     setSubmitting(true);
@@ -106,8 +108,14 @@ export default function ReferralWithdrawDialog({
             </div>
           </div>
 
+          {alreadyRequested > 0 && (
+            <div className="p-3 rounded-lg bg-gold/5 border border-gold/20 flex items-center justify-between">
+              <p className="text-xs font-medium text-foreground/80">Already requested (pending payout)</p>
+              <p className="font-numeric font-semibold text-sm text-gold-dark">− {formatNaira(alreadyRequested)}</p>
+            </div>
+          )}
           <div className="p-4 rounded-lg bg-muted/30 border border-border flex items-center justify-between">
-            <p className="text-sm font-medium text-foreground">Total Available</p>
+            <p className="text-sm font-medium text-foreground">Available to withdraw now</p>
             <p className="font-numeric font-bold text-xl text-foreground">{formatNaira(totalAvailable)}</p>
           </div>
 

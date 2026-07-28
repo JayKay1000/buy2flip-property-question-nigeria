@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import ReferralWithdrawDialog from "@/components/ReferralWithdrawDialog";
+import { availableToWithdraw, alreadyRequestedAmount } from "@/lib/referralEarnings";
 
 export default function ReferralAnalytics() {
   const [loading, setLoading] = useState(true);
@@ -22,6 +23,7 @@ export default function ReferralAnalytics() {
   const [referrals, setReferrals] = useState([]);
   const [search, setSearch] = useState("");
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -37,6 +39,10 @@ export default function ReferralAnalytics() {
         const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code }, "-created_date");
         setReferrals(refs);
       }
+      try {
+        const reqs = await base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date");
+        setRequests(reqs.filter((r) => r.request_type === "referral"));
+      } catch { /* requests unavailable */ }
     } catch {
     } finally {
       setLoading(false);
@@ -66,7 +72,12 @@ export default function ReferralAnalytics() {
   const isAvailable = isAccrued;
   const directAvailable = directEarnings;
   const indirectAvailable = indirectEarnings;
-  const totalAvailable = totalEarnings;
+  // Withdrawable = accrued minus amounts already locked in active referral
+  // withdrawal requests, so a participant cannot re-request what they have
+  // already withdrawn. Recurring: each new request subtracts from the running
+  // balance, and new rewards that accrue after a request become withdrawable.
+  const alreadyRequested = alreadyRequestedAmount(requests);
+  const totalAvailable = availableToWithdraw(referrals, requests);
 
   const searchQuery = search.trim().toLowerCase();
   const matchesSearch = (r) => !searchQuery || (r.referred_name || "").toLowerCase().includes(searchQuery);
@@ -173,12 +184,18 @@ export default function ReferralAnalytics() {
             <p className="font-numeric font-bold text-lg mt-1">{formatNaira(indirectAvailable)}</p>
           </div>
           <div className="bg-white/10 rounded-xl p-4">
-            <p className="text-white/60 text-xs">Total Available</p>
+            <p className="text-white/60 text-xs">Available to Withdraw Now</p>
             <p className="font-numeric font-bold text-lg mt-1">{formatNaira(totalAvailable)}</p>
           </div>
         </div>
+        {alreadyRequested > 0 && (
+          <div className="mt-3 flex items-center justify-between bg-gold/15 border border-gold/30 rounded-xl px-4 py-3">
+            <p className="text-xs text-white/80">Already requested (pending payout)</p>
+            <p className="font-numeric font-semibold text-sm text-gold-light">− {formatNaira(alreadyRequested)}</p>
+          </div>
+        )}
         {totalAvailable <= 0 && (
-          <p className="text-xs text-white/60 mt-3">No withdrawable referral earnings yet. Rewards become available once your referrals' commitments are verified.</p>
+          <p className="text-xs text-white/60 mt-3">No withdrawable referral earnings yet. Your accrued rewards are either already covered by an active withdrawal request or awaiting commitment verification.</p>
         )}
       </Card>
 
@@ -262,6 +279,7 @@ export default function ReferralAnalytics() {
         onOpenChange={setWithdrawOpen}
         profile={profile}
         referrals={referrals}
+        requests={requests}
         onSubmitted={handleWithdrawSubmitted}
         onRevert={() => {}}
       />
