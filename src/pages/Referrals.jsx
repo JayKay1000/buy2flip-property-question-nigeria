@@ -10,6 +10,7 @@ import {
   CheckCircle2, Link2, ChevronRight, Trophy
 } from "lucide-react";
 import ReferralWithdrawalCard from "@/components/ReferralWithdrawalCard";
+import { referralBalance, referralStatus } from "@/lib/referralEarnings";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Referrals() {
@@ -86,10 +87,13 @@ export default function Referrals() {
   // admin processed it successfully — `withdrawn` is flipped to true solely by
   // the admin withdrawal-processing path. Never key off `status` alone, which
   // can hold stale "paid" values unrelated to an actual payout.
-  const paidRewards = referrals.filter((r) => r.withdrawn);
-  const pendingRewards = referrals.filter((r) => (r.reward_amount || 0) === 0 && !r.withdrawn);
-  const accruedRewards = referrals.filter((r) => (r.reward_amount || 0) > 0 && !r.withdrawn);
-  const totalEarnings = accruedRewards.reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+  // "Paid" = fully withdrawn with no new accrued balance; "available" = has an
+  // unwithdrawn balance (incl. referrals paid before that accrued new rewards);
+  // "pending" = referred commitment not yet verified (reward_amount == 0).
+  const paidRewards = referrals.filter((r) => (r.reward_amount || 0) > 0 && referralBalance(r) <= 0);
+  const pendingRewards = referrals.filter((r) => (r.reward_amount || 0) === 0);
+  const accruedRewards = referrals.filter((r) => referralBalance(r) > 0);
+  const totalEarnings = accruedRewards.reduce((sum, r) => sum + referralBalance(r), 0);
 
   const stats = [
     { label: "Total Referrals", value: referrals.length, icon: Users, color: "text-brand", bg: "bg-brand/10" },
@@ -310,9 +314,12 @@ export default function Referrals() {
                     <p className="text-xs text-muted-foreground">{formatDate(r.created_date)}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.withdrawn ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                      {r.withdrawn ? "paid" : "pending"}
+                    <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(referralBalance(r))}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                      referralStatus(r) === "available" ? "bg-gold/10 text-gold-dark" :
+                      referralStatus(r) === "paid" ? "bg-brand/10 text-brand" : "bg-muted text-muted-foreground"
+                    }`}>
+                      {referralStatus(r)}
                     </span>
                   </div>
                 </div>
@@ -341,9 +348,12 @@ export default function Referrals() {
                     <p className="text-xs text-muted-foreground">{formatDate(r.created_date)}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.withdrawn ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                      {r.withdrawn ? "paid" : "pending"}
+                    <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(referralBalance(r))}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                      referralStatus(r) === "available" ? "bg-gold/10 text-gold-dark" :
+                      referralStatus(r) === "paid" ? "bg-brand/10 text-brand" : "bg-muted text-muted-foreground"
+                    }`}>
+                      {referralStatus(r)}
                     </span>
                   </div>
                 </div>

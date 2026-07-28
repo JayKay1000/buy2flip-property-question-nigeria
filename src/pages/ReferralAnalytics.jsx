@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import ReferralWithdrawDialog from "@/components/ReferralWithdrawDialog";
-import { availableToWithdraw, alreadyRequestedAmount } from "@/lib/referralEarnings";
+import { availableToWithdraw, alreadyRequestedAmount, referralBalance, referralStatus } from "@/lib/referralEarnings";
 
 export default function ReferralAnalytics() {
   const [loading, setLoading] = useState(true);
@@ -59,12 +59,12 @@ export default function ReferralAnalytics() {
 
   const direct = referrals.filter((r) => r.level === 1);
   const indirect = referrals.filter((r) => r.level === 2);
-  // "Accrued" = reward computed & not yet withdrawn (available to claim).
+  // "Accrued" = there is an unwithdrawn balance (reward computed, not fully paid).
   // "Awaiting" = referral recorded but the referred commitment isn't verified yet.
-  const isAccrued = (r) => (r.reward_amount || 0) > 0 && !r.withdrawn;
-  const isAwaiting = (r) => (r.reward_amount || 0) === 0 && !r.withdrawn;
-  const directEarnings = direct.filter(isAccrued).reduce((s, r) => s + (r.reward_amount || 0), 0);
-  const indirectEarnings = indirect.filter(isAccrued).reduce((s, r) => s + (r.reward_amount || 0), 0);
+  const isAccrued = (r) => referralBalance(r) > 0;
+  const isAwaiting = (r) => (r.reward_amount || 0) === 0;
+  const directEarnings = direct.filter(isAccrued).reduce((s, r) => s + referralBalance(r), 0);
+  const indirectEarnings = indirect.filter(isAccrued).reduce((s, r) => s + referralBalance(r), 0);
   const directPending = direct.filter(isAwaiting).reduce((s, r) => s + (r.reward_amount || 0), 0);
   const indirectPending = indirect.filter(isAwaiting).reduce((s, r) => s + (r.reward_amount || 0), 0);
   const totalEarnings = directEarnings + indirectEarnings;
@@ -118,9 +118,12 @@ export default function ReferralAnalytics() {
               </p>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.withdrawn ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                {r.withdrawn ? "paid" : "pending"}
+              <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(referralBalance(r))}</p>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                referralStatus(r) === "available" ? "bg-gold/10 text-gold-dark" :
+                referralStatus(r) === "paid" ? "bg-brand/10 text-brand" : "bg-muted text-muted-foreground"
+              }`}>
+                {referralStatus(r)}
               </span>
             </div>
           </div>

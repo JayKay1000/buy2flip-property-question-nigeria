@@ -48,31 +48,17 @@ export default function ReferralWithdrawDialog({
       return;
     }
     setSubmitting(true);
-    const optimisticRecord = {
-      id: `tmp-${Date.now()}`,
-      amount: totalAvailable,
-      request_type: "referral",
-      status: "requested",
-      bank_name: profile.bank_name,
-      account_number: profile.account_number,
-      account_name: profile.account_name,
-      created_date: new Date().toISOString(),
-      created_by_id: profile.created_by_id,
-    };
+    // Server-authoritative: the backend recomputes the true available balance
+    // from a fresh fetch and creates the request with a validated amount, so
+    // a stale client `requests` state can never produce an over-request that
+    // would lock the user out of future withdrawals.
     try {
-      const created = await base44.entities.WithdrawalRequest.create({
-        amount: totalAvailable,
-        request_type: "referral",
-        status: "requested",
-        bank_name: profile.bank_name,
-        account_number: profile.account_number,
-        account_name: profile.account_name,
-      });
-      onSubmitted({ ...optimisticRecord, ...created, id: created.id });
+      const res = await base44.functions.invoke("requestReferralWithdrawal", { amount: totalAvailable });
+      const created = res.data?.request;
+      onSubmitted(created || null);
       onOpenChange(false);
     } catch (err) {
-      onRevert(optimisticRecord);
-      setError(err?.message || "Failed to submit request. Please try again.");
+      setError(err?.response?.data?.error || err?.message || "Failed to submit request. Please try again.");
     } finally {
       setSubmitting(false);
     }

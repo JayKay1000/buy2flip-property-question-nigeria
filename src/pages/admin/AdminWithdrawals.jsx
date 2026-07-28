@@ -122,10 +122,38 @@ export default function AdminWithdrawals() {
       await base44.entities.WithdrawalRequest.update(editing.id, updateData);
       if (newStatus === "paid") {
         if (isReferral(editing) && editing.created_by_id) {
-          await base44.entities.Referral.updateMany(
-            { referrer_user_id: editing.created_by_id, withdrawn: { $ne: true }, reward_amount: { $gt: 0 }, created_date: { $lte: editing.created_date } },
-            { $set: { withdrawn: true, status: "paid" } }
-          );
+          // Mark exactly the requested amount as withdrawn, distributed across
+          // the referrer's referrals that still have an unwithdrawn balance
+          // (oldest first). This consumes the payout against cumulative
+          // `withdrawn_amount` rather than flipping a blanket boolean, so any
+          // rewards that accrue afterwards (new downline commitments) re-open
+          // the balance and stay withdrawable.
+          const payoutAmount = editing.amount || 0;
+          const userRefs = referrals
+            .filter(
+              (r) =>
+                r.referrer_user_id === editing.created_by_id &&
+                (r.reward_amount || 0) > (r.withdrawn_amount || 0)
+            )
+            .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+          let remaining = payoutAmount;
+          const updates = [];
+          for (const r of userRefs) {
+            if (remaining <= 0) break;
+            const avail = (r.reward_amount || 0) - (r.withdrawn_amount || 0);
+            const consume = Math.min(avail, remaining);
+            const newWithdrawnAmount = (r.withdrawn_amount || 0) + consume;
+            updates.push({
+              id: r.id,
+              withdrawn_amount: newWithdrawnAmount,
+              withdrawn: newWithdrawnAmount >= (r.reward_amount || 0),
+              status: "paid",
+            });
+            remaining -= consume;
+          }
+          if (updates.length > 0) {
+            await base44.entities.Referral.bulkUpdate(updates);
+          }
         } else if (editing.commitment_id) {
           if (isWelcomePackage(editing)) {
             await base44.entities.Commitment.update(editing.commitment_id, { welcome_package_withdrawn: true });
@@ -284,8 +312,9 @@ export default function AdminWithdrawals() {
 
             {editingReferral && (() => {
               const userRefs = findReferralsFor(editing.created_by_id);
-              const l1 = userRefs.filter((r) => r.level === 1 && r.status === "paid" && !r.withdrawn).reduce((s, r) => s + (r.reward_amount || 0), 0);
-              const l2 = userRefs.filter((r) => r.level === 2 && r.status === "paid" && !r.withdrawn).reduce((s, r) => s + (r.reward_amount || 0), 0);
+              const bal = (r) => (r.reward_amount || 0) - (r.withdrawn_amount || 0);
+              const l1 = userRefs.filter((r) => r.level === 1 && bal(r) > 0).reduce((s, r) => s + bal(r), 0);
+              const l2 = userRefs.filter((r) => r.level === 2 && bal(r) > 0).reduce((s, r) => s + bal(r), 0);
               return (
                 <div className="p-3 mb-4 rounded-lg bg-brand/5 border border-brand/20 space-y-1.5">
                   <p className="text-xs font-semibold text-brand flex items-center gap-1.5">

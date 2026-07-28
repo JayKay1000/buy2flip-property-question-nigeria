@@ -41,6 +41,10 @@
     "withdrawn": {
       "type": "boolean",
       "default": false
+    },
+    "withdrawn_amount": {
+      "type": "number",
+      "default": 0
     }
   },
   "required": [

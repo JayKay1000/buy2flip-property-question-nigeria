@@ -1,37 +1,47 @@
 // Centralised referral-earnings maths shared by the withdrawal card, the
 // withdrawal dialog and the referral analytics page.
 //
-// Rule (per product requirement): a participant may only withdraw referral
-// rewards they have NOT already requested. When a withdrawal request is
-// created its amount is "locked" until the request is resolved (paid out or
-// rejected). The withdrawable balance is therefore:
+// Model: each Referral record holds a running total `reward_amount` that is
+// recomputed every time the referred participant's commitments change (active
+// or completed), plus a cumulative `withdrawn_amount` tracking how much of
+// that reward has already been paid out via an admin-processed withdrawal.
 //
-//   available = (accrued so far) − (sum of active referral withdrawal requests)
+//   available per referral = reward_amount − withdrawn_amount
 //
-// "Accrued" = a reward has been computed (reward_amount > 0) and has not yet
-// been paid out (withdrawn === false). Rewards awaiting the referred
-// participant's commitment verification (reward_amount == 0) are not yet
-// withdrawable. Once an admin pays a request the underlying referral records
-// are marked withdrawn, which drops them out of "accrued" — so the subtraction
-// only needs to cover the window between request creation and payout.
+// This keeps new rewards withdrawable even after an earlier payout: when the
+// downline makes a new commitment, `reward_amount` grows while
+// `withdrawn_amount` stays at the previously-paid snapshot, so the difference
+// (the new incremental reward) re-opens the balance and the Withdraw button
+// becomes active again.
 //
-// Recurring: every new request subtracts from the running balance, and any
-// rewards that accrue after a request become newly withdrawable.
+// Across all referrals, the withdrawable balance also subtracts amounts
+// already locked inside active (not-yet-resolved) referral withdrawal
+// requests, so a participant cannot re-request funds that are already pending
+// payout:
+//
+//   available = (sum of per-referral balances) − (active request amounts)
 
 const ACTIVE_REQUEST_STATUSES = ["requested", "processing"];
 
-export const isAccrued = (r) => (r.reward_amount || 0) > 0 && !r.withdrawn;
+// Per-referral unwithdrawn balance — the core accrual primitive.
+export const referralBalance = (r) =>
+  (r?.reward_amount || 0) - (r?.withdrawn_amount || 0);
+
+// "Accrued" = there is a positive unwithdrawn balance (reward computed, not
+// fully paid out). Rewards awaiting the referred commitment's verification
+// (reward_amount == 0) have a zero balance and are not yet withdrawable.
+export const isAccrued = (r) => referralBalance(r) > 0;
 
 export const accruedReferrals = (referrals) =>
   (referrals || []).filter(isAccrued);
 
 export const totalAccrued = (referrals) =>
-  accruedReferrals(referrals).reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+  accruedReferrals(referrals).reduce((sum, r) => sum + referralBalance(r), 0);
 
 export const accruedByLevel = (referrals, level) =>
   accruedReferrals(referrals)
     .filter((r) => r.level === level)
-    .reduce((sum, r) => sum + (r.reward_amount || 0), 0);
+    .reduce((sum, r) => sum + referralBalance(r), 0);
 
 export const alreadyRequestedAmount = (requests) =>
   (requests || [])
@@ -44,3 +54,13 @@ export const alreadyRequestedAmount = (requests) =>
 
 export const availableToWithdraw = (referrals, requests) =>
   Math.max(0, totalAccrued(referrals) - alreadyRequestedAmount(requests));
+
+// Human-readable per-referral state for badges: "available" when there is an
+// unwithdrawn balance (includes referrals that were paid out before and have
+// since accrued new rewards), "paid" when fully withdrawn, "pending" while the
+// referred commitment is still awaiting verification (reward_amount == 0).
+export const referralStatus = (r) => {
+  if (referralBalance(r) > 0) return "available";
+  if ((r?.reward_amount || 0) > 0) return "paid";
+  return "pending";
+};
