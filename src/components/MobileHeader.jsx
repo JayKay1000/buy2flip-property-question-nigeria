@@ -44,40 +44,42 @@ export default function MobileHeader() {
   const handleLogout = () => base44.auth.logout("/");
 
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-brand text-white z-40 flex items-center shadow-md pt-safe px-1">
-      <div className="flex items-center flex-shrink-0">
-        {isTabRoot ? (
-          <button onClick={() => navigate("/dashboard")} aria-label="Home" className="h-10 w-10 flex items-center justify-center rounded-lg active:bg-white/10 transition-colors">
-            <Logo light size="sm" />
-          </button>
-        ) : (
+    <header className="lg:hidden fixed top-0 left-0 right-0 bg-brand text-white z-40 pt-safe shadow-md">
+      <div className="h-14 flex items-center px-1">
+        <div className="flex items-center flex-shrink-0">
+          {isTabRoot ? (
+            <button onClick={() => navigate("/dashboard")} aria-label="Home" className="h-10 w-10 flex items-center justify-center rounded-lg active:bg-white/10 transition-colors">
+              <Logo light size="sm" />
+            </button>
+          ) : (
+            <button
+              onClick={handleBack}
+              aria-label="Back"
+              className="h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+        <h1 className="flex-1 min-w-0 font-heading font-semibold text-white text-sm sm:text-base text-center px-2 truncate">
+          {title}
+        </h1>
+        <div className="flex items-center justify-end flex-shrink-0 gap-1">
           <button
-            onClick={handleBack}
-            aria-label="Back"
+            onClick={() => navigate("/security-settings")}
+            aria-label="Account security"
+            className={`h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors ${pathname === "/security-settings" ? "opacity-100" : "opacity-90"}`}
+          >
+            <Shield className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleLogout}
+            aria-label="Sign out"
             className="h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <LogOut className="w-5 h-5" />
           </button>
-        )}
-      </div>
-      <h1 className="flex-1 min-w-0 font-heading font-semibold text-white text-sm sm:text-base text-center px-2 truncate">
-        {title}
-      </h1>
-      <div className="flex items-center justify-end flex-shrink-0 gap-1">
-        <button
-          onClick={() => navigate("/security-settings")}
-          aria-label="Account security"
-          className={`h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors ${pathname === "/security-settings" ? "opacity-100" : "opacity-90"}`}
-        >
-          <Shield className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleLogout}
-          aria-label="Sign out"
-          className="h-10 w-10 flex items-center justify-center rounded-lg text-white active:bg-white/10 transition-colors"
-        >
-          <LogOut className="w-5 h-5" />
-        </button>
+        </div>
       </div>
     </header>
   );
