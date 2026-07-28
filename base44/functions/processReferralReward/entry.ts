@@ -6,6 +6,12 @@ const REWARD_BY_LEVEL = { 1: 0.02, 2: 0.005 };
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    // Only admins (or the entity-triggered system workflow, which runs with an
+    // admin context) may process referral rewards and trigger notification emails.
+    const caller = await base44.auth.me();
+    if (!caller || caller.role !== "admin") {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
     const body = await req.json().catch(() => ({}));
     const referralId = typeof body.referralId === "string" ? body.referralId : "";
     if (!referralId) {

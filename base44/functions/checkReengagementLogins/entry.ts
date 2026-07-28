@@ -5,6 +5,12 @@ import { createClientFromRequest } from "npm:@base44/sdk@0.8.38";
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    // Only admins (or scheduled system workflows, which run with an admin
+    // context) may query login activity — blocks unauthenticated callers.
+    const caller = await base44.auth.me();
+    if (!caller || caller.role !== "admin") {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
     const payload = await req.json().catch(() => ({}));
     const userIds: string[] = Array.isArray(payload.user_ids) ? payload.user_ids : [];
     const sentAt = typeof payload.sent_at === "string" ? payload.sent_at : "";
