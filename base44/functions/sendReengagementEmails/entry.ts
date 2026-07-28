@@ -4,6 +4,12 @@ import { createClientFromRequest } from "npm:@base44/sdk@0.8.38";
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    // Only admins (or scheduled system workflows, which run with an admin
+    // context) may trigger this bulk email send — blocks unauthenticated calls.
+    const caller = await base44.auth.me();
+    if (!caller || caller.role !== "admin") {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const [users, loginActivity, documents] = await Promise.all([
       base44.asServiceRole.entities.User.list("-created_date", 5000),
@@ -82,7 +88,7 @@ Deno.serve(async (req) => {
         });
         notifiedUserIds.push(user.id);
       } catch (e) {
-        failures.push({ email: user.email, error: e.message });
+        failures.push({ error: e.message });
       }
     }
 
