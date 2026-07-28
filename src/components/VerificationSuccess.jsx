@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 
 const SUCCESS_IMAGE =
-  "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/1f303ee5d_generated_image.png";
+  "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/08d01c70b_EngineerFemi.png";
 
 const BRAND_COLORS = ["#0F5C3F", "#C9A227", "#0B3D2E", "#E0BE45"];
 
