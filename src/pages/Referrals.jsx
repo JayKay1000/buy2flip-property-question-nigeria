@@ -82,7 +82,11 @@ export default function Referrals() {
 
   const directReferrals = referrals.filter((r) => r.level === 1);
   const indirectReferrals = referrals.filter((r) => r.level === 2);
-  const paidRewards = referrals.filter((r) => r.status === "paid");
+  // "Paid" only when the participant manually requested a withdrawal AND an
+  // admin processed it successfully — `withdrawn` is flipped to true solely by
+  // the admin withdrawal-processing path. Never key off `status` alone, which
+  // can hold stale "paid" values unrelated to an actual payout.
+  const paidRewards = referrals.filter((r) => r.withdrawn);
   const pendingRewards = referrals.filter((r) => (r.reward_amount || 0) === 0 && !r.withdrawn);
   const accruedRewards = referrals.filter((r) => (r.reward_amount || 0) > 0 && !r.withdrawn);
   const totalEarnings = accruedRewards.reduce((sum, r) => sum + (r.reward_amount || 0), 0);
@@ -307,8 +311,8 @@ export default function Referrals() {
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                      {r.status}
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.withdrawn ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
+                      {r.withdrawn ? "paid" : "pending"}
                     </span>
                   </div>
                 </div>
@@ -338,8 +342,8 @@ export default function Referrals() {
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-                      {r.status}
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.withdrawn ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
+                      {r.withdrawn ? "paid" : "pending"}
                     </span>
                   </div>
                 </div>

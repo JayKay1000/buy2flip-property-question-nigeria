@@ -46,7 +46,7 @@ export default function LiveTopReferrers() {
       }
       agg[code].total_referrals += 1;
       agg[code].total_earnings += r.reward_amount || 0;
-      if (r.status === "paid") agg[code].paid_count += 1;
+      if (r.withdrawn) agg[code].paid_count += 1;
     });
 
     return Object.values(agg)

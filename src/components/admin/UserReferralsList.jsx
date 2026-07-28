@@ -51,8 +51,8 @@ export default function UserReferralsList({ referralCode }) {
       </div>
       <div className="text-right flex-shrink-0">
         <p className="text-xs font-numeric font-medium text-foreground">{formatNaira(r.reward_amount || 0)}</p>
-        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.status === "paid" ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
-          {r.status}
+        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${r.withdrawn ? "bg-brand/10 text-brand" : "bg-gold/10 text-gold-dark"}`}>
+          {r.withdrawn ? "paid" : "pending"}
         </span>
       </div>
     </div>

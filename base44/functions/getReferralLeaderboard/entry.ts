@@ -39,7 +39,9 @@ Deno.serve(async (req) => {
         };
       }
       agg[code].total_referrals += 1;
-      if (r.status === "paid") agg[code].paid_referrals += 1;
+      // "Paid" = the participant requested a withdrawal and an admin processed it
+      // (which sets withdrawn = true). Never count a bare status === "paid".
+      if (r.withdrawn) agg[code].paid_referrals += 1;
       agg[code].total_earnings += r.reward_amount || 0;
     });
 
