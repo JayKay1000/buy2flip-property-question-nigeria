@@ -7,9 +7,9 @@ import { Phone, MessageCircle, Mail, ArrowLeft } from "lucide-react";
 
 export default function ContactOfficer() {
   const navigate = useNavigate();
-  const phoneNumber = "+234 903 339 3000";
-  const phoneDigits = "2349033393000";
-  const whatsappDigits = "2349033393000";
+  const phoneNumber = "+234 703 509 7722";
+  const phoneDigits = "2347035097722";
+  const whatsappDigits = "2347035097722";
   const email = "buy2flip@propertyquestion.net";
 
   return (
