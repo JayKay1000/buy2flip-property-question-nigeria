@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { formatNaira } from "@/lib/format";
-import { isWelcomePackageEligible } from "@/lib/plans";
+import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -36,7 +36,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
   const principal = commitment?.amount || 0;
   const expectedReturn = commitment?.expected_return != null ? commitment.expected_return : Math.max(0, (commitment?.total_expected_value || 0) - principal);
   const hasWelcomePackage = isWelcomePackageEligible(commitment?.plan_name);
-  const welcomePackage = hasWelcomePackage ? principal * 0.01 : 0;
+  const welcomePackage = hasWelcomePackage ? principal * getWelcomePackageRate(commitment?.plan_name) : 0;
   const earlyPayout = principal - welcomePackage;
   // At maturity the participant receives their full commitment (principal, with the
   // 1% welcome package preserved) plus the entire expected return — no penalties.
@@ -96,7 +96,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
             <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Withdrawal Amount</p>
             <p className="font-numeric font-bold text-xl text-brand">{formatNaira(amount)}</p>
             <p className="text-xs text-muted-foreground mt-1">
-              {isEarlyWithdrawal ? "Requested (subject to early-withdrawal penalty)" : hasWelcomePackage ? "Full commitment + ROI (1% welcome package preserved)" : "Full commitment + ROI"}
+              {isEarlyWithdrawal ? "Requested (subject to early-withdrawal penalty)" : hasWelcomePackage ? `Full commitment + ROI (${formatWelcomePackageRate(commitment?.plan_name)} welcome package preserved)` : "Full commitment + ROI"}
             </p>
           </div>
 
@@ -109,11 +109,11 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
                 <div className="flex justify-between"><span className="text-muted-foreground">Original Commitment</span><span className="font-numeric font-medium">{formatNaira(principal)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Expected Return (ROI)</span><span className="font-numeric font-medium text-brand">+ {formatNaira(expectedReturn)}</span></div>
                 {hasWelcomePackage && (
-                <div className="flex justify-between"><span className="text-muted-foreground">1% Welcome Package</span><span className="font-numeric font-medium text-brand">Preserved</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{formatWelcomePackageRate(commitment?.plan_name)} Welcome Package</span><span className="font-numeric font-medium text-brand">Preserved</span></div>
                 )}
                 <div className="flex justify-between pt-1.5 border-t border-brand/15"><span className="font-medium text-foreground">Total Payable</span><span className="font-numeric font-bold text-brand">{formatNaira(maturedPayout)}</span></div>
               </div>
-              <p className="text-[11px] text-muted-foreground">{hasWelcomePackage ? "Your commitment has matured. You will receive your full principal, your full expected return, and your 1% welcome package — no penalties apply." : "Your commitment has matured. You will receive your full principal and your full expected return — no penalties apply."}</p>
+              <p className="text-[11px] text-muted-foreground">{hasWelcomePackage ? `Your commitment has matured. You will receive your full principal, your full expected return, and your ${formatWelcomePackageRate(commitment?.plan_name)} welcome package — no penalties apply.` : "Your commitment has matured. You will receive your full principal and your full expected return — no penalties apply."}</p>
             </div>
           )}
 
@@ -145,7 +145,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
               <ul className="text-sm text-foreground/90 space-y-1 pl-1">
                 <li>• Forfeit your entire Expected Return of <span className="font-numeric font-medium">{formatNaira(expectedReturn)}</span>.</li>
                 {hasWelcomePackage && (
-                <li>• Have the 1% welcome package (<span className="font-numeric font-medium">{formatNaira(welcomePackage)}</span>) deducted from your initial commitment.</li>
+                <li>• Have the {formatWelcomePackageRate(commitment?.plan_name)} welcome package (<span className="font-numeric font-medium">{formatNaira(welcomePackage)}</span>) deducted from your initial commitment.</li>
                 )}
               </ul>
               <div className="flex justify-between items-center pt-2 border-t border-destructive/20">
@@ -159,7 +159,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
                   onChange={(e) => setAcknowledged(e.target.checked)}
                   className="mt-0.5"
                 />
-                I understand and accept that I will forfeit my ROI{hasWelcomePackage ? " and the 1% welcome package" : ""} by withdrawing early.
+                I understand and accept that I will forfeit my ROI{hasWelcomePackage ? ` and the ${formatWelcomePackageRate(commitment?.plan_name)} welcome package` : ""} by withdrawing early.
               </label>
             </div>
           )}

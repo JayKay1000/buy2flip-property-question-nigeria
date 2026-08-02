@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate } from "@/lib/format";
-import { isWelcomePackageEligible } from "@/lib/plans";
+import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import WelcomePackageWithdrawDialog from "@/components/WelcomePackageWithdrawDialog";
 import {
   Gift, CheckCircle2, Clock, AlertCircle, Wallet, ArrowLeft,
@@ -57,10 +57,10 @@ export default function WelcomePackage() {
   const eligible = commitments.filter(
     (c) => c.status === "active" && isWelcomePackageEligible(c.plan_name) && !c.welcome_package_withdrawn && !pendingRequestFor(c.id)
   );
-  const totalAvailable = eligible.reduce((s, c) => s + Math.round((c.amount || 0) * 0.01), 0);
+  const totalAvailable = eligible.reduce((s, c) => s + Math.round((c.amount || 0) * getWelcomePackageRate(c.plan_name)), 0);
   const totalWithdrawn = commitments
     .filter((c) => c.welcome_package_withdrawn)
-    .reduce((s, c) => s + Math.round((c.amount || 0) * 0.01), 0);
+    .reduce((s, c) => s + Math.round((c.amount || 0) * getWelcomePackageRate(c.plan_name)), 0);
   const totalPending = welcomeRequests
     .filter((r) => r.status === "requested")
     .reduce((s, r) => s + (r.amount || 0), 0);
@@ -82,9 +82,9 @@ export default function WelcomePackage() {
         <Link to="/portfolio" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-3">
           <ArrowLeft className="w-4 h-4" /> Back to Portfolio
         </Link>
-        <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">1% Welcome Package</h1>
+        <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Welcome Package</h1>
         <p className="text-muted-foreground mt-1">
-          View the status of your 1% welcome package on each verified commitment and request a withdrawal once it becomes available.
+          View the status of your welcome package on each verified commitment and request a withdrawal once it becomes available.
         </p>
       </div>
 
@@ -97,7 +97,7 @@ export default function WelcomePackage() {
           <div>
             <h2 className="font-heading font-semibold text-foreground">How the welcome package works</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              When your payment is verified and your commitment is activated, a 1% welcome package becomes available.
+              When your payment is verified and your commitment is activated, a welcome package becomes available. The rate depends on your plan (Gold 1%, Platinum 2%, Diamond 1.5%).
               Request it here and our team pays it to your bank account after manual verification. Your full commitment
               and expected return remain payable at maturity.
             </p>
@@ -141,7 +141,7 @@ export default function WelcomePackage() {
       ) : (
         <div className="space-y-4">
           {commitments.map((c) => {
-            const welcomeAmount = Math.round((c.amount || 0) * 0.01);
+            const welcomeAmount = Math.round((c.amount || 0) * getWelcomePackageRate(c.plan_name));
             const pending = pendingRequestFor(c.id);
             const paid = c.welcome_package_withdrawn;
             const isPendingPayment = c.status === "pending_payment";
@@ -162,7 +162,7 @@ export default function WelcomePackage() {
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-4">
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider">1% Welcome</p>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">{wpEligible ? formatWelcomePackageRate(c.plan_name) : "N/A"} Welcome</p>
                       <p className="font-numeric font-bold text-lg text-gold-dark">{wpEligible ? formatNaira(welcomeAmount) : "—"}</p>
                     </div>
                     <div className="w-32 text-right">

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getPlan, PLANS, COMPANY_BANK, PAYMENT_EXPIRY_HOURS, isWelcomePackageEligible } from "@/lib/plans";
+import { getPlan, PLANS, COMPANY_BANK, PAYMENT_EXPIRY_HOURS, isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import CommitmentAmountSlider from "@/components/CommitmentAmountSlider";
 import { formatNaira } from "@/lib/format";
 import {
@@ -203,8 +203,8 @@ export default function Payment() {
           <div className="flex items-start gap-3 p-4 rounded-xl bg-gold/5 border border-gold/20">
             <Gift className="w-5 h-5 text-gold-dark flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-foreground">1% Welcome Package — {formatNaira(Math.round(validAmount * 0.01))}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">You'll receive a 1% welcome package of your commitment, withdrawable immediately once your payment is verified by our team.</p>
+              <p className="text-sm font-medium text-foreground">{formatWelcomePackageRate(selectedPlan.name)} Welcome Package — {formatNaira(Math.round(validAmount * getWelcomePackageRate(selectedPlan.name)))}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">You'll receive a {formatWelcomePackageRate(selectedPlan.name)} welcome package of your commitment, withdrawable immediately once your payment is verified by our team.</p>
             </div>
           </div>
           )}
@@ -369,8 +369,8 @@ export default function Payment() {
             </div>
             {isWelcomePackageEligible(selectedPlan.name) && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">1% Welcome Package</span>
-              <span className="font-numeric font-medium text-gold-dark">{formatNaira(Math.round(validAmount * 0.01))}</span>
+              <span className="text-muted-foreground">{formatWelcomePackageRate(selectedPlan.name)} Welcome Package</span>
+              <span className="font-numeric font-medium text-gold-dark">{formatNaira(Math.round(validAmount * getWelcomePackageRate(selectedPlan.name)))}</span>
             </div>
             )}
           </div>

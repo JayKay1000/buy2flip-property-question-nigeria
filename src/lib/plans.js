@@ -217,13 +217,27 @@ export const REFERRAL_REWARDS = {
   indirect: 0.005
 };
 
+// Per-plan welcome package rate (fraction of commitment). Bronze and Silver are excluded.
+export const WELCOME_PACKAGE_RATES = {
+  Gold: 0.01,
+  Platinum: 0.02,
+  Diamond: 0.015,
+};
+
+// Kept for backwards compatibility — prefer getWelcomePackageRate().
 export const WELCOME_PACKAGE_RATE = 0.01;
 
-// Plans eligible for the 1% welcome package. Bronze and Silver are excluded.
-export const WELCOME_PACKAGE_ELIGIBLE_PLANS = ["Gold", "Platinum", "Diamond"];
+export const WELCOME_PACKAGE_ELIGIBLE_PLANS = Object.keys(WELCOME_PACKAGE_RATES);
 
 export const isWelcomePackageEligible = (planName) =>
-  WELCOME_PACKAGE_ELIGIBLE_PLANS.includes(planName);
+  Object.prototype.hasOwnProperty.call(WELCOME_PACKAGE_RATES, planName);
+
+export const getWelcomePackageRate = (planName) => WELCOME_PACKAGE_RATES[planName] || 0;
+
+export const formatWelcomePackageRate = (planName) => {
+  const pct = (WELCOME_PACKAGE_RATES[planName] || 0) * 100;
+  return `${Number.isInteger(pct) ? pct : pct.toFixed(1)}%`;
+};
 
 export const PAYMENT_EXPIRY_HOURS = 24;
 

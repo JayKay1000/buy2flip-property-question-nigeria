@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate } from "@/lib/format";
-import { isWelcomePackageEligible } from "@/lib/plans";
+import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import { generateCommitmentCertificate } from "@/lib/certificate";
 import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
@@ -285,13 +285,13 @@ export default function Portfolio() {
                           const wp = withdrawals.find((w) => w.commitment_id === c.id && w.request_type === "welcome_package");
                           const wpPaid = c.welcome_package_withdrawn || wp?.status === "paid";
                           const wpPending = wp && (wp.status === "requested" || wp.status === "processing");
-                          const wpAmount = Math.round((c.amount || 0) * 0.01);
+                          const wpAmount = Math.round((c.amount || 0) * getWelcomePackageRate(c.plan_name));
                           return (
                             <div className="mt-4 pt-4 border-t border-border flex items-center justify-between gap-3">
                               <div className="flex items-center gap-2">
                                 <Gift className="w-4 h-4 text-gold-dark" />
                                 <div>
-                                  <p className="text-xs font-medium text-foreground">1% Welcome Package</p>
+                                  <p className="text-xs font-medium text-foreground">{formatWelcomePackageRate(c.plan_name)} Welcome Package</p>
                                   <p className="text-xs text-muted-foreground">{formatNaira(wpAmount)}</p>
                                 </div>
                               </div>
@@ -301,7 +301,7 @@ export default function Portfolio() {
                                 <span className="text-xs px-3 py-1.5 rounded-full font-medium bg-gold/10 text-gold-dark"><Clock className="w-3 h-3 inline mr-1" /> Processing</span>
                               ) : (
                                 <Button size="sm" className="bg-gold hover:bg-gold-dark text-white border-0" onClick={() => setWithdrawWelcome(c)}>
-                                  <Gift className="w-4 h-4 mr-1" /> Withdraw 1%
+                                  <Gift className="w-4 h-4 mr-1" /> Withdraw {formatWelcomePackageRate(c.plan_name)}
                                 </Button>
                               )}
                             </div>

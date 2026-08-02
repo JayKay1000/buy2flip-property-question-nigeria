@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatNaira } from "@/lib/format";
+import { getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import { Gift, Building2, AlertCircle, Loader2 } from "lucide-react";
 import {
   AlertDialog,
@@ -25,7 +26,7 @@ export default function WelcomePackageWithdrawDialog({
   const [error, setError] = useState("");
 
   const principal = commitment?.amount || 0;
-  const welcomeAmount = Math.round(principal * 0.01);
+  const welcomeAmount = Math.round(principal * getWelcomePackageRate(commitment?.plan_name));
   const hasBank = !!(profile?.bank_name && profile?.account_number && profile?.account_name);
 
   const handleSubmit = async () => {
@@ -72,16 +73,16 @@ export default function WelcomePackageWithdrawDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
-            <Gift className="w-5 h-5 text-gold-dark" /> Withdraw 1% Welcome Package
+            <Gift className="w-5 h-5 text-gold-dark" /> Withdraw {formatWelcomePackageRate(commitment?.plan_name)} Welcome Package
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Your commitment has been verified. You can now withdraw your 1% welcome package immediately.
+            Your commitment has been verified. You can now withdraw your {formatWelcomePackageRate(commitment?.plan_name)} welcome package immediately.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <div className="space-y-3 my-2">
           <div className="p-4 rounded-lg bg-gold/5 border border-gold/20">
-            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Welcome Package (1%)</p>
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Welcome Package ({formatWelcomePackageRate(commitment?.plan_name)})</p>
             <p className="font-numeric font-bold text-xl text-gold-dark">{formatNaira(welcomeAmount)}</p>
           </div>
 

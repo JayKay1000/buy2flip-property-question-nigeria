@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate } from "@/lib/format";
-import { isWelcomePackageEligible } from "@/lib/plans";
+import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import { isSafeUrl } from "@/lib/urlSafe";
 import {
   CreditCard, Clock, CheckCircle2, X, FileText, ExternalLink,
@@ -167,8 +167,8 @@ export default function AdminPayments() {
                   )}
                   {commitment && isWelcomePackageEligible(commitment.plan_name) && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">1% Welcome Package</span>
-                      <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * 0.01)}</span>
+                      <span className="text-muted-foreground">{formatWelcomePackageRate(commitment.plan_name)} Welcome Package</span>
+                      <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * getWelcomePackageRate(commitment.plan_name))}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
@@ -181,7 +181,7 @@ export default function AdminPayments() {
                   <div className="mb-4 p-3 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
                     <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-muted-foreground">
-                      This commitment includes a 1% welcome package ({formatNaira((commitment.amount || 0) * 0.01)}). Approving this payment only activates the commitment — it does <span className="font-medium text-foreground">not</span> pay the welcome package. The participant must separately request it, and you will approve that request under Withdrawal Requests.
+                      This commitment includes a {formatWelcomePackageRate(commitment.plan_name)} welcome package ({formatNaira((commitment.amount || 0) * getWelcomePackageRate(commitment.plan_name))}). Approving this payment only activates the commitment — it does <span className="font-medium text-foreground">not</span> pay the welcome package. The participant must separately request it, and you will approve that request under Withdrawal Requests.
                     </p>
                   </div>
                 )}

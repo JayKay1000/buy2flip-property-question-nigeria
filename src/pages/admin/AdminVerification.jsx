@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatNaira, formatDate } from "@/lib/format";
-import { isWelcomePackageEligible } from "@/lib/plans";
+import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import { isSafeUrl } from "@/lib/urlSafe";
 import {
   CreditCard, Clock, CheckCircle2, X, ExternalLink, AlertCircle,
@@ -142,7 +142,7 @@ export default function AdminVerification() {
           <ShieldCheck className="w-6 h-6 text-brand" />
           <h1 className="font-display font-bold text-2xl sm:text-3xl text-foreground">Verification Portal</h1>
         </div>
-        <p className="text-muted-foreground mt-1">Manually verify commitment payments and approve 1% welcome package withdrawals.</p>
+        <p className="text-muted-foreground mt-1">Manually verify commitment payments and approve welcome package withdrawals.</p>
       </div>
 
       {/* Tabs */}
@@ -197,8 +197,8 @@ export default function AdminVerification() {
                         </div>
                         {isWelcomePackageEligible(commitment.plan_name) && (
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">1% Welcome Package</span>
-                          <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * 0.01)}</span>
+                          <span className="text-muted-foreground">{formatWelcomePackageRate(commitment.plan_name)} Welcome Package</span>
+                          <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * getWelcomePackageRate(commitment.plan_name))}</span>
                         </div>
                         )}
                       </>
@@ -227,7 +227,7 @@ export default function AdminVerification() {
                   <div className="p-3 mb-4 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
                     <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-muted-foreground">
-                      Approving only activates the commitment. The 1% welcome package is paid separately after the participant requests it.
+                      Approving only activates the commitment. The welcome package is paid separately after the participant requests it.
                     </p>
                   </div>
                   )}
@@ -270,7 +270,7 @@ export default function AdminVerification() {
                   <div className="p-3 mb-4 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
                     <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-muted-foreground">
-                      Participant's upfront 1% welcome package. Verify the commitment is active before paying.
+                      Participant's upfront welcome package. Verify the commitment is active before paying.
                       Full commitment and ROI remain payable at maturity.
                     </p>
                   </div>

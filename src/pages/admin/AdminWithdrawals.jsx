@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatNaira, formatDate } from "@/lib/format";
-import { isWelcomePackageEligible } from "@/lib/plans";
+import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
 import {
   Select,
   SelectContent,
@@ -86,7 +86,7 @@ export default function AdminWithdrawals() {
     if (!commitment) return withdrawal.amount;
     const principal = commitment.amount || 0;
     if (isEarlyWithdrawal(commitment)) {
-      const welcomePackage = isWelcomePackageEligible(commitment.plan_name) ? principal * 0.01 : 0;
+      const welcomePackage = getWelcomePackageRate(commitment.plan_name) * principal;
       return Math.max(0, Math.round(principal - welcomePackage));
     }
     return commitment.total_expected_value || withdrawal.amount;
@@ -303,10 +303,10 @@ export default function AdminWithdrawals() {
             {editingWelcome && (
               <div className="p-3 mb-4 rounded-lg bg-gold/5 border border-gold/20 space-y-1">
                 <p className="text-xs font-semibold text-gold-dark flex items-center gap-1.5">
-                  <Gift className="w-4 h-4" /> 1% Welcome Package Withdrawal
+                  <Gift className="w-4 h-4" /> {formatWelcomePackageRate(editingCommitment?.plan_name)} Welcome Package Withdrawal
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  This is the participant's upfront 1% welcome package ({formatNaira(editingPayable)}), requested after their payment was verified. Please manually verify before paying. Their full commitment and ROI remain payable at maturity.
+                  This is the participant's upfront {formatWelcomePackageRate(editingCommitment?.plan_name)} welcome package ({formatNaira(editingPayable)}), requested after their payment was verified. Please manually verify before paying. Their full commitment and ROI remain payable at maturity.
                 </p>
               </div>
             )}
@@ -340,7 +340,7 @@ export default function AdminWithdrawals() {
                   <div className="flex justify-between"><span className="text-muted-foreground">Original Commitment</span><span className="font-numeric font-medium">{formatNaira(editingCommitment?.amount || 0)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Forfeited ROI</span><span className="font-numeric font-medium text-destructive">− {formatNaira(editingCommitment?.expected_return ?? Math.max(0, (editingCommitment?.total_expected_value || 0) - (editingCommitment?.amount || 0)))}</span></div>
                   {isWelcomePackageEligible(editingCommitment?.plan_name) && (
-                  <div className="flex justify-between"><span className="text-muted-foreground">1% Welcome Package</span><span className="font-numeric font-medium text-destructive">− {formatNaira((editingCommitment?.amount || 0) * 0.01)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">{formatWelcomePackageRate(editingCommitment?.plan_name)} Welcome Package</span><span className="font-numeric font-medium text-destructive">− {formatNaira((editingCommitment?.amount || 0) * getWelcomePackageRate(editingCommitment?.plan_name))}</span></div>
                   )}
                   <div className="flex justify-between pt-1 border-t border-destructive/20"><span className="font-medium text-foreground">Payable Amount</span><span className="font-numeric font-bold text-foreground">{formatNaira(editingPayable)}</span></div>
                 </div>
