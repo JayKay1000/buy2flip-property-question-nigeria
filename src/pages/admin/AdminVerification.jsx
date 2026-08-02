@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isWelcomePackageEligible } from "@/lib/plans";
 import { isSafeUrl } from "@/lib/urlSafe";
 import {
   CreditCard, Clock, CheckCircle2, X, ExternalLink, AlertCircle,
@@ -194,10 +195,12 @@ export default function AdminVerification() {
                           <span className="text-muted-foreground">Plan</span>
                           <span className="text-foreground">{commitment.plan_name} ({commitment.plan_duration_months}mo)</span>
                         </div>
+                        {isWelcomePackageEligible(commitment.plan_name) && (
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">1% Welcome Package</span>
                           <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * 0.01)}</span>
                         </div>
+                        )}
                       </>
                     )}
                     <div className="flex justify-between">
@@ -220,12 +223,14 @@ export default function AdminVerification() {
                       )}
                     </div>
                   )}
+                  {isWelcomePackageEligible(commitment?.plan_name) && (
                   <div className="p-3 mb-4 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
                     <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-muted-foreground">
                       Approving only activates the commitment. The 1% welcome package is paid separately after the participant requests it.
                     </p>
                   </div>
+                  )}
                   <div className="flex gap-2">
                     <Button size="sm" className="flex-1 bg-brand hover:bg-brand-dark" onClick={() => approvePayment(payment)} disabled={processing}>
                       <CheckCircle2 className="w-4 h-4 mr-1" /> Verify & Approve

@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isWelcomePackageEligible } from "@/lib/plans";
 import WelcomePackageWithdrawDialog from "@/components/WelcomePackageWithdrawDialog";
 import {
   Gift, CheckCircle2, Clock, AlertCircle, Wallet, ArrowLeft,
@@ -54,7 +55,7 @@ export default function WelcomePackage() {
     welcomeRequests.find((r) => r.commitment_id === commitmentId && r.status === "paid");
 
   const eligible = commitments.filter(
-    (c) => c.status === "active" && !c.welcome_package_withdrawn && !pendingRequestFor(c.id)
+    (c) => c.status === "active" && isWelcomePackageEligible(c.plan_name) && !c.welcome_package_withdrawn && !pendingRequestFor(c.id)
   );
   const totalAvailable = eligible.reduce((s, c) => s + Math.round((c.amount || 0) * 0.01), 0);
   const totalWithdrawn = commitments
@@ -144,6 +145,7 @@ export default function WelcomePackage() {
             const pending = pendingRequestFor(c.id);
             const paid = c.welcome_package_withdrawn;
             const isPendingPayment = c.status === "pending_payment";
+            const wpEligible = isWelcomePackageEligible(c.plan_name);
             return (
               <Card key={c.id} className="p-5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -161,10 +163,12 @@ export default function WelcomePackage() {
                   <div className="flex items-center justify-between sm:justify-end gap-4">
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground uppercase tracking-wider">1% Welcome</p>
-                      <p className="font-numeric font-bold text-lg text-gold-dark">{formatNaira(welcomeAmount)}</p>
+                      <p className="font-numeric font-bold text-lg text-gold-dark">{wpEligible ? formatNaira(welcomeAmount) : "—"}</p>
                     </div>
                     <div className="w-32 text-right">
-                      {isPendingPayment ? (
+                      {!wpEligible ? (
+                        <span className="text-xs text-muted-foreground">Not eligible for this plan</span>
+                      ) : isPendingPayment ? (
                         <span className="text-xs text-muted-foreground">Awaiting payment verification</span>
                       ) : paid ? (
                         <span className="inline-flex items-center gap-1.5 text-sm font-medium text-brand">

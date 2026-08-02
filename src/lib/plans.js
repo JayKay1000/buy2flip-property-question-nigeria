@@ -217,6 +217,14 @@ export const REFERRAL_REWARDS = {
   indirect: 0.005
 };
 
+export const WELCOME_PACKAGE_RATE = 0.01;
+
+// Plans eligible for the 1% welcome package. Bronze and Silver are excluded.
+export const WELCOME_PACKAGE_ELIGIBLE_PLANS = ["Gold", "Platinum", "Diamond"];
+
+export const isWelcomePackageEligible = (planName) =>
+  WELCOME_PACKAGE_ELIGIBLE_PLANS.includes(planName);
+
 export const PAYMENT_EXPIRY_HOURS = 24;
 
 export const HOW_IT_WORKS_STEPS = [

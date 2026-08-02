@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isWelcomePackageEligible } from "@/lib/plans";
 import { isSafeUrl } from "@/lib/urlSafe";
 import {
   CreditCard, Clock, CheckCircle2, X, FileText, ExternalLink,
@@ -164,7 +165,7 @@ export default function AdminPayments() {
                       <span className="text-foreground">{commitment.plan_name} ({commitment.plan_duration_months}mo)</span>
                     </div>
                   )}
-                  {commitment && (
+                  {commitment && isWelcomePackageEligible(commitment.plan_name) && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">1% Welcome Package</span>
                       <span className="font-numeric font-medium text-gold-dark">{formatNaira((commitment.amount || 0) * 0.01)}</span>
@@ -176,7 +177,7 @@ export default function AdminPayments() {
                   </div>
                 </div>
 
-                {payment.status === "pending" && commitment && (
+                {payment.status === "pending" && commitment && isWelcomePackageEligible(commitment.plan_name) && (
                   <div className="mb-4 p-3 rounded-lg bg-gold/5 border border-gold/20 flex items-start gap-2">
                     <Gift className="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-muted-foreground">

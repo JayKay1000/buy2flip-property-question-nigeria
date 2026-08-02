@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isWelcomePackageEligible } from "@/lib/plans";
 import { generateCommitmentCertificate } from "@/lib/certificate";
 import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
@@ -280,7 +281,7 @@ export default function Portfolio() {
                         )}
                         </div>
 
-                        {c.status === "active" && (() => {
+                        {c.status === "active" && isWelcomePackageEligible(c.plan_name) && (() => {
                           const wp = withdrawals.find((w) => w.commitment_id === c.id && w.request_type === "welcome_package");
                           const wpPaid = c.welcome_package_withdrawn || wp?.status === "paid";
                           const wpPending = wp && (wp.status === "requested" || wp.status === "processing");

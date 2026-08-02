@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatNaira, formatDate } from "@/lib/format";
+import { isWelcomePackageEligible } from "@/lib/plans";
 import {
   Select,
   SelectContent,
@@ -85,7 +86,7 @@ export default function AdminWithdrawals() {
     if (!commitment) return withdrawal.amount;
     const principal = commitment.amount || 0;
     if (isEarlyWithdrawal(commitment)) {
-      const welcomePackage = principal * 0.01;
+      const welcomePackage = isWelcomePackageEligible(commitment.plan_name) ? principal * 0.01 : 0;
       return Math.max(0, Math.round(principal - welcomePackage));
     }
     return commitment.total_expected_value || withdrawal.amount;
@@ -338,7 +339,9 @@ export default function AdminWithdrawals() {
                 <div className="text-xs space-y-1">
                   <div className="flex justify-between"><span className="text-muted-foreground">Original Commitment</span><span className="font-numeric font-medium">{formatNaira(editingCommitment?.amount || 0)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Forfeited ROI</span><span className="font-numeric font-medium text-destructive">− {formatNaira(editingCommitment?.expected_return ?? Math.max(0, (editingCommitment?.total_expected_value || 0) - (editingCommitment?.amount || 0)))}</span></div>
+                  {isWelcomePackageEligible(editingCommitment?.plan_name) && (
                   <div className="flex justify-between"><span className="text-muted-foreground">1% Welcome Package</span><span className="font-numeric font-medium text-destructive">− {formatNaira((editingCommitment?.amount || 0) * 0.01)}</span></div>
+                  )}
                   <div className="flex justify-between pt-1 border-t border-destructive/20"><span className="font-medium text-foreground">Payable Amount</span><span className="font-numeric font-bold text-foreground">{formatNaira(editingPayable)}</span></div>
                 </div>
                 <p className="text-[11px] text-muted-foreground pt-1">Per the early-withdrawal warning the participant accepted, only the adjusted amount may be processed.</p>
