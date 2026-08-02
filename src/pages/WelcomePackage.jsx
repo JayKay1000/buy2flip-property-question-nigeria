@@ -97,7 +97,7 @@ export default function WelcomePackage() {
           <div>
             <h2 className="font-heading font-semibold text-foreground">How the welcome package works</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              When your payment is verified and your commitment is activated, a welcome package becomes available. The rate depends on your plan (Gold 1%, Platinum 2%, Diamond 1.5%).
+              When your payment is verified and your commitment is activated, a welcome package becomes available. The rate depends on your plan (Gold 1%, Platinum 1.5%, Diamond 2%).
               Request it here and our team pays it to your bank account after manual verification. Your full commitment
               and expected return remain payable at maturity.
             </p>

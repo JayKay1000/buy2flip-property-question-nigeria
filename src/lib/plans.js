@@ -220,8 +220,8 @@ export const REFERRAL_REWARDS = {
 // Per-plan welcome package rate (fraction of commitment). Bronze and Silver are excluded.
 export const WELCOME_PACKAGE_RATES = {
   Gold: 0.01,
-  Platinum: 0.02,
-  Diamond: 0.015,
+  Platinum: 0.015,
+  Diamond: 0.02,
 };
 
 // Kept for backwards compatibility — prefer getWelcomePackageRate().
