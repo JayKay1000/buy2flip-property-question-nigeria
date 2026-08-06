@@ -71,7 +71,18 @@ export default function Landing() {
             </div>
           </div>
         </div>
-
+{/* GOOGLE ADSENSE AD START */}
+      <div className="my-8 flex justify-center">
+          <ins
+            className="adsbygoogle"
+            style={{display:"block"}}
+            data-ad-client="ca-pub-5371658397951527"
+            data-ad-slot="9876543210"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+      </div>
+      {/* GOOGLE ADSENSE AD END */}
         {/* Stats bar */}
         <div className="relative z-10 border-t border-white/10 glass-dark">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
