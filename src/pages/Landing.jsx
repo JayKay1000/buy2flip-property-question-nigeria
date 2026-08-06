@@ -84,6 +84,8 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5371658397951527"
+     crossorigin="anonymous"></script>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-24 bg-background">
