@@ -77,7 +77,7 @@ export default function Landing() {
             className="adsbygoogle"
             style={{display:"block"}}
             data-ad-client="ca-pub-5371658397951527"
-            data-ad-slot="9876543210"
+            data-ad-slot="8731932872"
             data-ad-format="auto"
             data-full-width-responsive="true"
           ></ins>
