@@ -47,14 +47,13 @@ export default function Landing() {
         <div className="relative z-10 flex-1 flex items-center w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 sm:py-32 w-full">
             <div className="max-w-3xl">
-            <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
-              <span className="text-gradient-gold">Buy2Flip</span>
+            <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight animate-fade-up">
+              <span className="text-gradient-gold">Own Premium Land.</span>
               <br />
-              Made Simple.
+              Flip It Back. Earn Up To 65%.
             </h1>
             <p className="mt-6 text-lg text-white/70 max-w-xl leading-relaxed animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              Property Question Nigeria Limited helps you build wealth through strategic Buy2Flip —
-              acquire premium land, earn returns according to your selected plan, and watch your portfolio grow.
+              Buy2Flip with Property Question Nigeria Limited — Simple. Strategic. Rewarding.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/register" className="w-full sm:w-auto">
