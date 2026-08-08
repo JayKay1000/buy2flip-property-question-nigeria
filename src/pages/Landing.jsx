@@ -52,10 +52,14 @@ export default function Landing() {
               <br />
               Made Simple.
             </h1>
-            <p className="mt-6 text-lg text-white/70 max-w-xl leading-relaxed animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              Property Question Nigeria Limited helps you build wealth through strategic Buy2Flip —
-              acquire premium land, earn returns according to your selected plan, and watch your portfolio grow.
-            </p>
+            <div className="mt-6 max-w-xl animate-fade-up" style={{ animationDelay: "0.1s" }}>
+              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">
+                OWN PREMIUM LAND. FLIP IT BACK. EARN UP TO 65%.
+              </p>
+              <p className="mt-2 text-lg text-white/80 leading-relaxed">
+                Buy2Flip with Property Question Nigeria Limited — Simple. Strategic. Rewarding.
+              </p>
+            </div>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/register" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto bg-gold hover:bg-gold-dark text-white border-0 h-14 px-8 text-base font-semibold">
