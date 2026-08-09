@@ -139,7 +139,7 @@ export default function Terms() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 For questions regarding these Terms, contact Property Question Nigeria Limited at
                 <span className="text-foreground font-medium"> subscribe@buy2flip.net</span>,
-                <span className="text-foreground font-medium"> +234 903 339 3000</span>, or Suite 43,
+                <span className="text-foreground font-medium"> +234 703 509 7722</span>, or Suite 43,
                 Ogba Shopping Arcade, Ijaiye Road, Ogba, Lagos, Nigeria.
               </p>
             </div>

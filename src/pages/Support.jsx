@@ -115,7 +115,7 @@ export default function Support() {
 
       {/* Quick support options */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <a href="https://wa.me/2349033393000" target="_blank" rel="noopener noreferrer">
+        <a href="https://wa.me/2347035097722" target="_blank" rel="noopener noreferrer">
           <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center mb-3">
               <MessageSquare className="w-5 h-5 text-brand" />
@@ -124,13 +124,13 @@ export default function Support() {
             <p className="text-xs text-muted-foreground mt-1">Chat with us on WhatsApp</p>
           </Card>
         </a>
-        <a href="tel:+2349033393000">
+        <a href="tel:+2347035097722">
           <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center mb-3">
               <Phone className="w-5 h-5 text-gold-dark" />
             </div>
             <h3 className="font-heading font-semibold text-foreground text-sm">Call Support</h3>
-            <p className="text-xs text-muted-foreground mt-1">+234 903 339 3000</p>
+            <p className="text-xs text-muted-foreground mt-1">+234 703 509 7722</p>
           </Card>
         </a>
         <a href="mailto:subscribe@buy2flip.net">
@@ -196,8 +196,8 @@ export default function Support() {
                 </div>
               </div>
               <div className="space-y-2">
-                <a href="tel:+2349033393000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                  <Phone className="w-4 h-4 text-muted-foreground" /> +234 903 339 3000
+                <a href="tel:+2347035097722" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                  <Phone className="w-4 h-4 text-muted-foreground" /> +234 703 509 7722
                 </a>
                 <a href="mailto:subscribe@buy2flip.net" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
                   <Mail className="w-4 h-4 text-muted-foreground" /> subscribe@buy2flip.net

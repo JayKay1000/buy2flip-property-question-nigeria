@@ -282,8 +282,8 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="space-y-2">
-              <a href="tel:+2349033393000" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
-                <Phone className="w-4 h-4 text-muted-foreground" /> +234 903 339 3000
+              <a href="tel:+2347035097722" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
+                <Phone className="w-4 h-4 text-muted-foreground" /> +234 703 509 7722
               </a>
               <a href="mailto:subscribe@buy2flip.net" className="flex items-center gap-2 text-sm text-foreground hover:text-brand transition-colors">
                 <Mail className="w-4 h-4 text-muted-foreground" /> subscribe@buy2flip.net

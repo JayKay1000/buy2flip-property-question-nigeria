@@ -167,8 +167,10 @@ export default function Portfolio() {
   const completedCommitments = commitments.filter((c) => c.status === "completed");
   const pendingCommitments = commitments.filter((c) => c.status === "pending_payment");
 
+  // Only match maturity-type withdrawals here — welcome-package and referral
+  // requests share the same commitment_id and must not hide the plan Withdraw button.
   const getWithdrawal = (commitmentId) =>
-    withdrawals.find((w) => w.commitment_id === commitmentId);
+    withdrawals.find((w) => w.commitment_id === commitmentId && (w.request_type === "maturity" || !w.request_type));
   const withdrawalStatusConfig = {
     requested: { label: "Withdrawal Requested", color: "bg-gold/10 text-gold-dark" },
     processing: { label: "Withdrawal Processing", color: "bg-blue-100 text-blue-700" },

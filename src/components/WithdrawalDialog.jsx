@@ -39,7 +39,7 @@ export default function WithdrawalDialog({ open, onOpenChange, commitment, profi
   const welcomePackage = hasWelcomePackage ? principal * getWelcomePackageRate(commitment?.plan_name) : 0;
   const earlyPayout = principal - welcomePackage;
   // At maturity the participant receives their full commitment (principal, with the
-  // 1% welcome package preserved) plus the entire expected return — no penalties.
+  // welcome package preserved) plus the entire expected return — no penalties.
   const maturedPayout = commitment?.total_expected_value || (principal + expectedReturn);
 
   const submitWithdrawal = async () => {
