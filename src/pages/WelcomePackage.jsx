@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate } from "@/lib/format";
 import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
+import { liveCommitments } from "@/lib/commitmentStatus";
 import WelcomePackageWithdrawDialog from "@/components/WelcomePackageWithdrawDialog";
 import {
   Gift, CheckCircle2, Clock, AlertCircle, Wallet, ArrowLeft,
@@ -133,14 +134,14 @@ export default function WelcomePackage() {
 
       {/* Commitments */}
       <h2 className="font-heading font-semibold text-foreground mb-4">Your Commitments</h2>
-      {commitments.length === 0 ? (
+      {liveCommitments(commitments).length === 0 ? (
         <Card className="p-12 text-center">
           <Wallet className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">No commitments yet.</p>
         </Card>
       ) : (
         <div className="space-y-4">
-          {commitments.map((c) => {
+          {liveCommitments(commitments).map((c) => {
             const welcomeAmount = Math.round((c.amount || 0) * getWelcomePackageRate(c.plan_name));
             const pending = pendingRequestFor(c.id);
             const paid = c.welcome_package_withdrawn;

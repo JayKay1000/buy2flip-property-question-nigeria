@@ -1,0 +1,84 @@
+{
+  "name": "LaunchResetAudit",
+  "type": "object",
+  "properties": {
+    "reset_type": {
+      "type": "string"
+    },
+    "executed_by": {
+      "type": "string"
+    },
+    "executed_by_name": {
+      "type": "string"
+    },
+    "executed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "users_affected": {
+      "type": "number",
+      "default": 0
+    },
+    "commitments_affected": {
+      "type": "number",
+      "default": 0
+    },
+    "referrals_affected": {
+      "type": "number",
+      "default": 0
+    },
+    "downlines_affected": {
+      "type": "number",
+      "default": 0
+    },
+    "payments_affected": {
+      "type": "number",
+      "default": 0
+    },
+    "withdrawals_affected": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed"
+      ],
+      "default": "completed"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "backup_snapshot": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "reset_type",
+    "executed_by",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

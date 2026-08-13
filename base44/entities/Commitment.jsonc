@@ -40,7 +40,8 @@
         "pending_payment",
         "active",
         "completed",
-        "cancelled"
+        "cancelled",
+        "void"
       ],
       "default": "pending_payment"
     },

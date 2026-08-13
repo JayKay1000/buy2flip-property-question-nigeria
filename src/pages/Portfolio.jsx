@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatNaira, formatDate } from "@/lib/format";
 import { isWelcomePackageEligible, getWelcomePackageRate, formatWelcomePackageRate } from "@/lib/plans";
+import { liveCommitments } from "@/lib/commitmentStatus";
 import { generateCommitmentCertificate } from "@/lib/certificate";
 import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
@@ -230,7 +231,7 @@ export default function Portfolio() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6">
             <h2 className="font-heading font-semibold text-foreground mb-4">Commitment History</h2>
-            {commitments.length === 0 ? (
+            {liveCommitments(commitments).length === 0 ? (
               <div className="py-12 text-center">
                 <FileText className="w-10 h-10 text-muted-foreground/50 mx-auto mb-3" />
                 <p className="text-sm text-muted-foreground mb-4">No commitments yet.</p>
@@ -238,7 +239,7 @@ export default function Portfolio() {
               </div>
             ) : (
               <div className="space-y-4">
-                {commitments.map((c) => {
+                {liveCommitments(commitments).map((c) => {
                   const StatusIcon = statusConfig[c.status]?.icon || Clock;
                   return (
                     <div key={c.id} className="border border-border rounded-xl p-5 hover:shadow-md transition-shadow">

@@ -46,6 +46,7 @@ const WelcomePackage = lazy(() => import('./pages/WelcomePackage'));
 const ReferralAnalytics = lazy(() => import('./pages/ReferralAnalytics'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminVerification = lazy(() => import('./pages/admin/AdminVerification'));
+const AdminLaunchReset = lazy(() => import('./pages/admin/AdminLaunchReset'));
 
 const PageLoader = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -111,6 +112,7 @@ const AuthenticatedApp = () => {
         <Route path="users" element={<AdminUsers />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="documents" element={<AdminDocuments />} />
+        <Route path="launch-reset" element={<AdminLaunchReset />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

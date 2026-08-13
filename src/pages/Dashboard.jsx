@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatNaira, formatDate, daysBetween } from "@/lib/format";
 import { REFERRAL_REWARDS } from "@/lib/plans";
+import { liveCommitments } from "@/lib/commitmentStatus";
 import {
   Wallet, TrendingUp, Calendar, Users, Bell, Download, LifeBuoy,
   ArrowRight, CheckCircle2, Clock, AlertCircle, Building2, Phone, Mail,
@@ -243,14 +244,14 @@ export default function Dashboard() {
               <h2 className="font-heading font-semibold text-foreground">Recent Activities</h2>
               <Link to="/portfolio"><Button variant="ghost" size="sm">View All <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
             </div>
-            {commitments.length === 0 ? (
+            {liveCommitments(commitments).length === 0 ? (
               <div className="py-8 text-center">
                 <Clock className="w-8 h-8 text-muted-foreground/50 mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">No activities yet. Start your first commitment.</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {commitments.slice(0, 5).map((c) => (
+                {liveCommitments(commitments).slice(0, 5).map((c) => (
                   <div key={c.id} className="flex items-center gap-3 py-2">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${c.status === "active" ? "bg-brand/10" : c.status === "completed" ? "bg-gold/10" : "bg-muted"}`}>
                       {c.status === "active" ? <CheckCircle2 className="w-4 h-4 text-brand" /> : c.status === "completed" ? <Award className="w-4 h-4 text-gold-dark" /> : <Clock className="w-4 h-4 text-muted-foreground" />}

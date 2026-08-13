@@ -11,6 +11,7 @@ import {
 import {
   downloadCsv, participantColumns, commitmentColumns,
 } from "@/lib/exportCsv";
+import { liveCommitments } from "@/lib/commitmentStatus";
 
 export default function AdminOverview() {
   const [loading, setLoading] = useState(true);
@@ -83,7 +84,7 @@ export default function AdminOverview() {
     { label: "Projected Returns", value: formatNaira(projectedReturns), icon: TrendingUp, color: "text-gold-dark", bg: "bg-gold/10" },
   ];
 
-  const recentCommitments = [...commitments].slice(0, 8);
+  const recentCommitments = liveCommitments(commitments).slice(0, 8);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
