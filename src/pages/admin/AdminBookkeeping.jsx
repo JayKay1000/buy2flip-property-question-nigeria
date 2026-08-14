@@ -53,6 +53,16 @@ export default function AdminBookkeeping() {
 
   const getUser = (uid) => users.find((u) => u.id === uid);
 
+  // Look up a downline's own referral code from their email (used in the drawer).
+  const codeForEmail = (email) => {
+    if (!email) return "—";
+    const p = participants.find((pp) => {
+      const u = getUser(pp.created_by_id);
+      return u?.email?.toLowerCase() === email.toLowerCase();
+    });
+    return p?.referral_code || "—";
+  };
+
   // Build the complete per-user report rows (used for both the table and the
   // CSV export). One row per participant with their full profile, aggregated
   // commitment totals + plan breakdown, and full direct/indirect referral data.
@@ -74,9 +84,29 @@ export default function AdminBookkeeping() {
         .map((c) => `${c.plan_name} ${formatNaira(c.amount || 0)} [${c.status}] ${c.start_date || ""}->${c.maturity_date || ""}`)
         .join("; ");
 
+      // Map each participant's email to their own referral_code so we can show
+      // the referral code of every downline (direct + indirect).
+      const emailToCode = {};
+      participants.forEach((p) => {
+        const u = getUser(p.created_by_id);
+        if (u?.email && p.referral_code) emailToCode[u.email.toLowerCase()] = p.referral_code;
+      });
+
       const refDetail = (list) =>
         list
-          .map((r) => `${r.referred_name || "—"} <${r.referred_email || "—"}> earned=${formatNaira(r.reward_amount || 0)} withdrawn=${formatNaira(r.withdrawn_amount || 0)} [${r.status}]`)
+          .map((r) => {
+            const code = emailToCode[(r.referred_email || "").toLowerCase()] || "—";
+            return `${r.referred_name || "—"} <${r.referred_email || "—"}> code=${code} earned=${formatNaira(r.reward_amount || 0)} withdrawn=${formatNaira(r.withdrawn_amount || 0)} [${r.status}]`;
+          })
+          .join("; ");
+
+      // Downline names + referral codes only (for the dedicated columns).
+      const downlineDetail = (list) =>
+        list
+          .map((r) => {
+            const code = emailToCode[(r.referred_email || "").toLowerCase()] || "—";
+            return `${r.referred_name || "—"} | ${code}`;
+          })
           .join("; ");
 
       const earned = totalEarnedRewards(userRefs);
@@ -108,6 +138,8 @@ export default function AdminBookkeeping() {
         referral_available: Math.max(0, earned - withdrawn),
         direct_detail: refDetail(directRefs),
         indirect_detail: refDetail(indirectRefs),
+        direct_downlines: downlineDetail(directRefs),
+        indirect_downlines: downlineDetail(indirectRefs),
         _commitments: userComms,
         _direct: directRefs,
         _indirect: indirectRefs,
@@ -160,8 +192,10 @@ export default function AdminBookkeeping() {
     { label: "Total Referral Earned", key: "referral_earned" },
     { label: "Total Referral Withdrawn", key: "referral_withdrawn" },
     { label: "Available Referral Balance", key: "referral_available" },
-    { label: "Direct Referrals (Name | Email | Earned | Withdrawn | Status)", key: "direct_detail" },
-    { label: "Indirect Referrals (Name | Email | Earned | Withdrawn | Status)", key: "indirect_detail" },
+    { label: "Direct Referrals (Name | Email | Code | Earned | Withdrawn | Status)", key: "direct_detail" },
+    { label: "Indirect Referrals (Name | Email | Code | Earned | Withdrawn | Status)", key: "indirect_detail" },
+    { label: "Direct Downlines (Name | Referral Code)", key: "direct_downlines" },
+    { label: "Indirect Downlines (Name | Referral Code)", key: "indirect_downlines" },
   ];
 
   const handleExport = () => {
@@ -240,12 +274,14 @@ export default function AdminBookkeeping() {
                 <tr className="border-b border-border text-left text-xs text-muted-foreground uppercase tracking-wider">
                   <th className="px-4 py-3 font-medium">Participant</th>
                   <th className="px-4 py-3 font-medium hidden md:table-cell">Code</th>
+                  <th className="px-4 py-3 font-medium hidden lg:table-cell">Phone</th>
                   <th className="px-4 py-3 font-medium text-center">Commitments</th>
                   <th className="px-4 py-3 font-medium text-right">Total Committed</th>
                   <th className="px-4 py-3 font-medium text-center hidden sm:table-cell">Direct</th>
                   <th className="px-4 py-3 font-medium text-center hidden sm:table-cell">Indirect</th>
                   <th className="px-4 py-3 font-medium text-right hidden lg:table-cell">Earned</th>
                   <th className="px-4 py-3 font-medium text-right hidden lg:table-cell">Withdrawn</th>
+                  <th className="px-4 py-3 font-medium hidden xl:table-cell">Joined</th>
                   <th className="px-4 py-3 font-medium text-right">Action</th>
                 </tr>
               </thead>
@@ -257,12 +293,14 @@ export default function AdminBookkeeping() {
                       <p className="text-xs text-muted-foreground">{r.email || "—"}</p>
                     </td>
                     <td className="px-4 py-3 font-numeric text-foreground hidden md:table-cell">{r.referral_code}</td>
+                    <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{r.phone_number || "—"}</td>
                     <td className="px-4 py-3 text-center text-foreground font-numeric">{r.commitments_count}</td>
                     <td className="px-4 py-3 text-right font-numeric text-foreground">{formatNaira(r.total_committed)}</td>
                     <td className="px-4 py-3 text-center text-foreground font-numeric hidden sm:table-cell">{r.direct_count}</td>
                     <td className="px-4 py-3 text-center text-foreground font-numeric hidden sm:table-cell">{r.indirect_count}</td>
                     <td className="px-4 py-3 text-right font-numeric text-gold-dark hidden lg:table-cell">{formatNaira(r.referral_earned)}</td>
                     <td className="px-4 py-3 text-right font-numeric text-brand hidden lg:table-cell">{formatNaira(r.referral_withdrawn)}</td>
+                    <td className="px-4 py-3 text-muted-foreground hidden xl:table-cell">{formatDate(r.joined_date)}</td>
                     <td className="px-4 py-3 text-right">
                       <Button variant="ghost" size="sm" onClick={() => setSelected(r)}>View</Button>
                     </td>
@@ -386,6 +424,7 @@ export default function AdminBookkeeping() {
                             <div key={r.id} className="border border-border rounded-lg p-2">
                               <p className="text-sm font-medium text-foreground truncate">{r.referred_name || "—"}</p>
                               <p className="text-xs text-muted-foreground truncate">{r.referred_email || "—"}</p>
+                              <p className="text-xs text-muted-foreground truncate font-numeric">Code: {codeForEmail(r.referred_email)}</p>
                               <div className="flex items-center justify-between mt-1">
                                 <span className="font-numeric text-xs text-foreground">earned {formatNaira(r.reward_amount || 0)}</span>
                                 <span className="font-numeric text-xs text-brand">paid {formatNaira(r.withdrawn_amount || 0)}</span>
