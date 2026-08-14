@@ -10,7 +10,7 @@ import {
   CheckCircle2, Link2, ChevronRight, Trophy
 } from "lucide-react";
 import ReferralWithdrawalCard from "@/components/ReferralWithdrawalCard";
-import { referralBalance, referralStatus } from "@/lib/referralEarnings";
+import { referralBalance, referralStatus, totalEarnedRewards, totalWithdrawnAmount } from "@/lib/referralEarnings";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Referrals() {
@@ -94,6 +94,12 @@ export default function Referrals() {
   const pendingRewards = referrals.filter((r) => (r.reward_amount || 0) === 0);
   const accruedRewards = referrals.filter((r) => referralBalance(r) > 0);
   const totalEarnings = accruedRewards.reduce((sum, r) => sum + referralBalance(r), 0);
+
+  // Earned-vs-withdrawn breakdown (gross rewards ever earned vs cumulative payouts).
+  const totalEarned = totalEarnedRewards(referrals);
+  const totalWithdrawn = totalWithdrawnAmount(referrals);
+  const availableBalance = Math.max(0, totalEarned - totalWithdrawn);
+  const withdrawnPct = totalEarned > 0 ? Math.min(100, Math.round((totalWithdrawn / totalEarned) * 100)) : 0;
 
   const stats = [
     { label: "Total Referrals", value: referrals.length, icon: Users, color: "text-brand", bg: "bg-brand/10" },
@@ -201,6 +207,46 @@ export default function Referrals() {
           </Card>
         ))}
       </div>
+
+      {/* Earned vs withdrawn breakdown */}
+      <Card className="p-6 mb-8 border-brand/20">
+        <div className="flex items-center gap-2 mb-5">
+          <TrendingUp className="w-5 h-5 text-brand" />
+          <h2 className="font-heading font-semibold text-foreground">Earnings Breakdown</h2>
+          <span className="ml-auto text-xs text-muted-foreground">Total earned vs. withdrawn</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+          <div className="p-4 rounded-xl bg-brand/5 border border-brand/10">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Total Earned Rewards</p>
+            <p className="font-numeric font-bold text-2xl text-brand">{formatNaira(totalEarned)}</p>
+            <p className="text-xs text-muted-foreground mt-1">Lifetime gross referral rewards</p>
+          </div>
+          <div className="p-4 rounded-xl bg-muted/40 border border-border">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Withdrawn to Date</p>
+            <p className="font-numeric font-bold text-2xl text-foreground">{formatNaira(totalWithdrawn)}</p>
+            <p className="text-xs text-muted-foreground mt-1">Cumulative payouts processed</p>
+          </div>
+          <div className="p-4 rounded-xl bg-gold/5 border border-gold/20">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Available Balance</p>
+            <p className="font-numeric font-bold text-2xl text-gold-dark">{formatNaira(availableBalance)}</p>
+            <p className="text-xs text-muted-foreground mt-1">Ready to request for withdrawal</p>
+          </div>
+        </div>
+        {totalEarned > 0 && (
+          <div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+              <span>Withdrawn {withdrawnPct}%</span>
+              <span>{formatNaira(totalWithdrawn)} of {formatNaira(totalEarned)}</span>
+            </div>
+            <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-brand to-gold rounded-full transition-all"
+                style={{ width: `${withdrawnPct}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </Card>
 
       {/* Featured monthly leaders (admin-published) */}
       {featured && (featured.entries || []).length > 0 && (

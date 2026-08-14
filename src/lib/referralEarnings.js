@@ -55,6 +55,16 @@ export const alreadyRequestedAmount = (requests) =>
 export const availableToWithdraw = (referrals, requests) =>
   Math.max(0, totalAccrued(referrals) - alreadyRequestedAmount(requests));
 
+// Total cumulative reward ever earned across all referrals (gross, before any
+// payouts). This is the "earned" side of the earned-vs-withdrawn breakdown.
+export const totalEarnedRewards = (referrals) =>
+  (referrals || []).reduce((sum, r) => sum + (r?.reward_amount || 0), 0);
+
+// Total cumulative amount already paid out to the participant via admin-
+// processed referral withdrawals. This is the "withdrawn" side.
+export const totalWithdrawnAmount = (referrals) =>
+  (referrals || []).reduce((sum, r) => sum + (r?.withdrawn_amount || 0), 0);
+
 // Human-readable per-referral state for badges: "available" when there is an
 // unwithdrawn balance (includes referrals that were paid out before and have
 // since accrued new rewards), "paid" when fully withdrawn, "pending" while the
