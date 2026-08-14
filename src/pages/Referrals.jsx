@@ -10,6 +10,7 @@ import {
   CheckCircle2, Link2, ChevronRight, Trophy
 } from "lucide-react";
 import ReferralWithdrawalCard from "@/components/ReferralWithdrawalCard";
+import ReferralEarningsChart from "@/components/ReferralEarningsChart";
 import { referralBalance, referralStatus, totalEarnedRewards, totalWithdrawnAmount } from "@/lib/referralEarnings";
 import { toast } from "@/components/ui/use-toast";
 
@@ -247,6 +248,9 @@ export default function Referrals() {
           </div>
         )}
       </Card>
+
+      {/* Earnings trend chart */}
+      <ReferralEarningsChart referrals={referrals} requests={requests} />
 
       {/* Featured monthly leaders (admin-published) */}
       {featured && (featured.entries || []).length > 0 && (
