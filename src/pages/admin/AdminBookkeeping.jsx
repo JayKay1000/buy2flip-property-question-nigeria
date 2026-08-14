@@ -11,13 +11,89 @@ import {
 } from "@/lib/referralEarnings";
 import {
   FileSpreadsheet, Download, Search, Users, TrendingUp, Banknote, X,
-  Mail, Phone, Building2, CreditCard, Network, Wallet, Calendar,
+  Mail, Phone, Building2, CreditCard, Network, Wallet, Calendar, RefreshCw,
 } from "lucide-react";
 
-const todayStamp = () => {
+// Full export timestamp (date + time) so each download is uniquely named and
+// reflects the exact moment it was generated — available at any time, not just
+// the current day.
+const exportStamp = () => {
   const d = new Date();
   const pad = (n) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
+};
+
+// Pure row builder — shared by the on-screen table (via useMemo) and the CSV
+// export (with freshly fetched data) so the export always reflects real-time
+// state at the moment of download.
+const buildReportRows = (participants, users, commitments, referrals) => {
+  const getUser = (uid) => users.find((u) => u.id === uid);
+  const emailToCode = {};
+  participants.forEach((p) => {
+    const u = getUser(p.created_by_id);
+    if (u?.email && p.referral_code) emailToCode[u.email.toLowerCase()] = p.referral_code;
+  });
+  const refDetail = (list) =>
+    list
+      .map((r) => {
+        const code = emailToCode[(r.referred_email || "").toLowerCase()] || "—";
+        return `${r.referred_name || "—"} <${r.referred_email || "—"}> code=${code} earned=${formatNaira(r.reward_amount || 0)} withdrawn=${formatNaira(r.withdrawn_amount || 0)} [${r.status}]`;
+      })
+      .join("; ");
+  const downlineDetail = (list) =>
+    list
+      .map((r) => {
+        const code = emailToCode[(r.referred_email || "").toLowerCase()] || "—";
+        return `${r.referred_name || "—"} | ${code}`;
+      })
+      .join("; ");
+  return participants.map((p) => {
+    const user = getUser(p.created_by_id);
+    const userComms = liveCommitments(commitments.filter((c) => c.created_by_id === p.created_by_id));
+    const userRefs = referrals.filter((r) => r.referrer_code === p.referral_code);
+    const directRefs = userRefs.filter((r) => r.level === 1);
+    const indirectRefs = userRefs.filter((r) => r.level === 2);
+    const totalCommitted = userComms.reduce((s, c) => s + (c.amount || 0), 0);
+    const totalExpectedReturn = userComms.reduce((s, c) => s + (c.expected_return || 0), 0);
+    const totalExpectedValue = userComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
+    const plansDetail = userComms
+      .map((c) => `${c.plan_name} ${formatNaira(c.amount || 0)} [${c.status}] ${c.start_date || ""}->${c.maturity_date || ""}`)
+      .join("; ");
+    const earned = totalEarnedRewards(userRefs);
+    const withdrawn = totalWithdrawnAmount(userRefs);
+    return {
+      id: p.id,
+      full_name: p.full_name,
+      email: user?.email || "",
+      phone_number: p.phone_number,
+      referral_code: p.referral_code,
+      referred_by_code: p.referred_by_code || "",
+      status: p.status,
+      bank_name: p.bank_name || "",
+      account_number: p.account_number || "",
+      account_name: p.account_name || "",
+      preferred_receiving_bank: p.preferred_receiving_bank || "",
+      relationship_officer: p.relationship_officer || "",
+      joined_date: p.created_date,
+      commitments_count: userComms.length,
+      total_committed: totalCommitted,
+      total_expected_return: totalExpectedReturn,
+      total_expected_value: totalExpectedValue,
+      plans_detail: plansDetail,
+      direct_count: directRefs.length,
+      indirect_count: indirectRefs.length,
+      referral_earned: earned,
+      referral_withdrawn: withdrawn,
+      referral_available: Math.max(0, earned - withdrawn),
+      direct_detail: refDetail(directRefs),
+      indirect_detail: refDetail(indirectRefs),
+      direct_downlines: downlineDetail(directRefs),
+      indirect_downlines: downlineDetail(indirectRefs),
+      _commitments: userComms,
+      _direct: directRefs,
+      _indirect: indirectRefs,
+    };
+  });
 };
 
 export default function AdminBookkeeping() {
@@ -26,14 +102,21 @@ export default function AdminBookkeeping() {
   const [commitments, setCommitments] = useState([]);
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     loadData();
+    // Auto-refresh every 30s so the report + export stay current in real time.
+    const id = setInterval(() => loadData(true), 30000);
+    return () => clearInterval(id);
   }, []);
 
-  const loadData = async () => {
+  const loadData = async (silent = false) => {
+    if (!silent) setLoading(true);
+    else setRefreshing(true);
     try {
       const [parts, usrs, comms, refs] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
@@ -48,6 +131,8 @@ export default function AdminBookkeeping() {
     } catch {
     } finally {
       setLoading(false);
+      setRefreshing(false);
+      setLastUpdated(new Date());
     }
   };
 
@@ -66,86 +151,10 @@ export default function AdminBookkeeping() {
   // Build the complete per-user report rows (used for both the table and the
   // CSV export). One row per participant with their full profile, aggregated
   // commitment totals + plan breakdown, and full direct/indirect referral data.
-  const reportRows = useMemo(() => {
-    return participants.map((p) => {
-      const user = getUser(p.created_by_id);
-      const userComms = liveCommitments(
-        commitments.filter((c) => c.created_by_id === p.created_by_id)
-      );
-      const userRefs = referrals.filter((r) => r.referrer_code === p.referral_code);
-      const directRefs = userRefs.filter((r) => r.level === 1);
-      const indirectRefs = userRefs.filter((r) => r.level === 2);
-
-      const totalCommitted = userComms.reduce((s, c) => s + (c.amount || 0), 0);
-      const totalExpectedReturn = userComms.reduce((s, c) => s + (c.expected_return || 0), 0);
-      const totalExpectedValue = userComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
-
-      const plansDetail = userComms
-        .map((c) => `${c.plan_name} ${formatNaira(c.amount || 0)} [${c.status}] ${c.start_date || ""}->${c.maturity_date || ""}`)
-        .join("; ");
-
-      // Map each participant's email to their own referral_code so we can show
-      // the referral code of every downline (direct + indirect).
-      const emailToCode = {};
-      participants.forEach((p) => {
-        const u = getUser(p.created_by_id);
-        if (u?.email && p.referral_code) emailToCode[u.email.toLowerCase()] = p.referral_code;
-      });
-
-      const refDetail = (list) =>
-        list
-          .map((r) => {
-            const code = emailToCode[(r.referred_email || "").toLowerCase()] || "—";
-            return `${r.referred_name || "—"} <${r.referred_email || "—"}> code=${code} earned=${formatNaira(r.reward_amount || 0)} withdrawn=${formatNaira(r.withdrawn_amount || 0)} [${r.status}]`;
-          })
-          .join("; ");
-
-      // Downline names + referral codes only (for the dedicated columns).
-      const downlineDetail = (list) =>
-        list
-          .map((r) => {
-            const code = emailToCode[(r.referred_email || "").toLowerCase()] || "—";
-            return `${r.referred_name || "—"} | ${code}`;
-          })
-          .join("; ");
-
-      const earned = totalEarnedRewards(userRefs);
-      const withdrawn = totalWithdrawnAmount(userRefs);
-
-      return {
-        id: p.id,
-        full_name: p.full_name,
-        email: user?.email || "",
-        phone_number: p.phone_number,
-        referral_code: p.referral_code,
-        referred_by_code: p.referred_by_code || "",
-        status: p.status,
-        bank_name: p.bank_name || "",
-        account_number: p.account_number || "",
-        account_name: p.account_name || "",
-        preferred_receiving_bank: p.preferred_receiving_bank || "",
-        relationship_officer: p.relationship_officer || "",
-        joined_date: p.created_date,
-        commitments_count: userComms.length,
-        total_committed: totalCommitted,
-        total_expected_return: totalExpectedReturn,
-        total_expected_value: totalExpectedValue,
-        plans_detail: plansDetail,
-        direct_count: directRefs.length,
-        indirect_count: indirectRefs.length,
-        referral_earned: earned,
-        referral_withdrawn: withdrawn,
-        referral_available: Math.max(0, earned - withdrawn),
-        direct_detail: refDetail(directRefs),
-        indirect_detail: refDetail(indirectRefs),
-        direct_downlines: downlineDetail(directRefs),
-        indirect_downlines: downlineDetail(indirectRefs),
-        _commitments: userComms,
-        _direct: directRefs,
-        _indirect: indirectRefs,
-      };
-    });
-  }, [participants, users, commitments, referrals]);
+  const reportRows = useMemo(
+    () => buildReportRows(participants, users, commitments, referrals),
+    [participants, users, commitments, referrals]
+  );
 
   const filtered = reportRows.filter((r) =>
     !search ||
@@ -198,12 +207,41 @@ export default function AdminBookkeeping() {
     { label: "Indirect Downlines (Name | Referral Code)", key: "indirect_downlines" },
   ];
 
-  const handleExport = () => {
-    const rows = filtered.map((r) => {
-      const { _commitments, _direct, _indirect, ...rest } = r;
-      return rest;
-    });
-    downloadCsv(`buy2flip-bookkeeping-report-${todayStamp()}.csv`, exportColumns, rows);
+  // Export always re-fetches the latest data first, so the downloaded file
+  // reflects real-time state at the exact moment of export (any time).
+  const handleExport = async () => {
+    setRefreshing(true);
+    let parts = participants, usrs = users, comms = commitments, refs = referrals;
+    try {
+      [parts, usrs, comms, refs] = await Promise.all([
+        base44.entities.ParticipantProfile.list(),
+        base44.entities.User.list(),
+        base44.entities.Commitment.list(),
+        base44.entities.Referral.list(),
+      ]);
+      setParticipants(parts);
+      setUsers(usrs);
+      setCommitments(comms);
+      setReferrals(refs);
+    } catch {
+    } finally {
+      setRefreshing(false);
+      setLastUpdated(new Date());
+    }
+    const q = search.trim().toLowerCase();
+    const matchSearch = (r) =>
+      !q ||
+      r.full_name?.toLowerCase().includes(q) ||
+      r.email?.toLowerCase().includes(q) ||
+      r.phone_number?.includes(search.trim()) ||
+      r.referral_code?.toLowerCase().includes(q);
+    const rows = buildReportRows(parts, usrs, comms, refs)
+      .filter(matchSearch)
+      .map((r) => {
+        const { _commitments, _direct, _indirect, ...rest } = r;
+        return rest;
+      });
+    downloadCsv(`buy2flip-bookkeeping-report-${exportStamp()}.csv`, exportColumns, rows);
   };
 
   if (loading) {
@@ -230,10 +268,20 @@ export default function AdminBookkeeping() {
           <p className="text-muted-foreground mt-1">
             Complete, exportable record of every participant — commitments, referrals, and earnings.
           </p>
+          {lastUpdated && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Last updated {lastUpdated.toLocaleString()} · auto-refreshes every 30s
+            </p>
+          )}
         </div>
-        <Button onClick={handleExport} className="bg-brand hover:bg-brand-dark h-11">
-          <Download className="w-4 h-4 mr-2" /> Export Full Report ({todayStamp()})
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => loadData(true)} disabled={refreshing} className="h-11">
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} /> Refresh
+          </Button>
+          <Button onClick={handleExport} disabled={refreshing} className="bg-brand hover:bg-brand-dark h-11">
+            <Download className="w-4 h-4 mr-2" /> {refreshing ? "Preparing..." : "Export Full Report"}
+          </Button>
+        </div>
       </div>
 
       {/* Summary */}
