@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 import {
   LayoutDashboard, Users, CreditCard, TrendingUp, Megaphone, Banknote,
-  LogOut, Menu, X, ShieldCheck, Trophy, UserCog, BarChart3, FolderOpen, AlertTriangle
+  LogOut, Menu, X, ShieldCheck, Trophy, UserCog, BarChart3, FolderOpen, AlertTriangle, FileSpreadsheet
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -21,6 +21,7 @@ const navItems = [
   { label: "Leaderboard", path: "/admin/leaderboard", icon: Trophy },
   { label: "Analytics", path: "/admin/analytics", icon: BarChart3 },
   { label: "Documents", path: "/admin/documents", icon: FolderOpen },
+  { label: "Book-Keeping Report", path: "/admin/bookkeeping", icon: FileSpreadsheet },
   { label: "Launch Reset", path: "/admin/launch-reset", icon: AlertTriangle },
 ];
 
