@@ -65,7 +65,7 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
             marginSize={4}
             fgColor="#0B3D2E"
             bgColor="#ffffff"
-            className="w-44 h-44 sm:w-52 sm:h-52 block"
+            className="w-32 h-32 sm:w-36 sm:h-36 block"
           />
         </div>
         <div className="flex-1 w-full text-center sm:text-left">
