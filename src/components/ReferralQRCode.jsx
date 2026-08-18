@@ -16,34 +16,34 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
 
   const getCanvas = () => wrapRef.current?.querySelector("canvas");
 
+  const shareImage = useCallback(async () => {
+    const canvas = getCanvas();
+    if (!canvas) return false;
+    try {
+      const blob = await new Promise((res) => canvas.toBlob(res, "image/png"));
+      if (!blob) return false;
+      const file = new File([blob], fileName, { type: "image/png" });
+      if (navigator.share) {
+        await navigator.share({ files: [file], title: "Buy2Flip Referral QR Code" });
+        return true;
+      }
+    } catch (e) {
+      // AbortError = user cancelled the share sheet; treat as "not shared"
+      if (e && e.name === "AbortError") return true;
+    }
+    return false;
+  }, [fileName]);
+
   const handleDownload = useCallback(async () => {
     const canvas = getCanvas();
     if (!canvas) return;
-
-    // Mobile WebViews often block the anchor "download" attribute on data
-    // URLs. Prefer the native Web Share sheet (which lets the user "Save
-    // Image") when available, then fall back to an anchor download (desktop).
-    const shared = await new Promise((resolve) => {
-      canvas.toBlob(async (blob) => {
-        if (!blob) return resolve(false);
-        const file = new File([blob], fileName, { type: "image/png" });
-        try {
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: "Buy2Flip Referral QR Code" });
-            return resolve(true);
-          }
-        } catch {
-          /* user cancelled or share unavailable */
-        }
-        resolve(false);
-      }, "image/png");
-    });
-    if (shared) return;
-
-    // In native app WebViews the anchor "download" attribute is blocked, so
-    // surface the PNG full-screen for a long-press → "Save Image" save.
+    // Try the native share sheet first (works on Android → "Save to device").
+    // Don't gate on navigator.canShare — many WebViews lack it but still
+    // support navigator.share with files.
+    if (await shareImage()) return;
+    // Fallback: show the image full-screen for long-press → Save Image (iOS).
     setSaveImage(canvas.toDataURL("image/png"));
-  }, [fileName]);
+  }, [shareImage]);
 
   const handleShare = useCallback(async () => {
     const canvas = getCanvas();
@@ -119,9 +119,15 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
           <img
             src={saveImage}
             alt="Referral QR Code"
-            className="w-[80vw] max-w-sm h-auto rounded-xl bg-white p-3"
+            className="w-[80vw] max-w-sm h-auto rounded-xl bg-white p-3 mb-5"
             style={{ WebkitTouchCallout: "default", WebkitUserSelect: "auto", userSelect: "auto" }}
           />
+          <Button
+            className="bg-brand hover:bg-brand-dark"
+            onClick={async () => { if (await shareImage()) setSaveImage(null); }}
+          >
+            <Download className="w-4 h-4 mr-2" /> Save / Share Image
+          </Button>
         </div>
       )}
     </Card>
