@@ -15,15 +15,40 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
 
   const getCanvas = () => wrapRef.current?.querySelector("canvas");
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     const canvas = getCanvas();
     if (!canvas) return;
-    const a = document.createElement("a");
-    a.href = canvas.toDataURL("image/png");
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+
+    // Mobile WebViews often block the anchor "download" attribute on data
+    // URLs. Prefer the native Web Share sheet (which lets the user "Save
+    // Image") when available, then fall back to an anchor download (desktop).
+    const shared = await new Promise((resolve) => {
+      canvas.toBlob(async (blob) => {
+        if (!blob) return resolve(false);
+        const file = new File([blob], fileName, { type: "image/png" });
+        try {
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: "Buy2Flip Referral QR Code" });
+            return resolve(true);
+          }
+        } catch {
+          /* user cancelled or share unavailable */
+        }
+        resolve(false);
+      }, "image/png");
+    });
+    if (shared) return;
+
+    try {
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch {
+      window.open(canvas.toDataURL("image/png"), "_blank");
+    }
   }, [fileName]);
 
   const handleShare = useCallback(async () => {
@@ -65,7 +90,7 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
             marginSize={4}
             fgColor="#0B3D2E"
             bgColor="#ffffff"
-            className="w-32 h-32 sm:w-36 sm:h-36 block"
+            className="w-[72vw] sm:w-48 max-w-[300px] h-auto block mx-auto"
           />
         </div>
         <div className="flex-1 w-full text-center sm:text-left">
