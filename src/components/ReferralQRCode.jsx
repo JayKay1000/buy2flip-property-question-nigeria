@@ -104,23 +104,23 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
       {saveImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-6"
-          onClick={() => setSaveImage(null)}
+          onClick={(e) => { if (e.target === e.currentTarget) setSaveImage(null); }}
         >
           <button
-            className="absolute top-4 right-4 text-white/80 hover:text-white"
+            className="absolute top-4 right-4 text-white/80 hover:text-white z-10"
             onClick={() => setSaveImage(null)}
             aria-label="Close"
           >
             <X className="w-7 h-7" />
           </button>
           <p className="text-white text-center text-sm mb-4 max-w-xs">
-            Long-press the image and tap <span className="font-semibold">Save Image</span> to keep it on your device.
+            Press and hold the image, then tap <span className="font-semibold">Save Image</span> / <span className="font-semibold">Download image</span> to keep it on your device.
           </p>
           <img
             src={saveImage}
             alt="Referral QR Code"
             className="w-[80vw] max-w-sm h-auto rounded-xl bg-white p-3"
-            onClick={(e) => e.stopPropagation()}
+            style={{ WebkitTouchCallout: "default", WebkitUserSelect: "auto", userSelect: "auto" }}
           />
         </div>
       )}
