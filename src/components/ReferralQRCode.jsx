@@ -1,12 +1,13 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, QrCode } from "lucide-react";
+import { Download, Share2, QrCode, X } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 export default function ReferralQRCode({ referralUrl, referralCode }) {
   const wrapRef = useRef(null);
+  const [saveImage, setSaveImage] = useState(null);
 
   const fileName =
     referralCode && referralCode !== "—"
@@ -39,16 +40,9 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
     });
     if (shared) return;
 
-    try {
-      const a = document.createElement("a");
-      a.href = canvas.toDataURL("image/png");
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch {
-      window.open(canvas.toDataURL("image/png"), "_blank");
-    }
+    // In native app WebViews the anchor "download" attribute is blocked, so
+    // surface the PNG full-screen for a long-press → "Save Image" save.
+    setSaveImage(canvas.toDataURL("image/png"));
   }, [fileName]);
 
   const handleShare = useCallback(async () => {
@@ -106,6 +100,30 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
           </div>
         </div>
       </div>
+
+      {saveImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-6"
+          onClick={() => setSaveImage(null)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white/80 hover:text-white"
+            onClick={() => setSaveImage(null)}
+            aria-label="Close"
+          >
+            <X className="w-7 h-7" />
+          </button>
+          <p className="text-white text-center text-sm mb-4 max-w-xs">
+            Long-press the image and tap <span className="font-semibold">Save Image</span> to keep it on your device.
+          </p>
+          <img
+            src={saveImage}
+            alt="Referral QR Code"
+            className="w-[80vw] max-w-sm h-auto rounded-xl bg-white p-3"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </Card>
   );
 }
