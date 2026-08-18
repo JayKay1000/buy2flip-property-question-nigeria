@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import ReferralWithdrawalCard from "@/components/ReferralWithdrawalCard";
 import ReferralEarningsChart from "@/components/ReferralEarningsChart";
+import ReferralQRCode from "@/components/ReferralQRCode";
 import { referralBalance, referralStatus, totalEarnedRewards, totalWithdrawnAmount } from "@/lib/referralEarnings";
 import { toast } from "@/components/ui/use-toast";
 
@@ -165,6 +166,11 @@ export default function Referrals() {
           </Button>
         </div>
       </Card>
+
+      {/* Referral QR code — encodes the existing referral link, no logic changes */}
+      {profile?.referral_code && (
+        <ReferralQRCode referralUrl={referralLink} referralCode={referralCode} />
+      )}
 
       {/* Reward info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
