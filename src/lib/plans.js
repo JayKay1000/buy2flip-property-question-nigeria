@@ -5,7 +5,7 @@ export const PLANS = [
     durationMonths: 3,
     returnRate: 0.05,
     minimum: 1000000,
-    tagline: "Your first step into Buy2Flip",
+    tagline: "3 Months | 5% ROI",
     accent: "#A0673A",
     image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/ca8e7cb43_Bronzebanner.jpg",
     benefits: [
