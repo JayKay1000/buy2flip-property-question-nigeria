@@ -14,6 +14,7 @@ import ReferralEarningsChart from "@/components/ReferralEarningsChart";
 import ReferralQRCode from "@/components/ReferralQRCode";
 import { referralBalance, referralStatus, totalEarnedRewards, totalWithdrawnAmount } from "@/lib/referralEarnings";
 import { toast } from "@/components/ui/use-toast";
+import { ensureParticipantProfile } from "@/lib/ensureProfile";
 
 export default function Referrals() {
   const [profile, setProfile] = useState(null);
@@ -32,8 +33,7 @@ export default function Referrals() {
   const loadData = async () => {
     try {
       const me = await base44.auth.me();
-      const profiles = await base44.entities.ParticipantProfile.filter({ created_by_id: me.id });
-      const p = profiles[0] || null;
+      const p = await ensureParticipantProfile(me);
       setProfile(p);
       if (p?.referral_code) {
         const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code });

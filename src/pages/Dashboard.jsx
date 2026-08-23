@@ -12,6 +12,7 @@ import {
   Plus, Award, MapPin, Landmark, Gift
 } from "lucide-react";
 import PullToRefresh from "@/components/PullToRefresh";
+import { ensureParticipantProfile } from "@/lib/ensureProfile";
 
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
@@ -27,8 +28,7 @@ export default function Dashboard() {
   const loadData = async () => {
     try {
       const me = await base44.auth.me();
-      const profiles = await base44.entities.ParticipantProfile.filter({ created_by_id: me.id });
-      const p = profiles[0] || null;
+      const p = await ensureParticipantProfile(me);
       setProfile(p);
       const comms = await base44.entities.Commitment.filter({ created_by_id: me.id }, "-created_date");
       setCommitments(comms);
