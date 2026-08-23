@@ -114,7 +114,7 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {HOW_IT_WORKS_STEPS.map((step, i) =>
             <div key={step.step} className="relative">
-              {[1, 2, 3, 4].includes(step.step) ? (
+              {[1, 2, 3, 4, 5].includes(step.step) ? (
                 <Card className="relative overflow-hidden h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
                   <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full" />
                   <div className="absolute inset-0 z-[5] bg-gradient-to-t from-charcoal/90 via-charcoal/50 to-transparent" />
