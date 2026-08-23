@@ -249,5 +249,5 @@ export const HOW_IT_WORKS_STEPS = [
   { step: 5, title: "Select your preferred amount", detail: "Choose your commitment amount in multiples of ₦1,000,000", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/90b804010_Selectamount.png" },
   { step: 6, title: "View company payment account", detail: "Transfer to the official company bank account", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/e12a2e4bd_Companysaccount.png" },
   { step: 7, title: "Upload payment evidence", detail: "Upload your payment receipt for verification", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/bddafe16f_Completecommitment.png" },
-  { step: 8, title: "Confirmation", detail: "Your portfolio is activated upon verification", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/853d03f3a_generated_image.png" }
+  { step: 8, title: "Confirmation", detail: "Your portfolio is activated upon verification", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/b64ceb8e0_Confirmation.png" }
 ];
