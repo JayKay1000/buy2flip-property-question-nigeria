@@ -243,7 +243,7 @@ export const PAYMENT_EXPIRY_HOURS = 24;
 
 export const HOW_IT_WORKS_STEPS = [
   { step: 1, title: "Create your account", detail: "Register with your details and verify your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/c52d98fbd_GetStarted.png" },
-  { step: 2, title: "Verify email", detail: "Enter the 6-digit OTP sent to your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/3117eb2f3_generated_image.png" },
+  { step: 2, title: "Verify email", detail: "Enter the 6-digit OTP sent to your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/001834246_Verifyemail.png" },
   { step: 3, title: "Complete your profile", detail: "Add your personal and banking information", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/cbf0cb9af_generated_image.png" },
   { step: 4, title: "Choose a Commitment Plan", detail: "Select Bronze, Silver, Gold, or Platinum", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/b4fae45fa_generated_image.png" },
   { step: 5, title: "Select your preferred amount", detail: "Choose your commitment amount in multiples of ₦1,000,000", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/2f9fbdf2a_generated_image.png" },
