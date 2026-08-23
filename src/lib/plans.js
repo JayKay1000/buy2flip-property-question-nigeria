@@ -83,18 +83,20 @@ export const PLANS = [
     durationMonths: 12,
     returnRate: 0.30,
     minimum: 1000000,
-    tagline: "Accelerated wealth building with premium returns",
+    tagline: "12 Months | 30% ROI",
     accent: "#C9A227",
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80",
     benefits: [
-      "12-month commitment period",
-      "30% expected return on commitment",
-      "Minimum commitment of ₦1,000,000",
+      "₦1,000,000 Minimum Buy-in",
+      "12-month maturity period",
+      "1% initial sign on bonus",
+      "2% Direct & 0.05% third party referrer bonus",
+      "30% expected return",
       "Monthly portfolio progress updates",
       "Priority digital commitment certificate",
       "Enhanced referral reward programme",
       "Priority relationship officer support",
-      "Invitation to exclusive property tours"
+      
     ],
     timeline: [
       { phase: "Enrolment", detail: "Choose your plan and commitment amount" },
