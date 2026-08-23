@@ -238,7 +238,7 @@ export default function Landing() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
               <Button size="lg" className="bg-gold hover:bg-gold-dark text-white border-0 h-14 px-8 text-base font-semibold">
-                Participate Now <ArrowRight className="w-5 h-5 ml-2" />
+                Buy Now <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
             <Link to="/login">
