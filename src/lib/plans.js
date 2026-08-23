@@ -12,8 +12,8 @@ export const PLANS = [
       "₦1,000,000 Minimum Buy-in",
       "3-month maturity period",
       "5% expected return",
-      "Portfolio progress updates",
       "2% Direct & 0.05% third party referrer bonus",
+      "Portfolio progress updates",
       "Full access to referral reward programme",
       "Dedicated relationship officer support"
     ],
