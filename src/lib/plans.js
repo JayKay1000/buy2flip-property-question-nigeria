@@ -242,7 +242,7 @@ export const formatWelcomePackageRate = (planName) => {
 export const PAYMENT_EXPIRY_HOURS = 24;
 
 export const HOW_IT_WORKS_STEPS = [
-  { step: 1, title: "Create your account", detail: "Register with your details and verify your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/c52d98fbd_GetStarted.png" },
+  { step: 1, title: "Create your account", detail: "Register with your details and verify your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/ab7fc082b_Createaccount.png" },
   { step: 2, title: "Verify email", detail: "Enter the 6-digit OTP sent to your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/001834246_Verifyemail.png" },
   { step: 3, title: "Complete your profile", detail: "Add your personal and banking information", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/8e2b35fa4_BankingInformation.png" },
   { step: 4, title: "Choose a Commitment Plan", detail: "Select Bronze, Silver, Gold, or Platinum", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/0f1d84b26_Choosecommittmentplan.png" },
