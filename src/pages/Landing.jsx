@@ -56,9 +56,9 @@ export default function Landing() {
               <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">OWN THE LAND. WE'LL BUY IT BACK.
 
                 </p>
-              <p className="mt-2 text-lg text-white/80 leading-relaxed">
-                Buy2Flip with Property Question Nigeria Limited — Simple. Strategic. Rewarding.
-              </p>
+              <p className="mt-2 text-lg text-white/80 leading-relaxed">"Buy2Flip" L 
+
+                </p>
             </div>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/register" className="w-full sm:w-auto">
