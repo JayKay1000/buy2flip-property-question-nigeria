@@ -242,12 +242,12 @@ export const formatWelcomePackageRate = (planName) => {
 export const PAYMENT_EXPIRY_HOURS = 24;
 
 export const HOW_IT_WORKS_STEPS = [
-  { step: 1, title: "Create your account", detail: "Register with your details and verify your email" },
-  { step: 2, title: "Verify email", detail: "Enter the 6-digit OTP sent to your email" },
-  { step: 3, title: "Complete your profile", detail: "Add your personal and banking information" },
-  { step: 4, title: "Choose a Commitment Plan", detail: "Select Bronze, Silver, Gold, or Platinum" },
-  { step: 5, title: "Select your preferred amount", detail: "Choose your commitment amount in multiples of ₦1,000,000" },
-  { step: 6, title: "View company payment account", detail: "Transfer to the official company bank account" },
-  { step: 7, title: "Upload payment evidence", detail: "Upload your payment receipt for verification" },
-  { step: 8, title: "Confirmation", detail: "Your portfolio is activated upon verification" }
+  { step: 1, title: "Create your account", detail: "Register with your details and verify your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/0608b5a52_generated_image.png" },
+  { step: 2, title: "Verify email", detail: "Enter the 6-digit OTP sent to your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/3117eb2f3_generated_image.png" },
+  { step: 3, title: "Complete your profile", detail: "Add your personal and banking information", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/cbf0cb9af_generated_image.png" },
+  { step: 4, title: "Choose a Commitment Plan", detail: "Select Bronze, Silver, Gold, or Platinum", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/b4fae45fa_generated_image.png" },
+  { step: 5, title: "Select your preferred amount", detail: "Choose your commitment amount in multiples of ₦1,000,000", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/2f9fbdf2a_generated_image.png" },
+  { step: 6, title: "View company payment account", detail: "Transfer to the official company bank account", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/b1b863820_generated_image.png" },
+  { step: 7, title: "Upload payment evidence", detail: "Upload your payment receipt for verification", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/fb3a53b2b_generated_image.png" },
+  { step: 8, title: "Confirmation", detail: "Your portfolio is activated upon verification", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/853d03f3a_generated_image.png" }
 ];

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { Image } from "@/components/ui/image";
 import { PLANS, HOW_IT_WORKS_STEPS } from "@/lib/plans";
 import { formatNaira } from "@/lib/format";
 import {
@@ -113,12 +114,18 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {HOW_IT_WORKS_STEPS.map((step, i) =>
             <div key={step.step} className="relative">
-                <Card className="p-6 h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
-                  <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center mb-4">
-                    <span className="font-numeric font-bold text-lg text-brand">{step.step}</span>
+                <Card className="relative overflow-hidden p-6 h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
+                  <div className="absolute inset-0 z-0">
+                    <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full opacity-25" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/85 to-card/55" />
                   </div>
-                  <h3 className="font-heading font-semibold text-foreground text-base mb-2">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
+                  <div className="relative z-10">
+                    <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center mb-4">
+                      <span className="font-numeric font-bold text-lg text-brand">{step.step}</span>
+                    </div>
+                    <h3 className="font-heading font-semibold text-foreground text-base mb-2">{step.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
+                  </div>
                 </Card>
                 {i < HOW_IT_WORKS_STEPS.length - 1 && i % 4 !== 3 &&
               <ArrowRight className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-border" />
