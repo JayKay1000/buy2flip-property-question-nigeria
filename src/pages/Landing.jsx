@@ -53,7 +53,7 @@ export default function Landing() {
               Guaranteed Returns.
             </h1>
             <div className="mt-6 max-w-xl animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">OWN THE LAND. WE'LL BUY IT B
+              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">OWN THE LAND. WE'LL BUY IT BACK.
 
                 </p>
               <p className="mt-2 text-lg text-white/80 leading-relaxed">
