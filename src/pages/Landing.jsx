@@ -179,10 +179,10 @@ export default function Landing() {
                 </div>
                 <div className="p-6">
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="font-numeric font-bold text-4xl text-brand hidden">{(plan.returnRate * 100).toFixed(0)}%</span>
-                    <span className="text-sm text-muted-foreground hidden">expected return</span>
+                    
+                    
                   </div>
-                  <div className="text-sm text-muted-foreground mb-6 hidden">{plan.durationMonths} months · from {formatNaira(plan.minimum)}</div>
+                  
                   <ul className="space-y-2.5 mb-6">
                     {plan.benefits.slice(0, 4).map((benefit) =>
                   <li key={benefit} className="flex items-start gap-2 text-sm text-foreground/80">
