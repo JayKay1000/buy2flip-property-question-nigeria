@@ -53,9 +53,9 @@ export default function Landing() {
               Guaranteed Returns.
             </h1>
             <div className="mt-6 max-w-xl animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">
-                OWN PREMIUM LAND. FLIP IT BACK. EARN UP TO 65%.
-              </p>
+              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">OWN THE LAND. WE'LL BUY IT B
+
+                </p>
               <p className="mt-2 text-lg text-white/80 leading-relaxed">
                 Buy2Flip with Property Question Nigeria Limited — Simple. Strategic. Rewarding.
               </p>
@@ -79,12 +79,12 @@ export default function Landing() {
       <div className="my-8 flex justify-center">
           <ins
             className="adsbygoogle"
-            style={{display:"block"}}
+            style={{ display: "block" }}
             data-ad-client="ca-pub-5371658397951527"
             data-ad-slot="8731932872"
             data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
+            data-full-width-responsive="true">
+          </ins>
       </div>
       {/* GOOGLE ADSENSE AD END */}
         {/* Stats bar */}
@@ -100,7 +100,7 @@ export default function Landing() {
         </div>
       </section>
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5371658397951527"
-     crossorigin="anonymous"></script>
+      crossorigin="anonymous"></script>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-24 bg-background">
