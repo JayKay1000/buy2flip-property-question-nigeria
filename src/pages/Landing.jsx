@@ -117,9 +117,9 @@ export default function Landing() {
               {step.step === 1 ? (
                 <Card className="relative overflow-hidden h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
                   <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full" />
-                  <div className="absolute inset-x-0 bottom-0 z-10 p-4 bg-card/95 backdrop-blur-sm border-t border-border">
-                    <div className="flex items-start gap-3">
-                      <span className="shrink-0 w-9 h-9 rounded-xl bg-brand text-primary-foreground font-numeric font-bold flex items-center justify-center">{step.step}</span>
+                  <div className="relative z-10 h-full flex flex-col justify-end p-6">
+                    <div className="flex items-start gap-3 [text-shadow:0_1px_3px_rgba(255,255,255,0.9)]">
+                      <span className="shrink-0 w-10 h-10 rounded-xl bg-brand text-primary-foreground font-numeric font-bold flex items-center justify-center shadow-md">{step.step}</span>
                       <div>
                         <h3 className="font-heading font-semibold text-foreground text-base leading-tight">{step.title}</h3>
                         <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
