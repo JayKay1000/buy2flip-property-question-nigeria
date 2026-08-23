@@ -114,6 +114,20 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {HOW_IT_WORKS_STEPS.map((step, i) =>
             <div key={step.step} className="relative">
+              {step.step === 1 ? (
+                <Card className="relative overflow-hidden h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
+                  <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full" />
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-4 bg-card/95 backdrop-blur-sm border-t border-border">
+                    <div className="flex items-start gap-3">
+                      <span className="shrink-0 w-9 h-9 rounded-xl bg-brand text-primary-foreground font-numeric font-bold flex items-center justify-center">{step.step}</span>
+                      <div>
+                        <h3 className="font-heading font-semibold text-foreground text-base leading-tight">{step.title}</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ) : (
                 <Card className="relative overflow-hidden p-6 h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
                   <div className="absolute inset-0 z-0">
                     <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full opacity-25" />
@@ -127,6 +141,7 @@ export default function Landing() {
                     <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
                   </div>
                 </Card>
+              )}
                 {i < HOW_IT_WORKS_STEPS.length - 1 && i % 4 !== 3 &&
               <ArrowRight className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-border" />
               }
