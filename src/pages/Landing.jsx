@@ -13,12 +13,12 @@ import {
 "lucide-react";
 
 const features = [
-{ icon: ShieldCheck, title: "High-End Security", desc: "Email OTP, password hashing, session management, and audit logs protect every transaction." },
-{ icon: TrendingUp, title: "Strategic Returns", desc: "Up to 50% expected returns on carefully selected real estate developments." },
-{ icon: Users, title: "Referral Rewards", desc: "Earn 2% on direct referrals and 0.5% on indirect referrals — automatically tracked." },
-{ icon: Lock, title: "Secure Commitments", desc: "All commitments are backed by real estate, deployed by Property Question Nigeria Limited." },
-{ icon: Building2, title: "Real Estate Backing", desc: "Your commitments are deployed into carefully selected, premium real estate developments." },
-{ icon: Award, title: "Certified Portfolio", desc: "Download digital commitment certificates, statements, and acknowledgement letters." }];
+{ icon: ShieldCheck, title: "High-End Security", desc: "Email OTP, password hashing, session management, and audit logs protect every transaction.", iconColor: "text-blue-600", iconBg: "bg-blue-100" },
+{ icon: TrendingUp, title: "Strategic Returns", desc: "Up to 50% expected returns on carefully selected real estate developments.", iconColor: "text-emerald-600", iconBg: "bg-emerald-100" },
+{ icon: Users, title: "Referral Rewards", desc: "Earn 2% on direct referrals and 0.5% on indirect referrals — automatically tracked.", iconColor: "text-purple-600", iconBg: "bg-purple-100" },
+{ icon: Lock, title: "Secure Commitments", desc: "All commitments are backed by real estate, deployed by Property Question Nigeria Limited.", iconColor: "text-rose-600", iconBg: "bg-rose-100" },
+{ icon: Building2, title: "Real Estate Backing", desc: "Your commitments are deployed into carefully selected, premium real estate developments.", iconColor: "text-cyan-600", iconBg: "bg-cyan-100" },
+{ icon: Award, title: "Certified Portfolio", desc: "Download digital commitment certificates, statements, and acknowledgement letters.", iconColor: "text-amber-600", iconBg: "bg-amber-100" }];
 
 
 const stats = [
@@ -212,8 +212,8 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) =>
             <Card key={feature.title} className="p-6 border-border hover:border-gold/40 transition-colors duration-300">
-                <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-brand" />
+                <div className={`w-12 h-12 rounded-xl ${feature.iconBg} flex items-center justify-center mb-4`}>
+                  <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
                 </div>
                 <h3 className="font-heading font-semibold text-foreground text-lg mb-2">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
