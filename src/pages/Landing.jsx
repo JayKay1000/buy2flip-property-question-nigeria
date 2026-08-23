@@ -114,8 +114,8 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {HOW_IT_WORKS_STEPS.map((step, i) =>
             <div key={step.step} className="relative">
-              {[1, 2, 3, 4, 5, 6, 7, 8].includes(step.step) ? (
-                <Card className="relative overflow-hidden h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
+              {[1, 2, 3, 4, 5, 6, 7, 8].includes(step.step) ?
+              <Card className="relative overflow-hidden h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
                   <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full" />
                   <div className="absolute inset-0 z-[5] bg-gradient-to-t from-charcoal/90 via-charcoal/50 to-transparent" />
                   <div className="relative z-10 h-full flex flex-col justify-end p-6">
@@ -127,9 +127,9 @@ export default function Landing() {
                       </div>
                     </div>
                   </div>
-                </Card>
-              ) : (
-                <Card className="relative overflow-hidden p-6 h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
+                </Card> :
+
+              <Card className="relative overflow-hidden p-6 h-full border-border hover:border-gold/40 transition-colors duration-300 hover:shadow-md">
                   <div className="absolute inset-0 z-0">
                     <Image src={step.image} alt="" fittingType="fill" className="absolute inset-0 w-full h-full opacity-25" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/85 to-card/55" />
@@ -142,7 +142,7 @@ export default function Landing() {
                     <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
                   </div>
                 </Card>
-              )}
+              }
                 {i < HOW_IT_WORKS_STEPS.length - 1 && i % 4 !== 3 &&
               <ArrowRight className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-border" />
               }
@@ -179,10 +179,10 @@ export default function Landing() {
                 </div>
                 <div className="p-6">
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="font-numeric font-bold text-4xl text-brand">{(plan.returnRate * 100).toFixed(0)}%</span>
-                    <span className="text-sm text-muted-foreground">expected return</span>
+                    <span className="font-numeric font-bold text-4xl text-brand hidden">{(plan.returnRate * 100).toFixed(0)}%</span>
+                    <span className="text-sm text-muted-foreground hidden">expected return</span>
                   </div>
-                  <div className="text-sm text-muted-foreground mb-6">{plan.durationMonths} months · from {formatNaira(plan.minimum)}</div>
+                  <div className="text-sm text-muted-foreground mb-6 hidden">{plan.durationMonths} months · from {formatNaira(plan.minimum)}</div>
                   <ul className="space-y-2.5 mb-6">
                     {plan.benefits.slice(0, 4).map((benefit) =>
                   <li key={benefit} className="flex items-start gap-2 text-sm text-foreground/80">
