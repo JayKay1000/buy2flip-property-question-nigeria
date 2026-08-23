@@ -50,7 +50,7 @@ export default function Landing() {
             <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
               <span className="text-gradient-gold">Buy2Flip</span>
               <br />
-              Made Simple.
+              Guaranteed Returns.
             </h1>
             <div className="mt-6 max-w-xl animate-fade-up" style={{ animationDelay: "0.1s" }}>
               <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">
