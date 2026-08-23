@@ -56,7 +56,7 @@ export default function Landing() {
               <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">OWN THE LAND. WE'LL BUY IT BACK.
 
                 </p>
-              <p className="mt-2 text-lg text-white/80 leading-relaxed">"Buy2Flip" Land Backed Real Estate Opportunity w
+              <p className="mt-2 text-lg text-white/80 leading-relaxed">"Buy2Flip" Land Backed Real Estate Opportunity wIth U
 
                 </p>
             </div>
