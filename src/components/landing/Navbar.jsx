@@ -50,7 +50,7 @@ export default function Navbar() {
             </Button>
           </Link>
           <Link to="/register">
-            <Button className="bg-gold hover:bg-gold-dark text-white border-0">Get Started</Button>
+            <Button className="bg-gold hover:bg-gold-dark text-white border-0">Create Account</Button>
           </Link>
         </div>
       </div>
