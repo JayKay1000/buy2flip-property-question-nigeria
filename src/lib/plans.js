@@ -9,7 +9,6 @@ export const PLANS = [
     accent: "#A0673A",
     image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/ca8e7cb43_Bronzebanner.jpg",
     benefits: [
-      "Benefit:",
       "₦1,000,000 Minimum Buy-in",
       "3-month maturity period",
       "5% expected return",
