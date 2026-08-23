@@ -229,8 +229,8 @@ export default function Landing() {
           <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">
-            Ready to Start Buy2Flip?
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">Ready to Start Buying to Flip?
+
           </h2>
           <p className="text-white/70 mt-4 max-w-xl mx-auto">
             Join Property Question Nigeria Limited today and start building wealth through strategic Buy2Flip.
