@@ -27,17 +27,29 @@ export default function Navbar() {
             { href: "#how-it-works", label: "How It Works" },
             { href: "#plans", label: "Plans" },
             { href: "#why-us", label: "Why Us" },
-            { href: "#contact", label: "Contact" },
+            { to: "/contact-officer", label: "Contact" },
           ].map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
-              }`}
-            >
-              {link.label}
-            </a>
+            link.to ? (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`text-sm font-medium transition-colors ${
+                  scrolled ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors ${
+                  scrolled ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </a>
+            )
           ))}
         </nav>
         <div className="flex items-center gap-3">
