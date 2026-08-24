@@ -3,24 +3,27 @@ import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 
-export default function Navbar() {
+export default function Navbar({ solid = false }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    if (solid) return;
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [solid]);
+
+  const isSolid = solid || scrolled;
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/95 backdrop-blur-md shadow-sm py-3" : "bg-transparent py-5"
+        isSolid ? "bg-white/95 backdrop-blur-md shadow-sm py-3" : "bg-transparent py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         <Link to="/">
-          <Logo light={!scrolled} />
+          <Logo light={!isSolid} />
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           {[
@@ -34,7 +37,7 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to}
                 className={`text-sm font-medium transition-colors ${
-                  scrolled ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
+                  isSolid ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
                 }`}
               >
                 {link.label}
@@ -44,7 +47,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
-                  scrolled ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
+                  isSolid ? "text-foreground hover:text-brand" : "text-white/80 hover:text-white"
                 }`}
               >
                 {link.label}
@@ -55,8 +58,8 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link to="/login">
             <Button
-              variant={scrolled ? "ghost" : "ghost"}
-              className={scrolled ? "text-foreground hover:bg-accent" : "text-white hover:bg-white/10"}
+              variant="ghost"
+              className={isSolid ? "text-foreground hover:bg-accent" : "text-white hover:bg-white/10"}
             >
               Log in
             </Button>

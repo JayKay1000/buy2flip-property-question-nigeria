@@ -14,7 +14,7 @@ export default function ContactOfficer() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      <Navbar solid />
 
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 pt-32 pb-20">
         <div className="max-w-3xl w-full">
