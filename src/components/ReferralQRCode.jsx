@@ -76,7 +76,7 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
         <h2 className="font-heading font-semibold text-foreground">My Referral QR Code</h2>
       </div>
       <div className="flex flex-col sm:flex-row items-center gap-6">
-        <div ref={wrapRef} className="flex-shrink-0 p-4 bg-white rounded-xl border border-border shadow-sm">
+        <div ref={wrapRef} className="flex-shrink-0 p-3 bg-white rounded-lg border border-border shadow-sm">
           <QRCodeCanvas
             value={referralUrl}
             size={1024}
@@ -84,7 +84,7 @@ export default function ReferralQRCode({ referralUrl, referralCode }) {
             marginSize={4}
             fgColor="#0B3D2E"
             bgColor="#ffffff"
-            className="w-[72vw] sm:w-48 max-w-[300px] h-auto block mx-auto"
+            className="w-32 sm:w-36 h-auto block mx-auto"
           />
         </div>
         <div className="flex-1 w-full text-center sm:text-left">
