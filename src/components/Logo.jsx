@@ -1,7 +1,7 @@
 import React from "react";
 
 const LOGO_URL =
-  "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/3aafb3510_Property_Question_logo-1-removebg-preview.png";
+  "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/776ab2715_2Flip_ChatGPT_Image_Aug_24__2026__05_00_00_PM-removebg-preview.png";
 
 // Responsive heights — the logo scales with the `size` prop and the viewport,
 // so it never overflows tight bars (e.g. the 56px mobile header) or crowds
@@ -17,7 +17,7 @@ export default function Logo({ light = false, size = "md", className = "" }) {
     <div className={`flex items-center ${className}`}>
       <img
         src={LOGO_URL}
-        alt="Property Question Nigeria"
+        alt="Buy2Flip"
         className={`${sizeMap[size]} w-auto object-contain max-h-full`}
       />
     </div>
