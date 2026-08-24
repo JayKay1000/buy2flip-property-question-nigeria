@@ -19,6 +19,7 @@ export default function Logo({ light = false, size = "md", className = "" }) {
         src={LOGO_URL}
         alt="Buy2Flip"
         className={`${sizeMap[size]} w-auto object-contain max-h-full`}
+        style={!light ? { filter: "invert(1) hue-rotate(180deg)" } : undefined}
       />
     </div>
   );
