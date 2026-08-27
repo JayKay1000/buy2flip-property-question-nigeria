@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
+import { base44 } from "@/api/base44Client";
 
 export default function Navbar({ solid = false }) {
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
 
   useEffect(() => {
     if (solid) return;
@@ -12,6 +14,10 @@ export default function Navbar({ solid = false }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [solid]);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(setIsAuthed).catch(() => setIsAuthed(false));
+  }, []);
 
   const isSolid = solid || scrolled;
 
@@ -56,17 +62,25 @@ export default function Navbar({ solid = false }) {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <Link to="/login">
-            <Button
-              variant="ghost"
-              className={isSolid ? "text-foreground hover:bg-accent" : "text-white hover:bg-white/10"}
-            >
-              Log in
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button className="bg-gold hover:bg-gold-dark text-white border-0">Create Account</Button>
-          </Link>
+          {isAuthed ? (
+            <Link to="/dashboard">
+              <Button className="bg-gold hover:bg-gold-dark text-white border-0">Go to Dashboard</Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button
+                  variant="ghost"
+                  className={isSolid ? "text-foreground hover:bg-accent" : "text-white hover:bg-white/10"}
+                >
+                  Log in
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button className="bg-gold hover:bg-gold-dark text-white border-0">Create Account</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
