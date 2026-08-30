@@ -7,12 +7,12 @@ const tabs = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Plans", path: "/plans", icon: TrendingUp },
   { label: "Portfolio", path: "/portfolio", icon: Wallet },
-  { label: "Transactions", path: "/transactions", icon: Receipt },
   { label: "Support", path: "/support", icon: LifeBuoy },
 ];
 
 // Secondary pages reachable on mobile via the "More" sheet
 const moreItems = [
+  { label: "Transactions", path: "/transactions", icon: Receipt },
   { label: "Documents", path: "/documents", icon: FolderOpen },
   { label: "Referrals", path: "/referrals", icon: Users },
   { label: "Referral Analytics", path: "/referral-analytics", icon: BarChart3 },

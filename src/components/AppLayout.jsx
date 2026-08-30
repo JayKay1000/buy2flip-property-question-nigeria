@@ -25,7 +25,7 @@ const navItems = [
   { label: "Terms of Service", path: "/terms", icon: ScrollText },
 ];
 
-const TAB_ROOTS = ["/dashboard", "/plans", "/portfolio", "/transactions", "/support"];
+const TAB_ROOTS = ["/dashboard", "/plans", "/portfolio", "/support"];
 
 const getTabForPath = (p) =>
   TAB_ROOTS.find((r) => p === r || p.startsWith(r + "/"));
