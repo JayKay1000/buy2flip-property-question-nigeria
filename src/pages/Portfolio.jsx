@@ -13,21 +13,10 @@ import AdaptiveSelect from "@/components/AdaptiveSelect";
 import { NIGERIAN_BANKS } from "@/lib/nigerianBanks";
 import {
   Wallet, TrendingUp, Calendar, Download, Award, CheckCircle2,
-  Clock, FileText, Plus, Building2, Save, AlertTriangle, Trash2, ShieldAlert, Banknote, Gift
+  Clock, FileText, Plus, Building2, Save, Banknote, Gift
 } from "lucide-react";
 import WithdrawalDialog from "@/components/WithdrawalDialog";
 import WelcomePackageWithdrawDialog from "@/components/WelcomePackageWithdrawDialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import PullToRefresh from "@/components/PullToRefresh";
 import MaturityCountdown from "@/components/MaturityCountdown";
 import PortfolioDocuments from "@/components/PortfolioDocuments";
@@ -44,10 +33,6 @@ export default function Portfolio() {
   const [bankForm, setBankForm] = useState({ bank_name: "", account_number: "", account_name: "" });
   const [savingBank, setSavingBank] = useState(false);
   const [bankError, setBankError] = useState("");
-  const [deleteError, setDeleteError] = useState("");
-  const [deletingAccount, setDeletingAccount] = useState(false);
-  const [secondDialogOpen, setSecondDialogOpen] = useState(false);
-  const [confirmText, setConfirmText] = useState("");
   const [withdrawWelcome, setWithdrawWelcome] = useState(null);
 
   useEffect(() => {
@@ -136,24 +121,6 @@ export default function Portfolio() {
 
   const handleWithdrawalRevert = (record) => {
     setWithdrawals((prev) => prev.filter((w) => w.id !== record.id));
-  };
-
-  const handleRequestDeletion = async () => {
-    setDeleteError("");
-    setDeletingAccount(true);
-    try {
-      const me = await base44.auth.me();
-      await base44.entities.SupportTicket.create({
-        subject: "Account Deletion Request",
-        message: `User ${me.email || "(unknown)"} has requested permanent account deletion in compliance with App Store guideline 5.1.1. Please review all active commitments and process the deletion.`,
-        category: "account",
-        status: "open",
-      });
-      await base44.auth.logout("/");
-    } catch (err) {
-      setDeleteError(err?.message || "Failed to submit deletion request. Please contact support.");
-      setDeletingAccount(false);
-    }
   };
 
   if (loading) {
@@ -423,109 +390,6 @@ export default function Portfolio() {
                 </div>
               </div>
             )}
-          </Card>
-
-          {/* Account Deletion */}
-          <Card className="p-6 border-destructive/20">
-            <div className="flex items-center gap-2 mb-4">
-              <ShieldAlert className="w-5 h-5 text-destructive" />
-              <h2 className="font-heading font-semibold text-foreground">Danger Zone</h2>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/5 border border-destructive/15">
-                <AlertTriangle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Delete Account</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Permanently request account deletion. This will submit a secure request to our team.
-                    Your data and commitments will be reviewed before deletion is processed.
-                  </p>
-                </div>
-              </div>
-              {deleteError && (
-                <p className="text-xs text-destructive">{deleteError}</p>
-              )}
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="w-full" disabled={deletingAccount}>
-                    {deletingAccount ? "Submitting..." : (
-                      <><Trash2 className="w-4 h-4 mr-2" /> Request Account Deletion</>
-                    )}
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. A secure deletion request will be submitted to our
-                      team. You will be logged out and your account will be scheduled for permanent removal.
-                      Any active commitments will be reviewed before processing.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => setSecondDialogOpen(true)}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      Yes, continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              {/* Secondary confirmation dialog */}
-              <AlertDialog
-                open={secondDialogOpen}
-                onOpenChange={(open) => {
-                  if (!deletingAccount) {
-                    setSecondDialogOpen(open);
-                    if (!open) setConfirmText("");
-                  }
-                }}
-              >
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Final Confirmation</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This is your last chance to cancel. Type <strong>DELETE</strong> below to
-                      permanently remove your account, active commitments, and referral history.
-                      This action is irreversible and cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <div className="py-2">
-                    <Input
-                      value={confirmText}
-                      onChange={(e) => setConfirmText(e.target.value)}
-                      placeholder="Type DELETE to confirm"
-                      className="h-11"
-                    />
-                    {deleteError && (
-                      <p className="text-xs text-destructive mt-2">{deleteError}</p>
-                    )}
-                  </div>
-                  <AlertDialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSecondDialogOpen(false);
-                        setConfirmText("");
-                      }}
-                      disabled={deletingAccount}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={handleRequestDeletion}
-                      disabled={confirmText !== "DELETE" || deletingAccount}
-                    >
-                      {deletingAccount ? "Submitting..." : "Permanently Delete Account"}
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
           </Card>
         </div>
       </div>
