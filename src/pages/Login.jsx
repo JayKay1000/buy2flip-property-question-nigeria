@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
@@ -9,6 +9,12 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import PasswordInput from "@/components/PasswordInput";
+import {
+  getLoginRateLimit,
+  recordFailedLogin,
+  clearLoginRateLimit,
+  formatRemainingTime,
+} from "@/lib/authRateLimit";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +22,31 @@ export default function Login() {
   const { isAuthenticated, authChecked } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lockMs, setLockMs] = useState(0);
+  const [remainingAttempts, setRemainingAttempts] = useState(null);
+
+  const refreshLockState = useCallback((em = email) => {
+    const state = getLoginRateLimit(em);
+    setLockMs(state?.locked ? state.remainingMs : 0);
+    setRemainingAttempts(state && !state.locked ? state.remainingAttempts : null);
+  }, [email]);
+
+  // Tick down the lockout countdown so the UI stays accurate.
+  useEffect(() => {
+    if (lockMs <= 0) return;
+    const t = setInterval(() => {
+      setLockMs((prev) => {
+        const next = prev - 1000;
+        return next <= 0 ? 0 : next;
+      });
+    }, 1000);
+    return () => clearInterval(t);
+  }, [lockMs > 0]);
+
+  // Re-evaluate the lock state whenever the email changes.
+  useEffect(() => {
+    refreshLockState(email);
+  }, [email, refreshLockState]);
 
   // Keep already-authenticated users in their session even if they hit the
   // browser back button and land on /login.
@@ -26,12 +57,34 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const state = getLoginRateLimit(email);
+    if (state?.locked) {
+      setLockMs(state.remainingMs);
+      setError(`Too many failed attempts. Try again in ${formatRemainingTime(state.remainingMs)}.`);
+      return;
+    }
+
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
+      clearLoginRateLimit(email);
       window.location.href = "/dashboard";
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      const result = recordFailedLogin(email);
+      if (result?.locked) {
+        setLockMs(result.remainingMs);
+        setRemainingAttempts(null);
+        setError(`Too many failed attempts. Your account is locked for ${formatRemainingTime(result.remainingMs)}.`);
+      } else {
+        setRemainingAttempts(result?.remainingAttempts ?? null);
+        const left = result?.remainingAttempts;
+        setError(
+          left != null && left <= 2
+            ? `Invalid email or password. ${left} attempt${left === 1 ? "" : "s"} remaining before temporary lockout.`
+            : err.message || "Invalid email or password"
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -92,9 +145,11 @@ export default function Login() {
             required
           />
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
+        <Button type="submit" className="w-full h-12 font-medium" disabled={loading || lockMs > 0}>
           {loading ? (
             <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Logging in...</>
+          ) : lockMs > 0 ? (
+            <><Lock className="w-4 h-4 mr-2" />Locked — {formatRemainingTime(lockMs)}</>
           ) : (
             "Log in"
           )}
