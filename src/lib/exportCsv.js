@@ -2,7 +2,13 @@
 
 function escapeCell(value) {
   if (value === null || value === undefined) return "";
-  const str = String(value);
+  let str = String(value);
+  // CSV formula injection: neutralize leading characters that spreadsheet
+  // apps interpret as formulas (=, +, -, @, tab, carriage return) by prefixing
+  // with a single quote so the cell is treated as literal text.
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = `'${str}`;
+  }
   if (/[",\n\r]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`;
   }
