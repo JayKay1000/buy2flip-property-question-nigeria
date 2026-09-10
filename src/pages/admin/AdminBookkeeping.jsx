@@ -47,16 +47,23 @@ const buildReportRows = (participants, users, commitments, referrals) => {
         return `${r.referred_name || "—"} | ${code}`;
       })
       .join("; ");
+  // Only admin-confirmed commitments (active / completed) count toward totals.
+  // pending_payment records are visible in the detail drawer but excluded from
+  // all financial aggregations until an admin verifies the payment evidence.
+  const CONFIRMED_STATUSES = ["active", "completed"];
+  const isConfirmed = (c) => CONFIRMED_STATUSES.includes(c?.status);
+
   return participants.map((p) => {
     const user = getUser(p.created_by_id);
     const userComms = liveCommitments(commitments.filter((c) => c.created_by_id === p.created_by_id));
+    const confirmedComms = userComms.filter(isConfirmed);
     const userRefs = referrals.filter((r) => r.referrer_code === p.referral_code);
     const directRefs = userRefs.filter((r) => r.level === 1);
     const indirectRefs = userRefs.filter((r) => r.level === 2);
-    const totalCommitted = userComms.reduce((s, c) => s + (c.amount || 0), 0);
-    const totalExpectedReturn = userComms.reduce((s, c) => s + (c.expected_return || 0), 0);
-    const totalExpectedValue = userComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
-    const plansDetail = userComms
+    const totalCommitted = confirmedComms.reduce((s, c) => s + (c.amount || 0), 0);
+    const totalExpectedReturn = confirmedComms.reduce((s, c) => s + (c.expected_return || 0), 0);
+    const totalExpectedValue = confirmedComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
+    const plansDetail = confirmedComms
       .map((c) => `${c.plan_name} ${formatNaira(c.amount || 0)} [${c.status}] ${c.start_date || ""}->${c.maturity_date || ""}`)
       .join("; ");
     const earned = totalEarnedRewards(userRefs);
@@ -75,7 +82,7 @@ const buildReportRows = (participants, users, commitments, referrals) => {
       preferred_receiving_bank: p.preferred_receiving_bank || "",
       relationship_officer: p.relationship_officer || "",
       joined_date: p.created_date,
-      commitments_count: userComms.length,
+      commitments_count: confirmedComms.length,
       total_committed: totalCommitted,
       total_expected_return: totalExpectedReturn,
       total_expected_value: totalExpectedValue,
