@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
             "",
             "— Property Question Nigeria Limited",
           ].join("\n");
-          await base44.integrations.Core.SendEmail({
+          await base44.asServiceRole.integrations.Core.SendEmail({
             to: referrerEmail,
             subject: "Congratulations! A New Referral Has Been Recorded",
             body: emailBody,

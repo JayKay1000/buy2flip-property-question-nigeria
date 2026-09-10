@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
       ].join("\n");
 
       try {
-        await base44.integrations.Core.SendEmail({
+        await base44.asServiceRole.integrations.Core.SendEmail({
           to: email,
           subject: `Your Weekly Referral Leaderboard Update — Rank ${ordinal}`,
           body,

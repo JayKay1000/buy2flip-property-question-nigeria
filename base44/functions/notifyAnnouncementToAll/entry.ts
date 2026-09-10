@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
     for (const user of users) {
       if (!user.email) continue;
       try {
-        await base44.integrations.Core.SendEmail({
+        await base44.asServiceRole.integrations.Core.SendEmail({
           to: user.email,
           subject: `New Announcement: ${title}`,
           body: [

@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
       ].join("\n");
 
       try {
-        await base44.integrations.Core.SendEmail({
+        await base44.asServiceRole.integrations.Core.SendEmail({
           to: user.email,
           subject: "We miss you — see what's new on Property Question Nigeria Limited",
           body,

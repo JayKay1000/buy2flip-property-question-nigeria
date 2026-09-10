@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     for (const admin of admins) {
       if (admin.email) {
         try {
-          await base44.integrations.Core.SendEmail({ to: admin.email, subject, body: emailBody });
+          await base44.asServiceRole.integrations.Core.SendEmail({ to: admin.email, subject, body: emailBody });
           results.push(admin.email);
         } catch (e) {
           results.push(`${admin.email} (failed: ${e.message})`);
