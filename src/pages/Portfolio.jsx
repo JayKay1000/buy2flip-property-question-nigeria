@@ -20,6 +20,7 @@ import WelcomePackageWithdrawDialog from "@/components/WelcomePackageWithdrawDia
 import PullToRefresh from "@/components/PullToRefresh";
 import MaturityCountdown from "@/components/MaturityCountdown";
 import PortfolioDocuments from "@/components/PortfolioDocuments";
+import AccountDeletionRequest from "@/components/AccountDeletionRequest";
 
 export default function Portfolio() {
   const [profile, setProfile] = useState(null);
@@ -391,6 +392,8 @@ export default function Portfolio() {
               </div>
             )}
           </Card>
+
+          <AccountDeletionRequest />
         </div>
       </div>
     </div>
