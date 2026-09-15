@@ -12,9 +12,12 @@ import {
   Plus, Award, MapPin, Landmark, Gift
 } from "lucide-react";
 import PullToRefresh from "@/components/PullToRefresh";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 import { ensureParticipantProfile } from "@/lib/ensureProfile";
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [commitments, setCommitments] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -27,12 +30,14 @@ export default function Dashboard() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
-      const p = await ensureParticipantProfile(me);
+      const me = user;
+      const [p, comms, anns] = await Promise.all([
+        ensureParticipantProfile(me),
+        base44.entities.Commitment.filter({ created_by_id: me.id }, "-created_date"),
+        base44.entities.Announcement.filter({ active: true }, "-created_date", 5),
+      ]);
       setProfile(p);
-      const comms = await base44.entities.Commitment.filter({ created_by_id: me.id }, "-created_date");
       setCommitments(comms);
-      const anns = await base44.entities.Announcement.filter({ active: true }, "-created_date", 5);
       setAnnouncements(anns);
       if (p?.referral_code) {
         const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code });
@@ -46,8 +51,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

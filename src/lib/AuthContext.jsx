@@ -37,18 +37,30 @@ export const AuthProvider = ({ children }) => {
         interceptResponses: true
       });
       
+      // Start the auth check immediately so it runs IN PARALLEL with the
+      // public-settings fetch (previously these were sequential, doubling
+      // the initial app-load spinner time). The promise resolves to null on
+      // any auth failure, which is handled below.
+      const authPromise = appParams.token
+        ? base44.auth.me().catch(() => null)
+        : Promise.resolve(null);
+
       try {
         const publicSettings = await appClient.get(`/prod/public-settings/by-id/${appParams.appId}`);
         setAppPublicSettings(publicSettings);
-        
-        // If we got the app public settings successfully, check if user is authenticated
-        if (appParams.token) {
-          await checkUserAuth();
+
+        // Auth check was started in parallel above; await its (likely already
+        // resolved) result now. Public-settings errors are still handled in
+        // the catch block below exactly as before.
+        const currentUser = await authPromise;
+        if (currentUser) {
+          setUser(currentUser);
+          setIsAuthenticated(true);
         } else {
-          setIsLoadingAuth(false);
           setIsAuthenticated(false);
-          setAuthChecked(true);
         }
+        setAuthChecked(true);
+        setIsLoadingAuth(false);
         setIsLoadingPublicSettings(false);
       } catch (appError) {
         console.error('App state check failed:', appError);

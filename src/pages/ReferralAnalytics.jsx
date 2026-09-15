@@ -15,9 +15,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import ReferralWithdrawDialog from "@/components/ReferralWithdrawDialog";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 import { availableToWithdraw, alreadyRequestedAmount, referralBalance, referralStatus } from "@/lib/referralEarnings";
 
 export default function ReferralAnalytics() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
@@ -31,18 +34,18 @@ export default function ReferralAnalytics() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
-      const profiles = await base44.entities.ParticipantProfile.filter({ created_by_id: me.id });
+      const me = user;
+      const [profiles, reqs] = await Promise.all([
+        base44.entities.ParticipantProfile.filter({ created_by_id: me.id }),
+        base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date").catch(() => []),
+      ]);
       const p = profiles[0] || null;
       setProfile(p);
+      setRequests((reqs || []).filter((r) => r.request_type === "referral"));
       if (p?.referral_code) {
         const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code }, "-created_date");
         setReferrals(refs);
       }
-      try {
-        const reqs = await base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date");
-        setRequests(reqs.filter((r) => r.request_type === "referral"));
-      } catch { /* requests unavailable */ }
     } catch {
     } finally {
       setLoading(false);
@@ -51,8 +54,8 @@ export default function ReferralAnalytics() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import PullToRefresh from "@/components/PullToRefresh";
 import DocumentCentreBanner from "@/components/DocumentCentreBanner";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 
 const BROCHURE_URL = "https://media.base44.com/files/public/6a4d7c087d41148d5f9d3c8c/f478a8cea_FINALCOLONY_compressed.pdf";
 
@@ -35,6 +37,7 @@ const docTypeIcon = {
 };
 
 export default function DocumentCentre() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [commitments, setCommitments] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -46,7 +49,7 @@ export default function DocumentCentre() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
+      const me = user;
       const [profiles, comms, docs] = await Promise.all([
         base44.entities.ParticipantProfile.filter({ created_by_id: me.id }),
         base44.entities.Commitment.filter({ created_by_id: me.id, status: "active" }, "-created_date"),
@@ -91,8 +94,8 @@ export default function DocumentCentre() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

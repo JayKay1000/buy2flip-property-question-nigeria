@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import AdaptiveSelect from "@/components/AdaptiveSelect";
 import SupportAssistantChat from "@/components/SupportAssistantChat";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 import { formatDateTime } from "@/lib/format";
 import {
   LifeBuoy, MessageSquare, Phone, Mail, Building2, HelpCircle,
@@ -31,6 +33,7 @@ const ticketCategories = [
 ];
 
 export default function Support() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,10 +50,12 @@ export default function Support() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
-      const profiles = await base44.entities.ParticipantProfile.filter({ created_by_id: me.id });
+      const me = user;
+      const [profiles, tkts] = await Promise.all([
+        base44.entities.ParticipantProfile.filter({ created_by_id: me.id }),
+        base44.entities.SupportTicket.filter({ created_by_id: me.id }, "-created_date"),
+      ]);
       setProfile(profiles[0] || null);
-      const tkts = await base44.entities.SupportTicket.filter({ created_by_id: me.id }, "-created_date");
       setTickets(tkts);
     } catch {
     } finally {
@@ -96,8 +101,8 @@ export default function Support() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

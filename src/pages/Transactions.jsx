@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { formatNaira, formatDateTime } from "@/lib/format";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 import {
   ArrowDownCircle, ArrowUpCircle, RefreshCw, CreditCard, Banknote,
   TrendingUp, Clock, CheckCircle2, XCircle, FileText, Receipt
@@ -28,6 +30,7 @@ const commitmentStatusConfig = {
 };
 
 export default function Transactions() {
+  const { user } = useAuth();
   const [payments, setPayments] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
   const [commitments, setCommitments] = useState([]);
@@ -40,7 +43,7 @@ export default function Transactions() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
+      const me = user;
       const [pays, wds, comms] = await Promise.all([
         base44.entities.Payment.filter({ created_by_id: me.id }, "-created_date"),
         base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date"),
@@ -57,8 +60,8 @@ export default function Transactions() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

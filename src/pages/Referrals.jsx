@@ -15,8 +15,11 @@ import ReferralQRCode from "@/components/ReferralQRCode";
 import { referralBalance, referralStatus, totalEarnedRewards, totalWithdrawnAmount } from "@/lib/referralEarnings";
 import { toast } from "@/components/ui/use-toast";
 import { ensureParticipantProfile } from "@/lib/ensureProfile";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Referrals() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
@@ -32,26 +35,26 @@ export default function Referrals() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
-      const p = await ensureParticipantProfile(me);
+      const me = user;
+      const [p, lbResult, fResult, reqs] = await Promise.all([
+        ensureParticipantProfile(me),
+        base44.functions.invoke("getReferralLeaderboard", {}).catch(() => null),
+        base44.functions.invoke("getPublishedLeaderboard", {}).catch(() => null),
+        base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date").catch(() => []),
+      ]);
       setProfile(p);
       if (p?.referral_code) {
         const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code });
         setReferrals(refs);
       }
-      try {
-        const lb = await base44.functions.invoke("getReferralLeaderboard", {});
-        setLeaderboard(lb.data?.leaderboard || []);
-        setMyCode(lb.data?.myCode || null);
-      } catch { /* leaderboard unavailable */ }
-      try {
-        const f = await base44.functions.invoke("getPublishedLeaderboard", {});
-        setFeatured(f.data?.latest || null);
-      } catch { /* featured unavailable */ }
-      try {
-        const reqs = await base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date");
-        setRequests(reqs.filter((r) => r.request_type === "referral"));
-      } catch { /* requests unavailable */ }
+      if (lbResult) {
+        setLeaderboard(lbResult.data?.leaderboard || []);
+        setMyCode(lbResult.data?.myCode || null);
+      }
+      if (fResult) {
+        setFeatured(fResult.data?.latest || null);
+      }
+      setRequests((reqs || []).filter((r) => r.request_type === "referral"));
     } catch {
     } finally {
       setLoading(false);
@@ -68,8 +71,8 @@ export default function Referrals() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

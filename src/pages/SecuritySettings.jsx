@@ -10,9 +10,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { Shield, KeyRound, Smartphone, Clock, Monitor, Loader2, CheckCircle2, MapPin } from "lucide-react";
 import moment from "moment";
 import { parseUserAgent } from "@/lib/uaUtils";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function SecuritySettings() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [me, setMe] = useState(null);
   const [twoFactor, setTwoFactor] = useState(false);
   const [saving2fa, setSaving2fa] = useState(false);
@@ -26,11 +28,8 @@ export default function SecuritySettings() {
 
   useEffect(() => {
     (async () => {
-      try {
-        const user = await base44.auth.me();
-        setMe(user);
-        setTwoFactor(!!user?.two_factor_enabled);
-      } catch {}
+      setMe(user);
+      setTwoFactor(!!user?.two_factor_enabled);
       try {
         const items = await base44.entities.LoginActivity.filter({}, "-created_date", 10);
         setActivity(items || []);

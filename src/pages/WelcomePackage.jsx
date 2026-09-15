@@ -10,8 +10,11 @@ import {
   Gift, CheckCircle2, Clock, AlertCircle, Wallet, ArrowLeft,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageLoader from "@/components/PageLoader";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function WelcomePackage() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
   const [commitments, setCommitments] = useState([]);
@@ -25,14 +28,13 @@ export default function WelcomePackage() {
 
   const loadData = async () => {
     try {
-      const me = await base44.auth.me();
-      const profiles = await base44.entities.ParticipantProfile.filter({ created_by_id: me.id });
-      const p = profiles[0] || null;
-      setProfile(p);
-      const [comms, reqs] = await Promise.all([
+      const me = user;
+      const [profiles, comms, reqs] = await Promise.all([
+        base44.entities.ParticipantProfile.filter({ created_by_id: me.id }),
         base44.entities.Commitment.filter({ created_by_id: me.id }, "-created_date"),
         base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date"),
       ]);
+      setProfile(profiles[0] || null);
       setCommitments(comms);
       setRequests(reqs);
     } catch {
@@ -43,8 +45,8 @@ export default function WelcomePackage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+        <PageLoader />
       </div>
     );
   }

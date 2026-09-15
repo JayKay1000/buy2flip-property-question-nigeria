@@ -7,6 +7,7 @@ import {
   Banknote, Clock, CheckCircle2, X, Building2, Loader2, RefreshCw, ArrowLeft,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageLoader from "@/components/PageLoader";
 
 const statusConfig = {
   requested: { label: "Requested", color: "bg-gold/10 text-gold-dark border-gold/30", icon: Clock },
@@ -42,12 +43,14 @@ export default function WithdrawalStatus() {
     loadData();
   }, [loadData]);
 
-  // Realtime updates
+  // Realtime updates — debounced so a burst of events triggers a single reload
   useEffect(() => {
+    let timer;
     const unsubscribe = base44.entities.WithdrawalRequest.subscribe(() => {
-      loadData();
+      clearTimeout(timer);
+      timer = setTimeout(() => loadData(), 500);
     });
-    return unsubscribe;
+    return () => { clearTimeout(timer); unsubscribe(); };
   }, [loadData]);
 
   const handleRefresh = () => {
@@ -59,8 +62,8 @@ export default function WithdrawalStatus() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+        <PageLoader />
       </div>
     );
   }
