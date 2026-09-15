@@ -56,12 +56,23 @@ export default function AppLayout() {
     }
   }, [location.pathname]);
 
-  const handleLogout = async () => {
-    // base44.auth.logout() clears the token (localStorage + axios header) and
-    // tries to redirect to the Base44 logout endpoint. We override that
-    // redirect to keep the user on the Buy2Flip landing page — the Base44
-    // endpoint redirects to base44.app/ which 404s.
-    base44.auth.logout();
+  const handleLogout = () => {
+    // SOURCE FIX: base44.auth.logout() builds the logout URL from
+    // options.appBaseUrl, which is EMPTY when the app is hosted externally on
+    // Hostinger (VITE_BASE44_APP_BASE_URL is unset). That produces the RELATIVE
+    // URL /api/apps/auth/logout, which the browser resolves against
+    // https://buy2flip.net → Hostinger 404. Instead of using the SDK's logout
+    // (which would change login/SSO behavior if we patched appBaseUrl globally),
+    // we clear the local token directly and fire the Base44 logout endpoint at
+    // its ABSOLUTE backend URL to terminate the server-side session, then
+    // redirect client-side to the public landing page.
+    window.localStorage.removeItem("base44_access_token");
+    window.localStorage.removeItem("token");
+    fetch("https://base44.app/api/apps/auth/logout", {
+      credentials: "include",
+      mode: "no-cors",
+      keepalive: true,
+    }).catch(() => {});
     window.location.href = window.location.origin + "/";
   };
 

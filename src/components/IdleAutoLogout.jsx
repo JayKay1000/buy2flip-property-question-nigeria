@@ -36,9 +36,17 @@ export default function IdleAutoLogout() {
     logoutInitiatedRef.current = true;
     showWarningRef.current = false;
     setShowWarning(false);
-    // base44.auth.logout() clears the token; we override its redirect to keep
-    // the user on the Buy2Flip landing page (the Base44 endpoint 404s).
-    base44.auth.logout();
+    // SOURCE FIX: fire the Base44 logout endpoint at its ABSOLUTE URL (not the
+    // relative /api/apps/auth/logout that base44.auth.logout() builds from the
+    // empty appBaseUrl → Hostinger 404), clear the local token, and redirect
+    // client-side to the public landing page.
+    window.localStorage.removeItem("base44_access_token");
+    window.localStorage.removeItem("token");
+    fetch("https://base44.app/api/apps/auth/logout", {
+      credentials: "include",
+      mode: "no-cors",
+      keepalive: true,
+    }).catch(() => {});
     window.location.href = window.location.origin + "/";
   }, []);
 

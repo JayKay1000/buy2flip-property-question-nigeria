@@ -69,7 +69,14 @@ export const AuthProvider = ({ children }) => {
             // lands on the login page instead of being permanently stuck on
             // the "Access Restricted" screen.
             if (appParams.token) {
-              try { base44.auth.logout(); } catch {}
+              // Clear the stale token locally (do NOT use base44.auth.logout(),
+              // which builds a relative /api/apps/auth/logout URL that Hostinger
+              // 404s) and reload so the user lands on the login page.
+              try {
+                window.localStorage.removeItem("base44_access_token");
+                window.localStorage.removeItem("token");
+              } catch {}
+              window.location.reload();
               return;
             }
             setAuthError({
@@ -132,15 +139,24 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     
     if (shouldRedirect) {
-      // base44.auth.logout() clears the token (localStorage + axios header)
-      // and tries to redirect to the Base44 logout endpoint, which redirects
-      // to base44.app/ (404). We override that redirect to keep the user on
-      // the Buy2Flip landing page on this domain.
-      base44.auth.logout();
+      // SOURCE FIX: fire the Base44 logout endpoint at its ABSOLUTE URL (not
+      // the relative /api/apps/auth/logout that base44.auth.logout() builds
+      // from the empty appBaseUrl → Hostinger 404), clear the local token,
+      // and redirect client-side to the public landing page.
+      window.localStorage.removeItem("base44_access_token");
+      window.localStorage.removeItem("token");
+      fetch("https://base44.app/api/apps/auth/logout", {
+        credentials: "include",
+        mode: "no-cors",
+        keepalive: true,
+      }).catch(() => {});
       window.location.href = window.location.origin + "/";
     } else {
-      // Just remove the token without redirect
-      base44.auth.logout();
+      // Just remove the token locally without redirect (do NOT use
+      // base44.auth.logout(), which builds a relative /api/apps/auth/logout
+      // URL that Hostinger 404s).
+      window.localStorage.removeItem("base44_access_token");
+      window.localStorage.removeItem("token");
     }
   };
 
