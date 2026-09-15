@@ -1,44 +1,5 @@
 export const PLANS = [
   {
-    name: "Bronze",
-    slug: "bronze",
-    durationMonths: 3,
-    returnRate: 0.05,
-    minimum: 1000000,
-    tagline: "3 Months | 5% ROI",
-    accent: "#A0673A",
-    image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/ca8e7cb43_Bronzebanner.jpg",
-    benefits: [
-      "₦1,000,000 Minimum Buy-in",
-      "3-month maturity period",
-      "5% expected return",
-      "2% Direct & 0.5% third party referrer bonus",
-      "Portfolio progress updates",
-      "Full access to referral reward programme",
-      "Dedicated relationship officer support"
-    ],
-    timeline: [
-      { phase: "Enrolment", detail: "Choose your plan and commitment amount" },
-      { phase: "Payment", detail: "Transfer to the official company account" },
-      { phase: "Activation", detail: "Portfolio goes live upon confirmation" },
-      { phase: "Maturity", detail: "Receive principal plus expected return" }
-    ],
-    faqs: [
-      { q: "What is the minimum commitment amount?", a: "The minimum commitment for the Bronze Plan is ₦1,000,000. You may commit in multiples of ₦1,000,000." },
-      { q: "When do I receive my returns?", a: "Expected returns are disbursed at the end of the 3-month commitment period to your preferred receiving bank account." },
-      { q: "Can I withdraw my commitment early?", a: "Early withdrawal is not permitted. Commitments are held for the full duration to ensure optimal deployment." },
-      { q: "How is my return calculated?", a: "Your expected return is calculated as 5% of your commitment amount, payable at maturity." }
-    ],
-    terms: [
-      "The commitment period is fixed at 3 months from the activation date.",
-      "The minimum commitment amount is ₦1,000,000.",
-      "The expected return of 5% is calculated on the total commitment amount.",
-      "Returns are disbursed only to the participant's verified receiving bank account.",
-      "The participant must provide valid bank details before maturity.",
-      "Property Question Nigeria Limited reserves the right to verify all payment evidence."
-    ]
-  },
-  {
     name: "Silver",
     slug: "silver",
     durationMonths: 6,
@@ -222,7 +183,7 @@ export const REFERRAL_REWARDS = {
   indirect: 0.005
 };
 
-// Per-plan welcome package rate (fraction of commitment). Bronze and Silver are excluded.
+// Per-plan welcome package rate (fraction of commitment). Silver is excluded.
 export const WELCOME_PACKAGE_RATES = {
   Gold: 0.01,
   Platinum: 0.015,
@@ -250,7 +211,7 @@ export const HOW_IT_WORKS_STEPS = [
   { step: 1, title: "Create your account", detail: "Register with your details and verify your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/ab7fc082b_Createaccount.png" },
   { step: 2, title: "Verify email", detail: "Enter the 6-digit OTP sent to your email", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/001834246_Verifyemail.png" },
   { step: 3, title: "Complete your profile", detail: "Add your personal and banking information", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/8e2b35fa4_BankingInformation.png" },
-  { step: 4, title: "Choose a Plan", detail: "Select Bronze, Silver, Gold, or Platinum", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/0f1d84b26_Choosecommittmentplan.png" },
+  { step: 4, title: "Choose a Plan", detail: "Select Silver, Gold, Platinum, or Diamond", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/0f1d84b26_Choosecommittmentplan.png" },
   { step: 5, title: "Select your preferred amount", detail: "Choose your commitment amount", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/90b804010_Selectamount.png" },
   { step: 6, title: "View company payment account", detail: "Transfer to the official company bank account", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/e12a2e4bd_Companysaccount.png" },
   { step: 7, title: "Upload payment evidence", detail: "Upload your payment receipt for verification", image: "https://media.base44.com/images/public/6a4d7c087d41148d5f9d3c8c/bddafe16f_Completecommitment.png" },

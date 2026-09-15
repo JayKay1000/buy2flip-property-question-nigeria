@@ -19,7 +19,7 @@ const sections = [
 },
 {
   title: "4. Commitment Plans & Expected Returns",
-  body: "The Platform offers structured commitment plans (Bronze, Silver, Gold, and Platinum) with defined durations and return rates. Commitments must be made in multiples of ₦1,000,000. Expected returns are projections based on the chosen plan and are not guaranteed profit. The Company deploys commitments into carefully selected real estate developments and disburses the total expected value at maturity, subject to the terms of the selected plan."
+  body: "The Platform offers structured commitment plans (Silver, Gold, Platinum, and Diamond) with defined durations and return rates. Commitments must be made in multiples of ₦1,000,000. Expected returns are projections based on the chosen plan and are not guaranteed profit. The Company deploys commitments into carefully selected real estate developments and disburses the total expected value at maturity, subject to the terms of the selected plan."
 },
 {
   title: "5. Payments & Verification",

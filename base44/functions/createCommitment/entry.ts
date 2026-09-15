@@ -3,7 +3,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 // Authoritative plan definitions — the single source of truth for return rates
 // and durations. The client is never trusted to supply these values.
 const PLAN_DEFS = {
-  bronze:   { name: "Bronze",   durationMonths: 3,  returnRate: 0.05, minimum: 1000000 },
   silver:   { name: "Silver",   durationMonths: 6,  returnRate: 0.12, minimum: 1000000 },
   gold:     { name: "Gold",     durationMonths: 12, returnRate: 0.30, minimum: 1000000 },
   platinum: { name: "Platinum", durationMonths: 18, returnRate: 0.50, minimum: 1000000 },
