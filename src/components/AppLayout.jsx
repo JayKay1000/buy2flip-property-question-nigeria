@@ -57,9 +57,12 @@ export default function AppLayout() {
   }, [location.pathname]);
 
   const handleLogout = async () => {
-    // Absolute URL so the Base44 logout endpoint redirects back to the
-    // Buy2Flip landing page on this domain, not to base44.app/.
-    await base44.auth.logout(window.location.origin + "/");
+    // base44.auth.logout() clears the token (localStorage + axios header) and
+    // tries to redirect to the Base44 logout endpoint. We override that
+    // redirect to keep the user on the Buy2Flip landing page — the Base44
+    // endpoint redirects to base44.app/ which 404s.
+    base44.auth.logout();
+    window.location.href = window.location.origin + "/";
   };
 
   const SidebarContent = () => (
