@@ -31,7 +31,8 @@
       "enum": [
         "pending",
         "active",
-        "suspended"
+        "suspended",
+        "deletion_requested"
       ],
       "default": "pending"
     },
@@ -40,6 +41,10 @@
     },
     "relationship_officer": {
       "type": "string"
+    },
+    "deletion_requested_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [

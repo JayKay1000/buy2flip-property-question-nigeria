@@ -95,8 +95,9 @@ export default function DeleteAccount() {
                 <div className="bg-muted/50 rounded-lg p-4 mb-6 text-left">
                   <p className="text-sm text-muted-foreground">
                     <ShieldCheck className="w-4 h-4 inline mr-1 text-brand" />
-                    Your data will be permanently removed, including commitments,
-                    referrals, and payment records.
+                    Your account has been deactivated and your data marked for
+                    deletion. It will be permanently removed after our review
+                    period.
                   </p>
                 </div>
                 <Link to="/">
@@ -116,8 +117,9 @@ export default function DeleteAccount() {
                   Delete Your Account
                 </h1>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  Request permanent deletion of your account and all associated
-                  data. This action is irreversible once processed.
+                  Request deactivation and soft deletion of your account. Your
+                  account will be deactivated immediately and your data
+                  permanently removed after a review period.
                 </p>
               </div>
 
@@ -159,10 +161,11 @@ export default function DeleteAccount() {
                         <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
                         <p className="text-sm text-muted-foreground">
                           <span className="font-medium text-foreground">
-                            What will be deleted:
+                            What will happen:
                           </span>{" "}
-                          Your profile, commitments, referrals, payment records,
-                          and all associated data.
+                          Your account will be deactivated immediately and
+                          marked for deletion. Data is retained securely during
+                          the review period, then permanently removed.
                         </p>
                       </div>
                       <div className="flex items-start gap-2">
