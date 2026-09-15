@@ -1,0 +1,31 @@
+# SPA fallback for Hostinger (Apache).
+# The Buy2Flip frontend is a React SPA — all client-side routes (/dashboard,
+# /login, /portfolio, …) must be served by index.html so React Router can handle
+# them. Without this, Hostinger returns its default 404 page for any path that
+# isn't a real file, which breaks post-login redirects and deep links/refreshes.
+#
+# Deploy this file to the Hostinger public_html directory (it ships in the build
+# output as dist/.htaccess).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Don't rewrite real files or directories (assets, favicon, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Don't rewrite API requests — the app calls the Base44 backend directly via
+  # an absolute URL (https://base44.app), so /api/* should never reach Hostinger.
+  RewriteRule ^api/ - [L]
+
+  # Everything else → index.html (SPA fallback)
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
