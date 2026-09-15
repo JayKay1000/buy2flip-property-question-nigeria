@@ -132,8 +132,15 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     
     if (shouldRedirect) {
-      // Use the SDK's logout method which handles token cleanup and redirect
-      base44.auth.logout(window.location.href);
+      // Redirect to the public landing page after logout — NOT the current
+      // (protected) page. The SDK's logout() sends the browser to the Base44
+      // logout endpoint with from_url=<redirectUrl>, which clears the
+      // HTTP-only cookies and then redirects back to from_url. Passing the
+      // current page (e.g. /dashboard) causes a Hostinger 404 because the
+      // server has no SPA fallback for direct requests to deep routes.
+      // window.location.origin + "/" resolves to https://buy2flip.net/ (or
+      // the base44.app domain), which Hostinger serves as the SPA shell.
+      base44.auth.logout(window.location.origin + "/");
     } else {
       // Just remove the token without redirect
       base44.auth.logout();

@@ -36,7 +36,9 @@ export default function IdleAutoLogout() {
     logoutInitiatedRef.current = true;
     showWarningRef.current = false;
     setShowWarning(false);
-    base44.auth.logout("/login");
+    // Absolute URL so the Base44 logout endpoint redirects back to the
+    // Buy2Flip landing page on this domain, not to base44.app/login.
+    base44.auth.logout(window.location.origin + "/");
   }, []);
 
   // Track user activity; any activity while the warning is open = "continue"

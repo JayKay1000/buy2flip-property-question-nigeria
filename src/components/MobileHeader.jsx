@@ -41,7 +41,9 @@ export default function MobileHeader() {
   const title = getTitle(pathname);
 
   const handleBack = () => navigate(-1);
-  const handleLogout = () => base44.auth.logout("/");
+  // Absolute URL so the Base44 logout endpoint redirects back to the
+  // Buy2Flip landing page on this domain, not to base44.app/.
+  const handleLogout = () => base44.auth.logout(window.location.origin + "/");
 
   return (
     <header className="lg:hidden bg-brand text-white z-40 pt-safe shadow-md">
