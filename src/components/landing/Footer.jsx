@@ -24,6 +24,7 @@ export default function Footer() {
               <li><a href="#plans" className="hover:text-gold transition-colors">Commitment Plans</a></li>
               <li><a href="#how-it-works" className="hover:text-gold transition-colors">How It Works</a></li>
               <li><Link to="/terms" className="hover:text-gold transition-colors">Terms of Service</Link></li>
+              <li><Link to="/delete-account" className="hover:text-gold transition-colors">Delete Account</Link></li>
             </ul>
           </div>
           <div>
