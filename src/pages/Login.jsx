@@ -9,6 +9,7 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import PasswordInput from "@/components/PasswordInput";
+import { postAuthRedirect } from "@/lib/authReturnTo";
 import {
   getLoginRateLimit,
   recordFailedLogin,
@@ -69,7 +70,7 @@ export default function Login() {
     try {
       await base44.auth.loginViaEmailPassword(email, password);
       clearLoginRateLimit(email);
-      window.location.href = "/dashboard";
+      postAuthRedirect("/dashboard");
     } catch (err) {
       const result = recordFailedLogin(email);
       if (result?.locked) {
@@ -91,7 +92,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/dashboard");
+    base44.auth.loginWithProvider("google", "/?returnTo=" + encodeURIComponent("/dashboard"));
   };
 
   return (

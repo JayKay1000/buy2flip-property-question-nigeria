@@ -13,6 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import VerificationSuccess from "@/components/VerificationSuccess";
+import { postAuthRedirect } from "@/lib/authReturnTo";
 
 const generateReferralCode = (name) => {
   const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
@@ -38,7 +39,7 @@ export default function Register() {
   // Stable callback so the success screen's auto-redirect timer isn't reset
   // by unrelated re-renders (e.g. the resend-cooldown ticking).
   const goToDashboard = useCallback(() => {
-    window.location.href = "/dashboard";
+    postAuthRedirect("/dashboard");
   }, []);
 
   const fireConfetti = () => {
@@ -137,7 +138,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/dashboard");
+    base44.auth.loginWithProvider("google", "/?returnTo=" + encodeURIComponent("/dashboard"));
   };
 
   if (verified) {

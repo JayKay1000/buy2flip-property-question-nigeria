@@ -31,3 +31,12 @@ export function safeReturnTo() {
     return "/";
   }
 }
+
+// Hard-redirect to "/" carrying the intended destination as ?returnTo=.
+// The custom domain (buy2flip.net) has no SPA fallback — only "/" serves the
+// React app; any other path (/dashboard, /login, …) returns a CMS 404. So we
+// always reload to "/" (which works) and let the Landing page client-side
+// navigate to the real destination once the app is loaded.
+export function postAuthRedirect(destination = "/dashboard") {
+  window.location.href = "/?returnTo=" + encodeURIComponent(destination);
+}

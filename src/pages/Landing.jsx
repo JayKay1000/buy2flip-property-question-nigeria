@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { safeReturnTo } from "@/lib/authReturnTo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/landing/Navbar";
@@ -29,6 +30,19 @@ const stats = [
 
 
 export default function Landing() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // After a post-login/post-reset hard redirect to "/?returnTo=<path>", the
+    // custom domain served the app at "/". Now that the app is loaded, finish
+    // the trip client-side so we never hit the CMS 404 on a deep path.
+    const returnTo = new URLSearchParams(window.location.search).get("returnTo");
+    if (returnTo) {
+      const safe = safeReturnTo();
+      if (safe && safe !== "/") {
+        navigate(safe, { replace: true });
+      }
+    }
+  }, [navigate]);
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
