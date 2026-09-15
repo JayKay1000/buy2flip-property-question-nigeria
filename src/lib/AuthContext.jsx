@@ -26,7 +26,10 @@ export const AuthProvider = ({ children }) => {
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.
       const appClient = createAxiosClient({
-        baseURL: `/api/apps/public`,
+        // Absolute backend URL — the custom domain (buy2flip.net) does not proxy
+        // /api/* (returns a CMS 404), so the public-settings call must go directly
+        // to the Base44 backend (CORS '*').
+        baseURL: `https://base44.app/api/apps/public`,
         headers: {
           'X-App-Id': appParams.appId
         },
