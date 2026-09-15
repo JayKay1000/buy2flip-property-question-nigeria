@@ -19,6 +19,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import DeleteAccount from './pages/DeleteAccount';
 import Dashboard from './pages/Dashboard';
 import Plans from './pages/Plans';
 import PlanDetail from './pages/PlanDetail';
@@ -72,6 +73,7 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/delete-account" element={<DeleteAccount />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
