@@ -59,6 +59,16 @@ export const AuthProvider = ({ children }) => {
               message: 'Authentication required'
             });
           } else if (reason === 'user_not_registered') {
+            // A token is present but the platform reports the user is not
+            // registered for this app. This almost always means the token is
+            // stale (e.g. invalidated after a subscription renewal) rather than
+            // a genuinely unregistered user. Clear it and reload so the user
+            // lands on the login page instead of being permanently stuck on
+            // the "Access Restricted" screen.
+            if (appParams.token) {
+              try { base44.auth.logout(); } catch {}
+              return;
+            }
             setAuthError({
               type: 'user_not_registered',
               message: 'User not registered for this app'
