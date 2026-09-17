@@ -90,7 +90,19 @@ export default function Landing() {
             </div>
           </div>
         </div>
-{/* Stats bar */}
+{/* GOOGLE ADSENSE AD START */}
+      <div className="my-8 flex justify-center">
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client="ca-pub-5371658397951527"
+            data-ad-slot="8731932872"
+            data-ad-format="auto"
+            data-full-width-responsive="true">
+          </ins>
+      </div>
+      {/* GOOGLE ADSENSE AD END */}
+        {/* Stats bar */}
         <div className="relative z-10 border-t border-white/10 glass-dark">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat) =>
@@ -102,6 +114,8 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5371658397951527"
+      crossorigin="anonymous"></script>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-24 bg-background">
