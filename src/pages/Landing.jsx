@@ -53,6 +53,7 @@ export default function Landing() {
           <img
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80"
             alt="Luxury estate"
+            fetchpriority="high"
             className="w-full h-full object-cover" />
           
           <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/90 via-brand/75 to-brand-dark/85" />
@@ -178,7 +179,7 @@ export default function Landing() {
             {PLANS.map((plan) =>
             <Card key={plan.slug} className={`overflow-hidden transition-all duration-300 hover:shadow-xl ${plan.name === "Gold" ? "ring-2 ring-gold" : ""}`}>
                 <div className="relative h-40 overflow-hidden">
-                  <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" />
+                  <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-5">
                     <h3 className="font-display font-bold text-2xl text-white">{plan.name} Plan</h3>
@@ -240,7 +241,7 @@ export default function Landing() {
       {/* CTA */}
       <section className="py-24 bg-brand relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80" alt="" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80" alt="" className="w-full h-full object-cover" loading="lazy" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">Ready to Start Buying to Flip?

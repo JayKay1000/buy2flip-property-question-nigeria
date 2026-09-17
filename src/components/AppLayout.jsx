@@ -7,7 +7,6 @@ import MobileHeader from "@/components/MobileHeader";
 import LoginActivityTracker from "@/components/LoginActivityTracker";
 import IdleAutoLogout from "@/components/IdleAutoLogout";
 import { LayoutDashboard, TrendingUp, Wallet, Users, LifeBuoy, LogOut, Receipt, Banknote, ScrollText, FolderOpen, Shield, Gift, BarChart3 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -139,23 +138,13 @@ export default function AppLayout() {
 
       {/* Main content */}
       <main className="lg:ml-72 pt-0 min-h-screen pb-20 lg:pb-0">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-          >
-            <Suspense fallback={
-              <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
-              </div>
-            }>
-              <Outlet />
-            </Suspense>
-          </motion.div>
-        </AnimatePresence>
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin" />
+          </div>
+        }>
+          <Outlet key={location.pathname} />
+        </Suspense>
       </main>
     </div>
   );

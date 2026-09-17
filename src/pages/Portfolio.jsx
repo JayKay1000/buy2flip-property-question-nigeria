@@ -64,10 +64,12 @@ export default function Portfolio() {
       setCommitments(comms);
       setWithdrawals(wd);
       setPayments(pays);
-      const refs = await base44.entities.Referral.filter({ referrer_code: p?.referral_code || "___" });
-      setReferrals(refs);
+      setLoading(false);
+      // Referrals are non-critical — load in the background without blocking render
+      base44.entities.Referral.filter({ referrer_code: p?.referral_code || "___" })
+        .then(setReferrals)
+        .catch(() => {});
     } catch {
-    } finally {
       setLoading(false);
     }
   };

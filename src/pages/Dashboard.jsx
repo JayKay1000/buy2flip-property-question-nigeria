@@ -39,12 +39,14 @@ export default function Dashboard() {
       setProfile(p);
       setCommitments(comms);
       setAnnouncements(anns);
+      setLoading(false);
+      // Referrals are non-critical — load in the background without blocking render
       if (p?.referral_code) {
-        const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code });
-        setReferrals(refs);
+        base44.entities.Referral.filter({ referrer_code: p.referral_code })
+          .then(setReferrals)
+          .catch(() => {});
       }
     } catch {
-    } finally {
       setLoading(false);
     }
   };

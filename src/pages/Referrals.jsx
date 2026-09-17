@@ -43,10 +43,6 @@ export default function Referrals() {
         base44.entities.WithdrawalRequest.filter({ created_by_id: me.id }, "-created_date").catch(() => []),
       ]);
       setProfile(p);
-      if (p?.referral_code) {
-        const refs = await base44.entities.Referral.filter({ referrer_code: p.referral_code });
-        setReferrals(refs);
-      }
       if (lbResult) {
         setLeaderboard(lbResult.data?.leaderboard || []);
         setMyCode(lbResult.data?.myCode || null);
@@ -55,8 +51,14 @@ export default function Referrals() {
         setFeatured(fResult.data?.latest || null);
       }
       setRequests((reqs || []).filter((r) => r.request_type === "referral"));
+      setLoading(false);
+      // Downline list is non-critical — load in the background without blocking render
+      if (p?.referral_code) {
+        base44.entities.Referral.filter({ referrer_code: p.referral_code })
+          .then(setReferrals)
+          .catch(() => {});
+      }
     } catch {
-    } finally {
       setLoading(false);
     }
   };
