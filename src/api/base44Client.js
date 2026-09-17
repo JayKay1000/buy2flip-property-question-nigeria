@@ -15,5 +15,10 @@ export const base44 = createClient({
   functionsVersion,
   serverUrl: 'https://base44.app',
   requiresAuth: false,
-  appBaseUrl
+  // appBaseUrl is used by the SDK for auth redirects (loginWithProvider,
+  // logout). When unset, the SDK defaults it to "" and builds a RELATIVE
+  // /api/apps/auth/login URL — which the custom domain (buy2flip.net) does not
+  // proxy, returning a CMS 404 on Google OAuth. Hardcode the absolute backend
+  // so OAuth redirects go directly to base44.app, same as serverUrl.
+  appBaseUrl: appBaseUrl || 'https://base44.app'
 });
