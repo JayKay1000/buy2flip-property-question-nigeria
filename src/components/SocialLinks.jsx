@@ -63,6 +63,19 @@ const socials = [
       </>
     ),
   },
+  {
+    name: "Google Play",
+    href: "https://play.google.com/store/apps/details?id=com.base6a4d7c087d41148d5f9d3c8c.app",
+    gradient: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
+    path: (
+      <>
+        <path d="M3.609 1.814L13.792 12 3.609 22.186a.996.996 0 0 1-.609-.92V2.734a1 1 0 0 1 .609-.92z" fill="#00C3FF" />
+        <path d="M3.609 1.814L17.36 8.432 13.792 12 3.609 1.814z" fill="#00E976" />
+        <path d="M13.792 12L17.36 8.432l3.562 2.055c.5.288.5 1.018 0 1.306L17.36 13.848 13.792 12z" fill="#FFC107" />
+        <path d="M3.609 22.186L13.792 12l3.568 3.848-13.75 7.258a1 1 0 0 1-.609-.92z" fill="#FF003C" />
+      </>
+    ),
+  },
 ];
 
 export default function SocialLinks({ variant = "light" }) {
