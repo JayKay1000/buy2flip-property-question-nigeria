@@ -60,7 +60,7 @@ const buildReportRows = (participants, users, commitments, referrals) => {
     const userRefs = referrals.filter((r) => r.referrer_code === p.referral_code);
     const directRefs = userRefs.filter((r) => r.level === 1);
     const indirectRefs = userRefs.filter((r) => r.level === 2);
-    const totalCommitted = confirmedComms.reduce((s, c) => s + (c.amount || 0), 0);
+    const totalCommitted = 0;
     const totalExpectedReturn = confirmedComms.reduce((s, c) => s + (c.expected_return || 0), 0);
     const totalExpectedValue = confirmedComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
     const plansDetail = confirmedComms
