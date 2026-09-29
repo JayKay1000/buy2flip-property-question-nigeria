@@ -26,7 +26,7 @@ const exportStamp = () => {
 // Pure row builder — shared by the on-screen table (via useMemo) and the CSV
 // export (with freshly fetched data) so the export always reflects real-time
 // state at the moment of download.
-const buildReportRows = (participants, users, commitments, referrals) => {
+const buildReportRows = (participants, users, commitments, referrals, payments) => {
   const getUser = (uid) => users.find((u) => u.id === uid);
   const emailToCode = {};
   participants.forEach((p) => {
@@ -60,7 +60,8 @@ const buildReportRows = (participants, users, commitments, referrals) => {
     const userRefs = referrals.filter((r) => r.referrer_code === p.referral_code);
     const directRefs = userRefs.filter((r) => r.level === 1);
     const indirectRefs = userRefs.filter((r) => r.level === 2);
-    const totalCommitted = 0;
+    const confirmedPayments = payments.filter((pm) => pm.created_by_id === p.created_by_id && pm.status === "confirmed");
+    const totalCommitted = confirmedPayments.reduce((s, pm) => s + (pm.amount || 0), 0);
     const totalExpectedReturn = confirmedComms.reduce((s, c) => s + (c.expected_return || 0), 0);
     const totalExpectedValue = confirmedComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
     const plansDetail = confirmedComms
@@ -108,6 +109,7 @@ export default function AdminBookkeeping() {
   const [users, setUsers] = useState([]);
   const [commitments, setCommitments] = useState([]);
   const [referrals, setReferrals] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -125,16 +127,18 @@ export default function AdminBookkeeping() {
     if (!silent) setLoading(true);
     else setRefreshing(true);
     try {
-      const [parts, usrs, comms, refs] = await Promise.all([
+      const [parts, usrs, comms, refs, pays] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
         base44.entities.User.list(),
         base44.entities.Commitment.list(),
         base44.entities.Referral.list(),
+        base44.entities.Payment.list(),
       ]);
       setParticipants(parts);
       setUsers(usrs);
       setCommitments(comms);
       setReferrals(refs);
+      setPayments(pays);
     } catch {
     } finally {
       setLoading(false);
@@ -159,8 +163,8 @@ export default function AdminBookkeeping() {
   // CSV export). One row per participant with their full profile, aggregated
   // commitment totals + plan breakdown, and full direct/indirect referral data.
   const reportRows = useMemo(
-    () => buildReportRows(participants, users, commitments, referrals),
-    [participants, users, commitments, referrals]
+    () => buildReportRows(participants, users, commitments, referrals, payments),
+    [participants, users, commitments, referrals, payments]
   );
 
   const filtered = reportRows.filter((r) =>
@@ -218,18 +222,20 @@ export default function AdminBookkeeping() {
   // reflects real-time state at the exact moment of export (any time).
   const handleExport = async () => {
     setRefreshing(true);
-    let parts = participants, usrs = users, comms = commitments, refs = referrals;
+    let parts = participants, usrs = users, comms = commitments, refs = referrals, pays = payments;
     try {
-      [parts, usrs, comms, refs] = await Promise.all([
+      [parts, usrs, comms, refs, pays] = await Promise.all([
         base44.entities.ParticipantProfile.list(),
         base44.entities.User.list(),
         base44.entities.Commitment.list(),
         base44.entities.Referral.list(),
+        base44.entities.Payment.list(),
       ]);
       setParticipants(parts);
       setUsers(usrs);
       setCommitments(comms);
       setReferrals(refs);
+      setPayments(pays);
     } catch {
     } finally {
       setRefreshing(false);
@@ -242,7 +248,7 @@ export default function AdminBookkeeping() {
       r.email?.toLowerCase().includes(q) ||
       r.phone_number?.includes(search.trim()) ||
       r.referral_code?.toLowerCase().includes(q);
-    const rows = buildReportRows(parts, usrs, comms, refs)
+    const rows = buildReportRows(parts, usrs, comms, refs, pays)
       .filter(matchSearch)
       .map((r) => {
         const { _commitments, _direct, _indirect, ...rest } = r;
