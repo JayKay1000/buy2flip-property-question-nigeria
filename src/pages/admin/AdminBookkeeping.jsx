@@ -23,6 +23,10 @@ const exportStamp = () => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
 };
 
+// All existing commitment figures are test data. Only confirmed payments
+// confirmed AFTER this cutoff timestamp count toward Total Committed.
+const PAYMENT_RESET_CUTOFF = new Date("2026-09-29T15:50:00.000Z");
+
 // Pure row builder — shared by the on-screen table (via useMemo) and the CSV
 // export (with freshly fetched data) so the export always reflects real-time
 // state at the moment of download.
@@ -60,7 +64,12 @@ const buildReportRows = (participants, users, commitments, referrals, payments) 
     const userRefs = referrals.filter((r) => r.referrer_code === p.referral_code);
     const directRefs = userRefs.filter((r) => r.level === 1);
     const indirectRefs = userRefs.filter((r) => r.level === 2);
-    const confirmedPayments = payments.filter((pm) => pm.created_by_id === p.created_by_id && pm.status === "confirmed");
+    const confirmedPayments = payments.filter((pm) =>
+      pm.created_by_id === p.created_by_id &&
+      pm.status === "confirmed" &&
+      pm.confirmed_at &&
+      new Date(pm.confirmed_at) > PAYMENT_RESET_CUTOFF
+    );
     const totalCommitted = confirmedPayments.reduce((s, pm) => s + (pm.amount || 0), 0);
     const totalExpectedReturn = confirmedComms.reduce((s, c) => s + (c.expected_return || 0), 0);
     const totalExpectedValue = confirmedComms.reduce((s, c) => s + (c.total_expected_value || 0), 0);
