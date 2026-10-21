@@ -55,7 +55,7 @@ export default function Landing() {
             alt="Luxury estate"
             fetchpriority="high"
             className="w-full h-full object-cover" />
-          
+
           <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/90 via-brand/75 to-brand-dark/85" />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent" />
         </div>
@@ -68,13 +68,9 @@ export default function Landing() {
               <br />
               Guaranteed Returns!
             </h1>
-            <div className="mt-6 max-w-xl animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight">PARTNER WITH US, EARN GUARANTEED GAIN.
-
-                </p>
-              <p className="mt-2 text-lg text-white/80 leading-relaxed">"Buy2Flip" Land-Backed Real Estate Opportunity with UP TO 65% Guaranteed Returns
-
-                </p>
+            <div className="mt-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight whitespace-nowrap">PARTNER WITH US, EARN GUARANTEED GAIN.</p>
+              <p className="mt-2 max-w-xl text-lg text-white/80 leading-relaxed">"Buy2Flip" Land-Backed Real Estate Opportunity with UP TO 65% Guaranteed Returns</p>
             </div>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/register" className="w-full sm:w-auto">
@@ -91,8 +87,9 @@ export default function Landing() {
             </div>
           </div>
         </div>
-{/* GOOGLE ADSENSE AD START */}
-      <div className="my-8 flex justify-center">
+
+        <div className="my-8 flex justify-center">
+          {/* GOOGLE ADSENSE AD START */}
           <ins
             className="adsbygoogle"
             style={{ display: "block" }}
@@ -101,10 +98,11 @@ export default function Landing() {
             data-ad-format="auto"
             data-full-width-responsive="true">
           </ins>
-      </div>
-      {/* GOOGLE ADSENSE AD END */}
-        {/* Stats bar */}
+          {/* GOOGLE ADSENSE AD END */}
+        </div>
+
         <div className="relative z-10 border-t border-white/10 glass-dark">
+          {/* Stats bar */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat) =>
             <div key={stat.label} className="text-center">
@@ -115,11 +113,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5371658397951527"
-      crossorigin="anonymous"></script>
 
-      {/* How It Works */}
       <section id="how-it-works" className="py-24 bg-background">
+        {/* How It Works */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-semibold text-gold uppercase tracking-widest">The Process</span>
@@ -167,8 +163,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Plans Preview */}
       <section id="plans" className="py-24 bg-muted/40">
+        {/* Plans Preview */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-semibold text-gold uppercase tracking-widest">Commitment Plans</span>
@@ -193,11 +189,6 @@ export default function Landing() {
                 }
                 </div>
                 <div className="p-6">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    
-                    
-                  </div>
-                  
                   <ul className="space-y-2.5 mb-6">
                     {plan.benefits.slice(0, 4).map((benefit) =>
                   <li key={benefit} className="flex items-start gap-2 text-sm text-foreground/80">
@@ -216,8 +207,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
       <section id="why-us" className="py-24 bg-background">
+        {/* Why Choose Us */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-semibold text-gold uppercase tracking-widest">Why Choose Us</span>
@@ -238,15 +229,13 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-24 bg-brand relative overflow-hidden">
+        {/* CTA */}
         <div className="absolute inset-0 opacity-10">
           <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80" alt="" className="w-full h-full object-cover" loading="lazy" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">Ready to Start Buying to Flip?
-
-          </h2>
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">Ready to Start Buying to Flip?</h2>
           <p className="text-white/70 mt-4 max-w-xl mx-auto">
             Join Property Question Nigeria Limited today and start building wealth through strategic Buy2Flip.
           </p>
