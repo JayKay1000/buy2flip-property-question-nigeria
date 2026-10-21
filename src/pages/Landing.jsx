@@ -69,7 +69,7 @@ export default function Landing() {
               Guaranteed Returns!
             </h1>
             <div className="mt-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient-gold leading-tight">PARTNER WITH US, EARN GUARANTEED GAIN.</p>
+              <p className="whitespace-nowrap text-[length:clamp(0.68rem,3.3vw,1.875rem)] font-bold text-gradient-gold leading-tight">PARTNER WITH US, EARN GUARANTEED GAIN.</p>
               <p className="mt-2 max-w-xl text-lg text-white/80 leading-relaxed">"Buy2Flip" Land-Backed Real Estate Opportunity with UP TO 65% Guaranteed Returns</p>
             </div>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
