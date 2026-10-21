@@ -69,7 +69,8 @@ export default function Landing() {
               Guaranteed Returns!
             </h1>
             <div className="mt-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              <p className="whitespace-nowrap text-[length:clamp(0.68rem,3.3vw,1.875rem)] font-bold text-gradient-gold leading-tight">PARTNER WITH US, EARN GUARANTEED GAIN.</p>
+              <p className="whitespace-nowrap text-[length:clamp(0.68rem,3.3vw,1.875rem)] font-bold text-gradient-gold leading-tight">PARTNER WITH US,
+EARN GUARANTEED GAIN.</p>
               <p className="mt-2 max-w-xl text-lg text-white/80 leading-relaxed">"Buy2Flip" Land-Backed Real Estate Opportunity with UP TO 65% Guaranteed Returns</p>
             </div>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
@@ -90,13 +91,12 @@ export default function Landing() {
 
         <div className="my-8 flex justify-center">
           {/* GOOGLE ADSENSE AD START */}
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block" }}
-            data-ad-client="ca-pub-5371658397951527"
-            data-ad-slot="8731932872"
-            data-ad-format="auto"
-            data-full-width-responsive="true">
+          <ins className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-5371658397951527"
+          data-ad-slot="8731932872"
+          data-ad-format="auto"
+          data-full-width-responsive="true">
           </ins>
           {/* GOOGLE ADSENSE AD END */}
         </div>
