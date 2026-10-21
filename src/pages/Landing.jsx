@@ -62,14 +62,14 @@ export default function Landing() {
 
         <div className="relative z-10 flex-1 flex items-center w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 sm:py-32 w-full">
-            <div className="max-w-3xl">
+            <div className="max-w-4xl">
             <h1 className="font-display font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight animate-fade-up">
               <span className="text-gradient-gold">Buy2Flip</span>
               <br />
               Guaranteed Returns!
             </h1>
             <div className="mt-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-              <p className="text-2xl sm:text-3xl font-bold text-gradient-gold leading-tight whitespace-nowrap">PARTNER WITH US, EARN GUARANTEED GAIN.</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient-gold leading-tight">PARTNER WITH US, EARN GUARANTEED GAIN.</p>
               <p className="mt-2 max-w-xl text-lg text-white/80 leading-relaxed">"Buy2Flip" Land-Backed Real Estate Opportunity with UP TO 65% Guaranteed Returns</p>
             </div>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
